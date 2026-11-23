@@ -67,16 +67,31 @@ function spanFor(index: number, total: number) {
   return "lg:col-span-2";
 }
 
-export function ServiceCards({ services, copy }: { services: Service[]; copy: Copy["services"] }) {
+export function ServiceCards({
+  services,
+  copy,
+  showHeading = true,
+}: {
+  services: Service[];
+  copy: Copy["services"];
+  /** false on /services where the page header already shows the title. */
+  showHeading?: boolean;
+}) {
   return (
     <Section tone="light" labelledBy="services-title">
-      <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <SectionHeading id="services-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
-        <LinkButton href="/services" variant="outline" className="self-start md:self-auto">
-          All services
-        </LinkButton>
-      </div>
-      <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
+      {showHeading ? (
+        <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <SectionHeading id="services-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
+          <LinkButton href="/services" variant="outline" className="self-start md:self-auto">
+            All services
+          </LinkButton>
+        </div>
+      ) : (
+        <h2 id="services-title" className="sr-only">
+          {copy.title}
+        </h2>
+      )}
+      <ul className="pt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
         {services.map((s, i) => (
           <li key={s.slug} className={`group relative flex flex-col overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md ${spanFor(i, services.length)}`}>
             <BrandImage image={s.image} rounded={false} aspect="aspect-[16/9]" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" imgClassName="transition-transform duration-500 group-hover:scale-105" />

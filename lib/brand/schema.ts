@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { serviceTypes } from "@/lib/lead/constants";
 
 /* ------------------------------------------------------------------ */
 /* Primitives                                                          */
@@ -72,7 +73,6 @@ export const sectionKeys = [
 export const sectionKeySchema = z.enum(sectionKeys);
 export type SectionKey = z.infer<typeof sectionKeySchema>;
 
-export const serviceTypes = ["ac-repair", "ac-installation", "heating", "maintenance", "commercial"] as const;
 export const serviceTypeSchema = z.enum(serviceTypes);
 export type ServiceType = z.infer<typeof serviceTypeSchema>;
 
@@ -280,6 +280,15 @@ export const brandConfigSchema = z.object({
     locale: z.string().default("en_US"),
   }),
   tokens: tokensSchema,
+  /** Legal pages are DRAFT templates. A visible draft notice shows until reviewed is true. */
+  legal: z
+    .object({
+      reviewed: z.boolean().default(false),
+      effectiveDate: z.iso.date().optional(),
+      /** State whose law governs the Terms, 2-letter code. Defaults to the business address state. */
+      governingState: usState.optional(),
+    })
+    .default({ reviewed: false }),
   images: z.object({
     hero: imageSchema,
     about: imageSchema,

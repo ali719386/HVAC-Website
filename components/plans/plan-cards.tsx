@@ -42,7 +42,7 @@ export function PlanCards({ plans }: { plans: Plan[] }) {
             ))}
           </ul>
           <LinkButton
-            href={`/book?service=maintenance&plan=${p.id}`}
+            href="/book?service=maintenance"
             variant={p.featured ? "accent" : "outline"}
             className="mt-8 w-full"
             aria-label={`Ask about the ${p.name} plan`}
