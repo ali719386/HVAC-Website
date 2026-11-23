@@ -23,7 +23,7 @@ export default function ProjectsPage() {
   const c = content.copy.projects;
   return (
     <>
-      <PageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Projects", href: "/projects" }]} />
+      <PageHeader image={config.images.projects} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Projects", href: "/projects" }]} />
       <div className="container-site section-y">
         <ul className="grid gap-8 md:grid-cols-2">
           {content.projects.map((p, i) => (

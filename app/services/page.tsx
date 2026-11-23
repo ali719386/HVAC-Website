@@ -18,7 +18,7 @@ export default function ServicesPage() {
   const c = content.copy.services;
   return (
     <>
-      <PageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Services", href: "/services" }]} />
+      <PageHeader image={config.images.services} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Services", href: "/services" }]} />
       <ServiceCards services={content.services} copy={c} showHeading={false} />
       <FaqAccordion faqs={content.faqs} copy={content.copy.faq} phone={config.company.phone} />
       <div className="pt-[var(--brand-section-y)]">

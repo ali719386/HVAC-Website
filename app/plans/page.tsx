@@ -21,7 +21,7 @@ export default function PlansPage() {
   const c = content.copy.plans;
   return (
     <>
-      <PageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Plans", href: "/plans" }]} />
+      <PageHeader image={config.images.promo} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Plans", href: "/plans" }]} />
       <div className="container-site section-y">
         <div className="flex justify-center pt-4">
           <PlanCards plans={content.plans} />
