@@ -210,22 +210,37 @@ html.js:not(.reveal-off)[data-motion="on"] .reveal-group:not(.is-visible) > * {
   transform: var(--reveal-from);
 }
 
-/* mask-up: wipe upward with clip-path; the inner image settles from scale 1.08 to 1. */
-html.js:not(.reveal-off)[data-motion="on"] .reveal[data-reveal="mask-up"]:not(.is-visible),
-html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:not(.is-visible) > * {
+/*
+ * mask-up: wipe upward with clip-path; the inner image settles from scale 1.08 to 1.
+ * The clip goes on the CHILDREN, never on the observed element: a fully clipped element has
+ * zero visible area, so IntersectionObserver would never report it and it would stay hidden.
+ */
+html.js:not(.reveal-off)[data-motion="on"] .reveal[data-reveal="mask-up"]:not(.is-visible) {
   opacity: 1;
-  clip-path: inset(100% 0 0 0);
+  transform: none;
 }
-[data-reveal="mask-up"] img {
-  transition: transform calc(var(--motion-duration) * 1.6) var(--reveal-ease) var(--reveal-d, 0ms);
+.reveal[data-reveal="mask-up"] > *,
+.reveal-group[data-reveal="mask-up"] > * > * {
+  transition:
+    clip-path var(--motion-duration) var(--reveal-ease) var(--reveal-d),
+    transform calc(var(--motion-duration) * 1.6) var(--reveal-ease) var(--reveal-d);
+}
+html.js:not(.reveal-off)[data-motion="on"] .reveal[data-reveal="mask-up"]:not(.is-visible) > *,
+html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:not(.is-visible) > * > * {
+  clip-path: inset(100% 0 0 0);
 }
 html.js:not(.reveal-off)[data-motion="on"] [data-reveal="mask-up"]:not(.is-visible) img {
   transform: scale(1.08);
+}
+html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:not(.is-visible) > * {
+  opacity: 1;
+  transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-group > *,
+  [data-reveal="mask-up"] *,
   [data-reveal] img {
     opacity: 1 !important;
     transform: none !important;
