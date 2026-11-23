@@ -44,7 +44,7 @@ export const config: BrandConfigInput = {
         "Financing may be available for qualifying customers on new system installations, subject to credit approval. Ask our team for current terms.", // TODO: confirm wording with provider
     },
     promoBar: {
-      enabled: true,
+      enabled: false, // hidden at client request; set true to show it again
       text: "Schedule your seasonal tune-up early and lock in a convenient time.", // TODO: real promotion
       linkLabel: "Book now",
       href: "/book",
