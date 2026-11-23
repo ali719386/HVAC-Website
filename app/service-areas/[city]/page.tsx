@@ -43,7 +43,7 @@ export default async function CityPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={cityLd(city, brand)} />
+      <JsonLd data={cityLd(city)} />
       <PageHeader
         eyebrow="Service area"
         title={`Heating & cooling in ${city.city}, ${city.state}`}

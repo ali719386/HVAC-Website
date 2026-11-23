@@ -10,6 +10,8 @@ import { getBrand, getSiteUrl } from "@/lib/brand";
 import { tokensToCss } from "@/lib/brand/tokens";
 import { fontVars } from "@/lib/fonts";
 import { getNav } from "@/lib/nav";
+import { businessLd, JsonLd } from "@/lib/seo/jsonld";
+import { assetExists } from "@/components/ui/brand-image";
 
 export function generateMetadata(): Metadata {
   const { config } = getBrand();
@@ -19,7 +21,6 @@ export function generateMetadata(): Metadata {
     title: { default: seo.defaultTitle, template: seo.titleTemplate },
     description: seo.description,
     applicationName: company.name,
-    alternates: { canonical: "/" },
     openGraph: {
       type: "website",
       siteName: company.name,
@@ -27,7 +28,7 @@ export function generateMetadata(): Metadata {
       title: seo.defaultTitle,
       description: seo.description,
       url: "/",
-      images: seo.ogImage ? [{ url: seo.ogImage, width: 1200, height: 630, alt: company.name }] : undefined,
+      images: assetExists(seo.ogImage) ? [{ url: seo.ogImage, width: 1200, height: 630, alt: company.name }] : undefined,
     },
     twitter: { card: "summary_large_image", title: seo.defaultTitle, description: seo.description },
     formatDetection: { telephone: false },
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           {children}
         </main>
         <Footer brand={brand} nav={nav} />
+        <JsonLd data={businessLd(brand)} />
         <StickyMobileCallBar phone={config.company.phone} bookLabel={bookLabel} />
       </body>
     </html>

@@ -1,5 +1,6 @@
 import type { Brand, City, Service } from "@/lib/brand/schema";
 import { absoluteUrl } from "@/lib/brand";
+import { assetExists } from "@/components/ui/brand-image";
 
 type Ld = Record<string, unknown>;
 
@@ -38,7 +39,7 @@ const place = (c: Pick<City, "city" | "state">) => ({
  * Deliberately no aggregateRating/review markup and no FAQPage markup.
  */
 export function businessLd({ config, content }: Brand): Ld {
-  const { company, seo, offerings } = config;
+  const { company, seo } = config;
   const ld: Ld = {
     "@context": "https://schema.org",
     "@type": "HVACBusiness",
@@ -61,18 +62,10 @@ export function businessLd({ config, content }: Brand): Ld {
     areaServed: content.cities.map(place),
     currenciesAccepted: "USD",
   };
-  if (company.logo.light) ld.logo = absoluteUrl(company.logo.light);
-  if (seo.ogImage) ld.image = absoluteUrl(seo.ogImage);
+  if (assetExists(company.logo.light)) ld.logo = absoluteUrl(company.logo.light);
+  if (assetExists(seo.ogImage)) ld.image = absoluteUrl(seo.ogImage);
   if (company.socials.length) ld.sameAs = company.socials.map((s) => s.url);
   if (company.foundedYear) ld.foundingDate = String(company.foundedYear);
-  if (offerings.emergency24x7) {
-    ld.openingHoursSpecification = {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      opens: "00:00",
-      closes: "23:59",
-    };
-  }
   return ld;
 }
 
@@ -90,14 +83,14 @@ export function serviceLd(service: Service, brand: Brand): Ld {
 }
 
 /** City page: references the business and narrows areaServed to that city. */
-export function cityLd(city: City, brand: Brand): Ld {
+export function cityLd(city: City): Ld {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
     name: `HVAC services in ${city.city}, ${city.state}`,
     serviceType: "Heating and air conditioning services",
     url: absoluteUrl(`/service-areas/${city.slug}`),
-    provider: { "@id": businessId(), "@type": "HVACBusiness", name: brand.config.company.name },
+    provider: { "@id": businessId() },
     areaServed: { ...place(city), containedInPlace: { "@type": "State", name: city.state } },
   };
 }

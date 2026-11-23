@@ -45,7 +45,7 @@ export function BrandStrip({ brands, title }: { brands: string[]; title: string 
         </h2>
         <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
           {brands.map((b) => (
-            <li key={b} className="font-heading text-lg font-extrabold text-ink/45 sm:text-xl">
+            <li key={b} className="font-heading text-lg font-extrabold text-muted sm:text-xl">
               {b}
             </li>
           ))}

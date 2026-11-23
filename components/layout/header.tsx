@@ -9,7 +9,7 @@ import { MobileMenu } from "./mobile-menu";
 export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: NavItem[]; bookLabel: string }) {
   const { company } = config;
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/90">
+    <header className="sticky top-0 z-40 border-b border-line bg-surface">
       <div className="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
         <Logo name={company.name} src={company.logo.light} />
 

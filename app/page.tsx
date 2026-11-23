@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import { HomeSections } from "@/components/home/registry";
 import { getBrand, getServiceZips } from "@/lib/brand";
+
+export function generateMetadata(): Metadata {
+  const { seo } = getBrand().config;
+  return {
+    title: { absolute: seo.defaultTitle },
+    description: seo.description,
+    alternates: { canonical: "/" },
+  };
+}
 
 export default function HomePage() {
   const brand = getBrand();

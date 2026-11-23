@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { serviceTypes } from "@/lib/lead/constants";
+import { contrastRatio, requiredPairs } from "./contrast";
 
 /* ------------------------------------------------------------------ */
 /* Primitives                                                          */
@@ -197,8 +198,7 @@ export type Copy = z.infer<typeof copySchema>;
 /* Config                                                              */
 /* ------------------------------------------------------------------ */
 
-export const tokensSchema = z.object({
-  colors: z.object({
+const colorsSchema = z.object({
     primary: hex,
     primaryDark: hex,
     /** Text color on primary backgrounds. */
@@ -213,6 +213,21 @@ export const tokensSchema = z.object({
     text: hex,
     muted: hex,
     border: hex,
+  });
+
+export const tokensSchema = z.object({
+  /** Validated for WCAG AA contrast on every text/background pair the components use. */
+  colors: colorsSchema.superRefine((c, ctx) => {
+    for (const [fg, bg] of requiredPairs) {
+      const ratio = contrastRatio(c[fg], c[bg]);
+      if (ratio < 4.5) {
+        ctx.addIssue({
+          code: "custom",
+          path: [fg],
+          message: `Contrast ${fg} on ${bg} is ${ratio.toFixed(2)}:1; WCAG AA needs 4.5:1`,
+        });
+      }
+    }
   }),
   fonts: z.object({ heading: fontKeySchema, body: fontKeySchema }),
   /** Card/panel radius in px. */

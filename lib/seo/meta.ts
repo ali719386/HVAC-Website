@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getBrand } from "@/lib/brand";
+import { assetExists } from "@/components/ui/brand-image";
 
 /**
  * Per-page metadata with a canonical URL and OpenGraph. `title` is run through the
@@ -21,7 +22,8 @@ export function pageMetadata({
   noindex?: boolean;
 }): Metadata {
   const { config } = getBrand();
-  const ogImage = image ?? config.seo.ogImage;
+  // Only reference files that exist, so social previews never point at a 404.
+  const ogImage = [image, config.seo.ogImage].find((src) => assetExists(src));
   return {
     title,
     description,
