@@ -30,7 +30,7 @@ export default function PlansPage() {
           Plan details, pricing and terms are confirmed in writing when you enroll.
         </p>
       </div>
-      <FaqAccordion faqs={content.faqs} copy={content.copy.faq} phone={config.company.phone} />
+      <FaqAccordion faqs={content.faqs} copy={content.copy.faq} phone={config.company.phone} image={config.images.faq} />
       <div className="pt-[var(--brand-section-y)]">
         <CtaBand config={config} copy={content.copy.ctaBand} />
       </div>

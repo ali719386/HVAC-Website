@@ -31,6 +31,7 @@ export const copy: CopyOverrides = {
     intro: "Straight answers, clean work and technicians who explain what they find.",
   },
   testimonials: { eyebrow: "Reviews", title: "What Central Ohio homeowners say", intro: "" },
+  faq: { eyebrow: "", title: "Do You Have Any Questions?", intro: "" },
   about: {
     title: "About Coolwren Heating & Air",
     intro: "A Columbus heating and cooling company focused on honest recommendations and careful work.",

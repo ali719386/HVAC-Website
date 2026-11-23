@@ -171,7 +171,8 @@ export const statSchema = z.object({
 });
 
 const heroCopy = z.object({ eyebrow: nonEmpty, title: nonEmpty, subtitle: nonEmpty });
-const sectionCopy = z.object({ eyebrow: nonEmpty, title: nonEmpty, intro: z.string().default("") });
+/** eyebrow may be "" to hide the small label above a heading. */
+const sectionCopy = z.object({ eyebrow: z.string().default(""), title: nonEmpty, intro: z.string().default("") });
 
 /** Marketing copy. Every key has a default in /content/defaults.ts, brands override per section. */
 export const copySchema = z.object({
@@ -314,6 +315,8 @@ export const brandConfigSchema = z.object({
     expert: imageSchema,
     projects: imageSchema,
     promo: imageSchema,
+    /** Optional. When set, the FAQ block shows questions left + this photo right (no call box). */
+    faq: imageSchema.optional(),
   }),
   homepage: z.object({
     heroVariant: z.enum(["summer", "winter"]),

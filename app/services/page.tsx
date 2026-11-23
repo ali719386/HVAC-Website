@@ -20,7 +20,7 @@ export default function ServicesPage() {
     <>
       <PageHeader image={config.images.services} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Services", href: "/services" }]} />
       <ServiceCards services={content.services} copy={c} showHeading={false} />
-      <FaqAccordion faqs={content.faqs} copy={content.copy.faq} phone={config.company.phone} />
+      <FaqAccordion faqs={content.faqs} copy={content.copy.faq} phone={config.company.phone} image={config.images.faq} />
       <div className="pt-[var(--brand-section-y)]">
         <CtaBand config={config} copy={content.copy.ctaBand} />
       </div>

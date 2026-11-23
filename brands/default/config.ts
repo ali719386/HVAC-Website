@@ -96,6 +96,7 @@ export const config: BrandConfigInput = {
     services: { src: "services.jpg", alt: "Technician checking refrigerant pressure with gauges" },
     expert: { src: "expert-caller.jpg", alt: "Technician on the phone taking notes at the service van, with refrigerant gauges hanging inside" },
     projects: { src: "projects.jpg", alt: "Newly installed high-efficiency furnace" },
+    faq: { src: "faq-thermostat.jpg", alt: "Homeowner pointing out the thermostat to a technician in her hallway" },
     promo: { src: "promo.jpg", alt: "Thermostat set to a comfortable temperature" },
   },
   homepage: {

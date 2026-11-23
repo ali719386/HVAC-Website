@@ -48,6 +48,7 @@ function resolveAssets(brand: Brand): Brand {
         expert: img(im.expert),
         projects: img(im.projects),
         promo: img(im.promo),
+        faq: im.faq ? img(im.faq) : undefined,
       },
     },
     content: {

@@ -68,7 +68,7 @@ const registry: Record<SectionKey, Render> = {
     );
   },
   rebates: (b) => <RebatesBlock rebates={b.config.offerings.rebates} />,
-  faq: (b) => <FaqAccordion faqs={b.content.faqs} copy={b.content.copy.faq} phone={b.config.company.phone} />,
+  faq: (b) => <FaqAccordion faqs={b.content.faqs} copy={b.content.copy.faq} phone={b.config.company.phone} image={b.config.images.faq} />,
   posts: (b) => <PostCards posts={b.content.posts} copy={b.content.copy.posts} />,
   ctaBand: (b) => <CtaBand config={b.config} copy={b.content.copy.ctaBand} />,
 };

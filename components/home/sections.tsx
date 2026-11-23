@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, Phone, Siren } from "lucide-react";
-import type { Brand, BrandConfig, Copy, Post, Service, Stat, WhyItem } from "@/lib/brand/schema";
+import type { Brand, BrandConfig, Copy, ImageAsset, Post, Service, Stat, WhyItem } from "@/lib/brand/schema";
 import { formatDate, formatNumber } from "@/lib/format";
 import { assetExists, BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
@@ -245,19 +245,56 @@ export function FaqAccordion({
   faqs,
   copy,
   phone,
+  image,
   headingLevel = "h2",
 }: {
   faqs: Brand["content"]["faqs"];
   copy: Copy["faq"];
   phone: BrandConfig["company"]["phone"];
+  /** When set: heading on top, questions left, photo right, no call box. */
+  image?: ImageAsset;
   headingLevel?: "h1" | "h2";
 }) {
   if (faqs.length === 0) return null;
+  const heading = <SectionHeading id="faq-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} as={headingLevel} />;
+  const list = (
+    <div className="grid content-start gap-3">
+      {faqs.map((f, i) => (
+        <details key={f.question} className="group rounded-brand border border-line bg-surface open:shadow-brand-md" open={i === 0}>
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-heading text-lg font-bold marker:content-none [&::-webkit-details-marker]:hidden sm:p-6">
+            {f.question}
+            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-alt text-primary transition-transform group-open:rotate-45">
+              +
+            </span>
+          </summary>
+          <p className="px-5 pb-6 leading-relaxed text-muted sm:px-6">{f.answer}</p>
+        </details>
+      ))}
+    </div>
+  );
+
+  if (image) {
+    return (
+      <Section tone="alt" labelledBy="faq-title">
+        {heading}
+        <div className="mt-10 grid items-start gap-10 lg:mt-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+          {list}
+          <BrandImage
+            image={image}
+            sizes="(min-width: 1024px) 520px, 100vw"
+            aspect="aspect-[4/3]"
+            className="shadow-brand-lg lg:sticky lg:top-28"
+          />
+        </div>
+      </Section>
+    );
+  }
+
   return (
     <Section tone="alt" labelledBy="faq-title">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div>
-          <SectionHeading id="faq-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} as={headingLevel} />
+          {heading}
           <div className="mt-8 rounded-brand bg-primary p-7 text-on-primary">
             <p className="font-heading text-lg font-bold">{copy.contactTitle}</p>
             <p className="mt-1 text-on-primary/85">{copy.contactBody}</p>
@@ -267,19 +304,7 @@ export function FaqAccordion({
             </a>
           </div>
         </div>
-        <div className="grid gap-3">
-          {faqs.map((f, i) => (
-            <details key={f.question} className="group rounded-brand border border-line bg-surface open:shadow-brand-md" open={i === 0}>
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-heading text-lg font-bold marker:content-none [&::-webkit-details-marker]:hidden sm:p-6">
-                {f.question}
-                <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-surface-alt text-primary transition-transform group-open:rotate-45">
-                  +
-                </span>
-              </summary>
-              <p className="px-5 pb-6 leading-relaxed text-muted sm:px-6">{f.answer}</p>
-            </details>
-          ))}
-        </div>
+        {list}
       </div>
     </Section>
   );
