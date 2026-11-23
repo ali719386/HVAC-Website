@@ -124,6 +124,10 @@
 html[data-motion="off"] .animate-fade-up {
   animation: none;
 }
+/* No autoplay when the brand disables motion, so hide its Pause/Play toggle too. */
+html[data-motion="off"] .autoplay-toggle {
+  display: none;
+}
 
 /*
  * Scroll reveal (components/motion). Hidden states apply ONLY when:
