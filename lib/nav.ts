@@ -14,11 +14,10 @@ export const legalLinks: NavLink[] = [
 const present = <T>(items: (T | false)[]) => items.filter((i): i is T => i !== false);
 
 /**
- * Main navigation, derived from brand data. Dropdowns are generated from content,
- * so new services, projects and posts appear automatically; empty sections are hidden.
+ * Main navigation: plain links, no dropdowns. Sections with no content (projects, posts) are hidden.
+ * The header still supports `children`/`all` on an item if dropdowns are wanted again later.
  */
 export function getNav({ content }: Brand): NavItem[] {
-  // Plain links, no dropdowns. (Header still supports `children`/`all` if dropdowns are wanted later.)
   return present<NavItem>([
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
