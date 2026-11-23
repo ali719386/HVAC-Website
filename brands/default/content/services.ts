@@ -7,7 +7,7 @@ export const services: ServiceInput[] = [
     title: "AC Repair",
     summary: "Diagnosis and repair for warm air, short cycling, leaks and strange noises.",
     icon: "snowflake",
-    image: { src: "services/ac-repair.jpg", alt: "Technician repairing an outdoor condenser unit" },
+    image: { src: "services/ac-repair.jpg", alt: "Technician reviewing repair findings on a clipboard with a homeowner beside the outdoor AC unit" },
     intro:
       "When your air conditioner stops keeping up, a methodical diagnosis saves time and money. We find the cause first, then explain your options before any work begins.",
     body: [
@@ -30,7 +30,7 @@ export const services: ServiceInput[] = [
     title: "AC Installation",
     summary: "Properly sized central air and heat pump systems, installed to manufacturer specs.",
     icon: "fan",
-    image: { src: "services/ac-installation.jpg", alt: "New central air conditioner installed on a concrete pad" },
+    image: { src: "services/ac-installation.jpg", alt: "Two technicians leveling a new central air conditioner on a concrete pad" },
     intro:
       "A new cooling system is a long-term investment. Correct sizing and a clean installation matter as much as the equipment brand you choose.",
     body: [
