@@ -89,6 +89,7 @@ export const config: BrandConfigInput = {
     shadow: "soft",
     containerWidth: 1240,
     sectionSpacing: "normal",
+    motion: { enabled: true, durationMs: 700, distancePx: 24, staggerMs: 100 },
   },
   images: {
     hero: { src: "hero.png", alt: "HVAC technician inspecting an outdoor air conditioning condenser with a flashlight" },

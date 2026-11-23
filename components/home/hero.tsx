@@ -4,8 +4,8 @@ import { BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
 import { TrustList } from "@/components/layout/trust-list";
 
-/** Staggered entrance delay for hero items (CSS only; disabled by prefers-reduced-motion). */
-const delay = (ms: number) => ({ animationDelay: `${ms}ms` });
+/** Hero text entrance stagger: n x the brand motion stagger (CSS only; off when motion is disabled). */
+const delay = (step: number) => ({ animationDelay: `calc(var(--motion-stagger) * ${step})` });
 
 export function Hero({ brand }: { brand: Brand }) {
   const { config, content } = brand;
@@ -40,37 +40,36 @@ export function Hero({ brand }: { brand: Brand }) {
           <h1
             id="hero-title"
             className="animate-fade-up mt-7 text-[2.6rem] leading-[1.04] font-extrabold tracking-[-0.03em] sm:text-6xl lg:text-[4.5rem]"
-            style={delay(120)}
+            style={delay(1)}
           >
             {text.title}
           </h1>
-          <p className="animate-fade-up mt-7 max-w-xl text-lg leading-[1.8] text-muted sm:text-xl" style={delay(240)}>
+          <p className="animate-fade-up mt-7 max-w-xl text-lg leading-[1.8] text-muted sm:text-xl" style={delay(2)}>
             {text.subtitle}
           </p>
-          <div className="animate-fade-up mt-9 flex flex-col gap-3 sm:flex-row" style={delay(360)}>
+          <div className="animate-fade-up mt-9 flex flex-col gap-3 sm:flex-row" style={delay(3)}>
             <LinkButton href="/book" variant="accent" size="lg">
               {copy.primaryCta}
             </LinkButton>
             <CallButton phone={company.phone} variant="outline" size="lg" label={<span>Call {company.phone.display}</span>} />
           </div>
-          <div className="animate-fade-up" style={delay(480)}>
+          <div className="animate-fade-up" style={delay(4)}>
             <TrustList company={company} className="mt-8" />
           </div>
         </div>
 
-        <div className="animate-slide-in relative" style={delay(150)}>
-          <div className="animate-float">
-            <BrandImage
-              image={config.images.hero}
-              preload
-              sizes="(min-width: 1024px) 580px, 100vw"
-              aspect="aspect-[4/3] lg:aspect-square"
-              className="rounded-[calc(var(--brand-radius)*2)] shadow-brand-lg"
-            />
-          </div>
+        {/* Hero image is above the fold and never animates (LCP). */}
+        <div className="relative">
+          <BrandImage
+            image={config.images.hero}
+            preload
+            sizes="(min-width: 1024px) 580px, 100vw"
+            aspect="aspect-[4/3] lg:aspect-square"
+            className="rounded-[calc(var(--brand-radius)*2)] shadow-brand-lg"
+          />
           <div
             className="animate-fade-up absolute -bottom-5 left-4 flex items-center gap-3 rounded-brand bg-surface px-5 py-4 shadow-brand-lg sm:left-6"
-            style={delay(700)}
+            style={delay(5)}
           >
             <span className="grid size-11 place-items-center rounded-full bg-accent text-on-accent">
               <ShieldCheck className="size-5" aria-hidden="true" />
@@ -85,7 +84,7 @@ export function Hero({ brand }: { brand: Brand }) {
         </div>
       </div>
 
-      <div className="animate-fade-up container-site relative z-10 pb-14 lg:pb-20" style={delay(600)}>
+      <div className="animate-fade-up container-site relative z-10 pb-14 lg:pb-20" style={delay(5)}>
         <ul className="grid overflow-hidden rounded-brand bg-surface shadow-brand-md sm:grid-cols-3">
           {quick.map(({ icon: I, label, value, href }) => {
             const inner = (

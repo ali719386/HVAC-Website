@@ -240,6 +240,15 @@ export const tokensSchema = z.object({
   /** Max container width in px. */
   containerWidth: z.number().int().min(960).max(1600),
   sectionSpacing: z.enum(["compact", "normal", "relaxed"]),
+  /** Scroll-reveal motion. enabled:false disables every reveal and hero entrance animation. */
+  motion: z
+    .object({
+      enabled: z.boolean().default(true),
+      durationMs: z.number().int().min(0).max(3000).default(700),
+      distancePx: z.number().int().min(0).max(120).default(24),
+      staggerMs: z.number().int().min(0).max(1000).default(100),
+    })
+    .default({ enabled: true, durationMs: 700, distancePx: 24, staggerMs: 100 }),
 });
 export type Tokens = z.infer<typeof tokensSchema>;
 

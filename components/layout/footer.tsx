@@ -4,6 +4,7 @@ import type { Brand } from "@/lib/brand/schema";
 import { getFooterLinks, legalLinks } from "@/lib/nav";
 import { Logo } from "@/components/ui/logo";
 import { TrustList } from "./trust-list";
+import { Reveal } from "@/components/motion/reveal";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
 
@@ -17,7 +18,7 @@ export function Footer({ brand }: { brand: Brand }) {
 
   return (
     <footer className="bg-surface-dark pb-20 text-on-primary/80 md:pb-0">
-      <div className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
+      <Reveal variant="fade-in" className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
         <div className="lg:col-span-4">
           <Logo name={company.name} src={company.logo.dark} onDark />
           <p className="mt-4 max-w-sm leading-relaxed">{company.tagline}</p>
@@ -120,7 +121,7 @@ export function Footer({ brand }: { brand: Brand }) {
             </>
           ) : null}
         </div>
-      </div>
+      </Reveal>
 
       <div className="border-t border-on-primary/15">
         <div className="container-site flex flex-col gap-4 py-6 text-sm md:flex-row md:items-center md:justify-between">

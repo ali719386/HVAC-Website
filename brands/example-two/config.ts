@@ -80,6 +80,7 @@ export const config: BrandConfigInput = {
     shadow: "medium",
     containerWidth: 1180,
     sectionSpacing: "compact",
+    motion: { enabled: true, durationMs: 550, distancePx: 16, staggerMs: 80 },
   },
   images: {
     hero: { src: "hero.jpg", alt: "Technician servicing a furnace in a mountain-area home" },

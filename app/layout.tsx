@@ -13,6 +13,9 @@ import { getNav } from "@/lib/nav";
 import { businessLd, JsonLd } from "@/lib/seo/jsonld";
 import { assetExists } from "@/components/ui/brand-image";
 
+const REVEAL_BOOT =
+  "(function(d){d.classList.add(\"js\");setTimeout(function(){if(!window.__revealReady)d.classList.add(\"reveal-off\")},3500)})(document.documentElement);";
+
 export function generateMetadata(): Metadata {
   const { config } = getBrand();
   const { seo, company } = config;
@@ -48,8 +51,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   const fontClasses = [...new Set([fontVars[fonts.heading].className, fontVars[fonts.body].className])].join(" ");
 
   return (
-    <html lang="en-US" className={fontClasses}>
+    <html
+      lang="en-US"
+      className={fontClasses}
+      data-motion={config.tokens.motion.enabled ? "on" : "off"}
+      // The inline script below adds "js" before hydration.
+      suppressHydrationWarning
+    >
       <head>
+        {/*
+          Marks JS as available so reveal hidden-states can apply (content stays visible without JS).
+          Fallback: if the reveal code never runs (script error/blocked), show everything after 3.5s.
+        */}
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT }} />
         {/* Brand design tokens. Values are validated by Zod (hex, enums, ints) before injection. */}
         <style id="brand-tokens" dangerouslySetInnerHTML={{ __html: tokensToCss(config.tokens) }} />
       </head>

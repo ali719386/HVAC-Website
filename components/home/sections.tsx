@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, Phone, Siren } from "lucide-react";
 import type { Brand, BrandConfig, Copy, ImageAsset, Post, Service, Stat, WhyItem } from "@/lib/brand/schema";
-import { formatDate, formatNumber } from "@/lib/format";
+import { formatDate } from "@/lib/format";
+import { CountUp } from "@/components/motion/count-up";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { assetExists, BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
@@ -106,7 +108,7 @@ export function ServiceCards({
           {copy.title}
         </h2>
       )}
-      <ul className="pt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-6">
+      <RevealGroup as="ul" variant="fade-up" className="grid gap-6 pt-4 sm:grid-cols-2 lg:grid-cols-6">
         {services.map((s, i) => (
           <li key={s.slug} className={`group relative flex flex-col overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md ${spanFor(i, services.length)}`}>
             <BrandImage image={s.image} rounded={false} aspect="aspect-[16/9]" sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw" imgClassName="transition-transform duration-500 group-hover:scale-105" />
@@ -126,7 +128,7 @@ export function ServiceCards({
             </div>
           </li>
         ))}
-      </ul>
+      </RevealGroup>
     </Section>
   );
 }
@@ -152,7 +154,7 @@ export function WhyChooseUs({ brand }: { brand: Brand }) {
         </div>
         <div>
           <SectionHeading id="why-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
-          <ul className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
+          <RevealGroup as="ul" variant="fade-up" className="mt-10 grid gap-x-8 gap-y-8 sm:grid-cols-2">
             {items.map((it) => (
               <li key={it.title} className="flex gap-4">
                 <span className="grid size-12 shrink-0 place-items-center rounded-brand-sm bg-surface text-accent shadow-brand-sm">
@@ -164,7 +166,7 @@ export function WhyChooseUs({ brand }: { brand: Brand }) {
                 </div>
               </li>
             ))}
-          </ul>
+          </RevealGroup>
           <TrustList company={config.company} className="mt-10 border-t border-line pt-8 text-ink" />
         </div>
       </div>
@@ -185,8 +187,9 @@ export function ExpertBlock({ config, copy }: { config: BrandConfig; copy: Copy[
             aspect="aspect-[16/11] lg:aspect-auto lg:h-full"
             imgClassName="object-[50%_25%]"
             sizes="(min-width: 1024px) 520px, 100vw"
+            reveal="mask-up"
           />
-          <div className="p-8 sm:p-10 lg:p-14">
+          <Reveal variant="slide-right" delay={150} className="p-8 sm:p-10 lg:p-14">
             <SectionHeading id="expert-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} onDark />
             {copy.bullets.length > 0 ? (
               <ul className="mt-8 grid gap-3 sm:grid-cols-2">
@@ -206,7 +209,7 @@ export function ExpertBlock({ config, copy }: { config: BrandConfig; copy: Copy[
               </LinkButton>
               <CallButton phone={config.company.phone} variant="ghost" size="lg" />
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -223,17 +226,23 @@ export function StatsCounter({ stats, copy }: { stats: Stat[]; copy: Copy["stats
         <h2 id="stats-title" className="sr-only">
           {copy.title}
         </h2>
-        <dl className={`grid grid-cols-2 gap-y-10 ${stats.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
-          {stats.map((s, i) => (
-            <div key={s.label} className="animate-rise flex flex-col px-4 text-center not-first:border-line lg:not-first:border-l" style={{ animationDelay: `${i * 90}ms` }}>
+        <RevealGroup
+          as="dl"
+          variant="fade-in"
+          className={`grid grid-cols-2 gap-y-10 ${stats.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}
+        >
+          {stats.map((s) => (
+            <div key={s.label} className="flex flex-col px-4 text-center not-first:border-line lg:not-first:border-l">
               <dt className="order-last mt-1 text-sm font-semibold text-muted sm:text-base">{s.label}</dt>
               <dd className="font-heading text-4xl font-extrabold text-primary sm:text-5xl">
-                {formatNumber(s.value)}
-                <span className="text-accent">{s.suffix}</span>
+                <CountUp value={s.value} suffix={s.suffix} />
+                <span className="text-accent" aria-hidden="true">
+                  {s.suffix}
+                </span>
               </dd>
             </div>
           ))}
-        </dl>
+        </RevealGroup>
       </div>
     </section>
   );
@@ -258,7 +267,7 @@ export function FaqAccordion({
   if (faqs.length === 0) return null;
   const heading = <SectionHeading id="faq-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} as={headingLevel} />;
   const list = (
-    <div className="grid content-start gap-3">
+    <Reveal variant="fade-up" className="grid content-start gap-3">
       {faqs.map((f, i) => (
         <details key={f.question} className="group rounded-brand border border-line bg-surface open:shadow-brand-md" open={i === 0}>
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 font-heading text-lg font-bold marker:content-none [&::-webkit-details-marker]:hidden sm:p-6">
@@ -270,7 +279,7 @@ export function FaqAccordion({
           <p className="px-5 pb-6 leading-relaxed text-muted sm:px-6">{f.answer}</p>
         </details>
       ))}
-    </div>
+    </Reveal>
   );
 
   if (image) {
@@ -316,7 +325,7 @@ export function PostCards({ posts, copy, limit = 3 }: { posts: Post[]; copy?: Co
   const latest = [...posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
   if (latest.length === 0) return null;
   const grid = (
-    <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <RevealGroup as="ul" variant="fade-up" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {latest.map((p) => (
         <li key={p.slug} className="group relative flex flex-col overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md">
           <BrandImage image={p.image} rounded={false} aspect="aspect-[16/10]" sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw" />
@@ -337,7 +346,7 @@ export function PostCards({ posts, copy, limit = 3 }: { posts: Post[]; copy?: Co
           </div>
         </li>
       ))}
-    </ul>
+    </RevealGroup>
   );
   if (!copy) return grid;
   return (
@@ -359,7 +368,7 @@ export function CtaBand({ config, copy }: { config: BrandConfig; copy: Copy["cta
   return (
     <section aria-labelledby="cta-title" className="bg-surface pb-[var(--brand-section-y)]">
       <div className="container-site">
-        <div className="flex flex-col gap-8 rounded-brand bg-accent px-6 py-10 text-on-accent sm:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-14 lg:py-14">
+        <Reveal variant="zoom-in" className="flex flex-col gap-8 rounded-brand bg-accent px-6 py-10 text-on-accent sm:px-10 lg:flex-row lg:items-center lg:justify-between lg:px-14 lg:py-14">
           <div className="max-w-2xl">
             <h2 id="cta-title" className="text-3xl leading-tight font-extrabold sm:text-4xl">
               {copy.title}
@@ -372,7 +381,7 @@ export function CtaBand({ config, copy }: { config: BrandConfig; copy: Copy["cta
             </LinkButton>
             <CallButton phone={config.company.phone} variant="ghost" size="lg" />
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

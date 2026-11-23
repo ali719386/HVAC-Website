@@ -54,6 +54,9 @@ export function tokensToCss(t: Tokens): string {
     "--brand-section-y": spacing[t.sectionSpacing],
     "--brand-font-heading": `var(${fontVars[t.fonts.heading].cssVar})`,
     "--brand-font-body": `var(${fontVars[t.fonts.body].cssVar})`,
+    "--motion-duration": `${t.motion.enabled ? t.motion.durationMs : 0}ms`,
+    "--motion-distance": `${t.motion.enabled ? t.motion.distancePx : 0}px`,
+    "--motion-stagger": `${t.motion.enabled ? t.motion.staggerMs : 0}ms`,
   };
   const body = Object.entries(vars)
     .map(([k, v]) => `${k}:${v}`)

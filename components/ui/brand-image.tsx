@@ -1,7 +1,8 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import Image from "next/image";
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
+import { Reveal, type RevealVariant } from "@/components/motion/reveal";
 import type { ImageAsset } from "@/lib/brand/schema";
 
 const publicDir = path.join(process.cwd(), "public");
@@ -32,7 +33,10 @@ export function BrandImage({
   imgClassName = "",
   preload = false,
   rounded = true,
+  reveal,
 }: {
+  /** Scroll reveal for the image box, e.g. "mask-up" (clip-path wipe + inner image scale). Never use on the hero. */
+  reveal?: RevealVariant;
   image: ImageAsset;
   sizes: string;
   /** Tailwind aspect class. Use "" when the parent sets the size (e.g. absolute inset-0). */
@@ -45,10 +49,19 @@ export function BrandImage({
 }) {
   const uid = useId().replace(/[^\w-]/g, "");
   const box = `relative overflow-hidden ${aspect} ${rounded ? "rounded-brand" : ""} ${className}`;
+  const wrap = (children: ReactNode, extra = "", label?: string) =>
+    reveal ? (
+      <Reveal variant={reveal} className={`${box} ${extra}`} role={label ? "img" : undefined} aria-label={label}>
+        {children}
+      </Reveal>
+    ) : (
+      <div className={`${box} ${extra}`} role={label ? "img" : undefined} aria-label={label}>
+        {children}
+      </div>
+    );
 
   if (assetExists(image.src)) {
-    return (
-      <div className={box}>
+    return wrap(
         <Image
           src={image.src}
           alt={image.alt}
@@ -57,13 +70,12 @@ export function BrandImage({
           preload={preload}
           loading={preload ? undefined : "lazy"}
           className={`object-cover ${imgClassName}`}
-        />
-      </div>
+        />,
     );
   }
 
-  return (
-    <div className={`${box} bg-surface-alt`} role="img" aria-label={image.alt}>
+  return wrap(
+    <>
       <svg className="absolute inset-0 size-full" aria-hidden="true" focusable="false" preserveAspectRatio="none">
         <defs>
           <linearGradient id={`g${uid}`} x1="0" y1="0" x2="1" y2="1">
@@ -89,6 +101,8 @@ export function BrandImage({
           ) : null}
         </div>
       </div>
-    </div>
+    </>,
+    "bg-surface-alt",
+    image.alt,
   );
 }

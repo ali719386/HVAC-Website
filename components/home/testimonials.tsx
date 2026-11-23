@@ -4,6 +4,7 @@ import { assetExists } from "@/components/ui/brand-image";
 import type { Copy, Testimonial } from "@/lib/brand/schema";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { SliderControls } from "./slider-controls";
+import { Reveal } from "@/components/motion/reveal";
 
 export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy: Copy["testimonials"] }) {
   if (items.length === 0) return null;
@@ -14,6 +15,7 @@ export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy:
         <SectionHeading id="reviews-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
         {items.length > 1 ? <SliderControls trackId={trackId} label="reviews" /> : null}
       </div>
+      <Reveal variant="fade-in">
       <ul
         id={trackId}
         tabIndex={0}
@@ -57,6 +59,7 @@ export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy:
           );
         })}
       </ul>
+      </Reveal>
     </Section>
   );
 }

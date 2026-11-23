@@ -104,63 +104,134 @@
   }
 }
 
-/* Subtle entrance for stat numbers; disabled by reduced-motion rule above. */
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@utility animate-rise {
-  animation: rise 0.6s ease-out both;
-}
-
 /*
- * Hero entrance animations. CSS only. The global prefers-reduced-motion rule
- * shortens them to ~0ms, so content appears immediately for those users.
- * Start opacity is 0.01 (not 0) so the browser still counts the hero for LCP.
+ * Hero entrance (CSS keyframes, no JS needed). Text only: the hero image never animates.
+ * Driven by the brand motion tokens; [data-motion="off"] and reduced motion disable it.
  */
 @keyframes fade-up {
   from {
-    opacity: 0.01;
-    transform: translateY(28px);
+    opacity: 0.01; /* not 0, so the browser still counts hero text for LCP */
+    transform: translateY(var(--motion-distance));
   }
   to {
     opacity: 1;
     transform: none;
-  }
-}
-@keyframes slide-in {
-  from {
-    opacity: 0.01;
-    transform: translateX(56px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-12px);
   }
 }
 @utility animate-fade-up {
-  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-up calc(var(--motion-duration) * 0.8) cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@utility animate-slide-in {
-  animation: slide-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+html[data-motion="off"] .animate-fade-up {
+  animation: none;
 }
-@utility animate-float {
-  animation: float 6s ease-in-out 1.2s infinite;
+
+/*
+ * Scroll reveal (components/motion). Hidden states apply ONLY when:
+ *   - JS is running (html.js, set by an inline script in app/layout.tsx),
+ *   - the reveal script has not failed (html.reveal-off is the no-hang fallback),
+ *   - the brand has motion on (html[data-motion="on"]).
+ * Only opacity, transform and clip-path animate. No layout properties, no global will-change.
+ */
+:root {
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal,
+.reveal-group > * {
+  transition:
+    opacity var(--motion-duration) var(--reveal-ease) var(--reveal-d),
+    transform var(--motion-duration) var(--reveal-ease) var(--reveal-d),
+    clip-path var(--motion-duration) var(--reveal-ease) var(--reveal-d),
+    box-shadow 200ms ease,
+    border-color 200ms ease,
+    background-color 200ms ease,
+    color 200ms ease;
+}
+.reveal {
+  --reveal-d: var(--reveal-delay, 0ms);
+}
+.reveal-group > * {
+  --reveal-d: calc(var(--reveal-delay, 0ms) + var(--reveal-i, 0) * var(--reveal-stagger, var(--motion-stagger)));
+}
+.reveal-group > :nth-child(2) {
+  --reveal-i: 1;
+}
+.reveal-group > :nth-child(3) {
+  --reveal-i: 2;
+}
+.reveal-group > :nth-child(4) {
+  --reveal-i: 3;
+}
+.reveal-group > :nth-child(5) {
+  --reveal-i: 4;
+}
+.reveal-group > :nth-child(6) {
+  --reveal-i: 5;
+}
+.reveal-group > :nth-child(7) {
+  --reveal-i: 6;
+}
+.reveal-group > :nth-child(8) {
+  --reveal-i: 7;
+}
+.reveal-group > :nth-child(9) {
+  --reveal-i: 8;
+}
+.reveal-group > :nth-child(10) {
+  --reveal-i: 9;
+}
+.reveal-group > :nth-child(11) {
+  --reveal-i: 10;
+}
+.reveal-group > :nth-child(12) {
+  --reveal-i: 11;
+}
+
+[data-reveal="fade-up"] {
+  --reveal-from: translate3d(0, var(--motion-distance), 0);
+}
+[data-reveal="fade-in"],
+[data-reveal="mask-up"] {
+  --reveal-from: none;
+}
+/* slide-left moves leftward into place (enters from the right); slide-right enters from the left. */
+[data-reveal="slide-left"] {
+  --reveal-from: translate3d(calc(var(--motion-distance) * 1.5), 0, 0);
+}
+[data-reveal="slide-right"] {
+  --reveal-from: translate3d(calc(var(--motion-distance) * -1.5), 0, 0);
+}
+[data-reveal="zoom-in"] {
+  --reveal-from: scale(0.94);
+}
+
+html.js:not(.reveal-off)[data-motion="on"] .reveal:not(.is-visible),
+html.js:not(.reveal-off)[data-motion="on"] .reveal-group:not(.is-visible) > * {
+  opacity: 0;
+  transform: var(--reveal-from);
+}
+
+/* mask-up: wipe upward with clip-path; the inner image settles from scale 1.08 to 1. */
+html.js:not(.reveal-off)[data-motion="on"] .reveal[data-reveal="mask-up"]:not(.is-visible),
+html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:not(.is-visible) > * {
+  opacity: 1;
+  clip-path: inset(100% 0 0 0);
+}
+[data-reveal="mask-up"] img {
+  transition: transform calc(var(--motion-duration) * 1.6) var(--reveal-ease) var(--reveal-d, 0ms);
+}
+html.js:not(.reveal-off)[data-motion="on"] [data-reveal="mask-up"]:not(.is-visible) img {
+  transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-group > *,
+  [data-reveal] img {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
 }
 
 /* Long-form text (blog posts, legal pages). */

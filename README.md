@@ -85,6 +85,8 @@ How it fits together:
 | `containerWidth` | Max content width in px (960 to 1600). |
 | `sectionSpacing` | `compact`, `normal` or `relaxed` vertical rhythm. |
 
+**Motion** (`tokens.motion`): `{ enabled, durationMs, distancePx, staggerMs }`, exposed as `--motion-duration`, `--motion-distance` and `--motion-stagger`. Scroll reveals use `components/motion/reveal.tsx` (`Reveal`, `RevealGroup`) with one shared IntersectionObserver. They are CSS-only transitions of opacity, transform and clip-path. Hidden states apply only after the inline script adds `html.js`, so content stays visible without JS, and a 3.5 s fallback shows everything if the reveal code never runs. `prefers-reduced-motion` shows everything immediately. The hero image never animates. Set `enabled: false` to turn all motion off.
+
 **Contrast is enforced.** The build fails if any text/background pair the components use is below WCAG AA (4.5:1). Examples are `onAccent` on `accent` and `muted` on `surfaceAlt`. The full list is in `lib/brand/contrast.ts`.
 
 **Adding a font:** add a `next/font/google` import in `lib/fonts.ts`, add its key to `fontKeys` in `lib/brand/schema.ts`, and keep the registry at 4 to 6 fonts. Runtime font loading is intentionally not supported.
