@@ -251,7 +251,7 @@ export function FaqAccordion({
   faqs: Brand["content"]["faqs"];
   copy: Copy["faq"];
   phone: BrandConfig["company"]["phone"];
-  /** When set: heading on top, questions left, photo right, no call box. */
+  /** When set: heading on top, photo left, questions right (photo below questions on mobile), no call box. */
   image?: ImageAsset;
   headingLevel?: "h1" | "h2";
 }) {
@@ -277,14 +277,14 @@ export function FaqAccordion({
     return (
       <Section tone="alt" labelledBy="faq-title">
         {heading}
-        <div className="mt-10 grid items-start gap-10 lg:mt-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
-          {list}
+        <div className="mt-10 grid items-start gap-10 lg:mt-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
           <BrandImage
             image={image}
             sizes="(min-width: 1024px) 520px, 100vw"
             aspect="aspect-[4/3]"
-            className="shadow-brand-lg lg:sticky lg:top-28"
+            className="order-last shadow-brand-lg lg:order-first lg:sticky lg:top-28"
           />
+          {list}
         </div>
       </Section>
     );
