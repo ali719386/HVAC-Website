@@ -23,38 +23,37 @@ export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy:
         {items.map((t, i) => {
           const bg = assetExists(t.background) ? t.background : undefined;
           return (
-          <li
-            key={`${t.name}-${i}`}
-            className={`relative flex w-[88%] shrink-0 snap-start flex-col overflow-hidden rounded-brand border border-line bg-surface p-7 shadow-brand-sm sm:w-[calc(50%-0.75rem)] ${
-              bg ? "min-h-[22rem] sm:p-9" : "lg:w-[calc(33.333%-1rem)]"
-            }`}
-          >
-            {bg ? (
-              <>
-                {/* Decorative scene; text sits on the plain left side of the photo. */}
-                <Image src={bg} alt="" fill sizes="(min-width: 640px) 50vw, 88vw" className="object-cover object-right" />
-                <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,var(--brand-surface)_0%,color-mix(in_srgb,var(--brand-surface)_88%,transparent)_45%,transparent_80%)]" />
-              </>
-            ) : null}
-            <figure className={`relative flex h-full flex-col ${bg ? "max-w-[62%] sm:max-w-[58%]" : ""}`}>
-              <div className="flex items-center justify-between">
-                <Quote className="size-9 text-accent" aria-hidden="true" />
-                {t.placeholder ? (
-                  <span className="rounded-full border border-line px-2.5 py-0.5 text-xs font-semibold text-muted">Sample</span>
-                ) : null}
-              </div>
-              <blockquote className="mt-5 flex-1 text-lg leading-relaxed">
-                <p>{t.quote}</p>
-              </blockquote>
-              <figcaption className="mt-6 border-t border-line pt-5">
-                <span className="block font-heading font-bold">{t.name}</span>
-                <span className="block text-sm text-muted">
-                  {t.location}
-                  {t.service ? ` · ${t.service}` : ""}
-                </span>
-              </figcaption>
-            </figure>
-          </li>
+            <li
+              key={`${t.name}-${i}`}
+              className={`flex w-[88%] shrink-0 snap-start overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md sm:w-[calc(50%-0.75rem)] ${
+                bg ? "flex-col md:flex-row" : "flex-col lg:w-[calc(33.333%-1rem)]"
+              }`}
+            >
+              {bg ? (
+                // Decorative photo panel: top on phones, right side from md up. Cropped toward the subject.
+                <div className="relative aspect-[16/9] w-full shrink-0 md:order-last md:aspect-auto md:w-[42%]">
+                  <Image src={bg} alt="" fill sizes="(min-width: 768px) 22vw, 88vw" className="object-cover" />
+                </div>
+              ) : null}
+              <figure className="flex flex-1 flex-col p-7 sm:p-8">
+                <div className="flex items-center justify-between gap-3">
+                  <Quote className="size-9 text-accent" aria-hidden="true" />
+                  {t.placeholder ? (
+                    <span className="rounded-full border border-line px-2.5 py-0.5 text-xs font-semibold text-muted">Sample</span>
+                  ) : null}
+                </div>
+                <blockquote className="mt-5 flex-1 text-lg leading-relaxed">
+                  <p>{t.quote}</p>
+                </blockquote>
+                <figcaption className="mt-6 border-t border-line pt-5">
+                  <span className="block font-heading font-bold">{t.name}</span>
+                  <span className="block text-sm text-muted">
+                    {t.location}
+                    {t.service ? ` · ${t.service}` : ""}
+                  </span>
+                </figcaption>
+              </figure>
+            </li>
           );
         })}
       </ul>
