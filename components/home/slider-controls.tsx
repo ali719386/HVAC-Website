@@ -6,8 +6,9 @@ import { motionAllowed } from "@/components/motion/observer";
 
 /**
  * Prev/next buttons + optional autoplay for a CSS scroll-snap track. The track stays usable without JS.
- * Autoplay advances one card every `autoplayMs`, loops to the start, and pauses on hover, keyboard
- * focus, hidden tab, or after the user scrolls/clicks. It never runs with reduced motion or when the
+ * Autoplay advances one card every `autoplayMs`, loops to the start, and pauses while the pointer is
+ * over the cards, during keyboard focus inside the track, in a hidden tab, and briefly after the user
+ * scrolls/clicks. It never runs with reduced motion or when the
  * brand disables motion, and a Pause/Play button lets anyone stop it (WCAG 2.2.2).
  */
 export function SliderControls({ trackId, label, autoplayMs = 5000 }: { trackId: string; label: string; autoplayMs?: number }) {
@@ -34,17 +35,32 @@ export function SliderControls({ trackId, label, autoplayMs = 5000 }: { trackId:
     if (!playing || autoplayMs <= 0) return;
     const track = document.getElementById(trackId);
     if (!track) return;
-    const area = track.closest("section") ?? track;
-    const pause = () => (paused.current = true);
-    const resume = () => (paused.current = false);
-    const touched = () => (lastInteraction.current = Date.now());
-    const onFocusOut = (e: FocusEvent) => {
-      if (!(e.relatedTarget instanceof Node) || !area.contains(e.relatedTarget)) resume();
+    // Pause only while the pointer is over the cards, or keyboard focus is inside the track.
+    // (Mouse clicks on the arrow buttons must not pause it.)
+    let hovered = false;
+    let keyboardFocus = false;
+    const sync = () => (paused.current = hovered || keyboardFocus);
+    const onEnter = () => {
+      hovered = true;
+      sync();
     };
-    area.addEventListener("mouseenter", pause);
-    area.addEventListener("mouseleave", resume);
-    area.addEventListener("focusin", pause);
-    area.addEventListener("focusout", onFocusOut);
+    const onLeave = () => {
+      hovered = false;
+      sync();
+    };
+    const onFocusIn = (e: FocusEvent) => {
+      keyboardFocus = e.target instanceof Element && e.target.matches(":focus-visible");
+      sync();
+    };
+    const onFocusOut = (e: FocusEvent) => {
+      if (!(e.relatedTarget instanceof Node) || !track.contains(e.relatedTarget)) keyboardFocus = false;
+      sync();
+    };
+    const touched = () => (lastInteraction.current = Date.now());
+    track.addEventListener("pointerenter", onEnter);
+    track.addEventListener("pointerleave", onLeave);
+    track.addEventListener("focusin", onFocusIn);
+    track.addEventListener("focusout", onFocusOut);
     track.addEventListener("pointerdown", touched);
     track.addEventListener("wheel", touched, { passive: true });
     track.addEventListener("touchstart", touched, { passive: true });
@@ -57,10 +73,11 @@ export function SliderControls({ trackId, label, autoplayMs = 5000 }: { trackId:
 
     return () => {
       window.clearInterval(id);
-      area.removeEventListener("mouseenter", pause);
-      area.removeEventListener("mouseleave", resume);
-      area.removeEventListener("focusin", pause);
-      area.removeEventListener("focusout", onFocusOut);
+      paused.current = false;
+      track.removeEventListener("pointerenter", onEnter);
+      track.removeEventListener("pointerleave", onLeave);
+      track.removeEventListener("focusin", onFocusIn);
+      track.removeEventListener("focusout", onFocusOut);
       track.removeEventListener("pointerdown", touched);
       track.removeEventListener("wheel", touched);
       track.removeEventListener("touchstart", touched);
