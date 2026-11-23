@@ -53,7 +53,7 @@ export const services: ServiceInput[] = [
     title: "Heating Services",
     summary: "Furnace and heat pump repair, replacement and safety checks for Ohio winters.",
     icon: "flame",
-    image: { src: "services/heating.jpg", alt: "Technician inspecting a gas furnace" },
+    image: { src: "services/heating-furnace.jpg", alt: "Technician inspecting the burners and controls of an open gas furnace with a flashlight" },
     intro:
       "Cold Ohio nights are no time for a furnace failure. We repair and replace gas furnaces, heat pumps and air handlers, with safety checks on every visit.",
     body: [
@@ -76,7 +76,7 @@ export const services: ServiceInput[] = [
     title: "Maintenance & Tune-Ups",
     summary: "Seasonal tune-ups that catch small problems before they become breakdowns.",
     icon: "wrench",
-    image: { src: "services/maintenance.jpg", alt: "Technician cleaning an AC condenser coil" },
+    image: { src: "services/maintenance-filter.jpg", alt: "Technician replacing the air filter on a home furnace during a tune-up" },
     intro:
       "Regular maintenance helps equipment run efficiently and can extend its life. Many manufacturers also require it to keep warranties valid.",
     body: [
@@ -94,7 +94,7 @@ export const services: ServiceInput[] = [
     title: "Commercial HVAC",
     summary: "Rooftop units, split systems and planned maintenance for local businesses.",
     icon: "building",
-    image: { src: "services/commercial.jpg", alt: "Rooftop HVAC units on a commercial building" },
+    image: { src: "services/commercial-rooftop.jpg", alt: "Technician checking a commercial rooftop HVAC unit with a tablet" },
     intro:
       "Downtime costs money. We service rooftop units and split systems for offices, retail spaces and restaurants, with scheduling that works around your hours.",
     body: [
