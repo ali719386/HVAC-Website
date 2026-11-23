@@ -277,7 +277,8 @@ export const brandConfigSchema = z.object({
       linkLabel: z.string().optional(),
       href: z.string().startsWith("/").optional(),
     }),
-    supportedBrands: z.array(nonEmpty),
+    /** Equipment brands serviced. `logo` is optional (path in /public/brands/<slug>/); a text wordmark shows until the file exists. */
+    supportedBrands: z.array(z.object({ name: nonEmpty, logo: assetPath.optional() })),
     emergency24x7: z.boolean(),
     rebates: z.object({
       enabled: z.boolean().default(false),

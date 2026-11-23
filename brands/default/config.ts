@@ -49,7 +49,14 @@ export const config: BrandConfigInput = {
       linkLabel: "Book now",
       href: "/book",
     },
-    supportedBrands: ["Carrier", "Trane", "Lennox", "Rheem", "Goodman", "American Standard", "Daikin", "Bryant"], // TODO: confirm
+    // TODO: confirm the brands the client services. Add official logo files (with permission) at the paths below.
+    supportedBrands: [
+      { name: "Gree", logo: "logos/gree.svg" },
+      { name: "Haier", logo: "logos/haier.svg" },
+      { name: "Dawlance", logo: "logos/dawlance.svg" },
+      { name: "Orient", logo: "logos/orient.svg" },
+      { name: "Daikin", logo: "logos/daikin.svg" },
+    ],
     emergency24x7: true, // TODO: set false if the client does not offer 24/7 service
     rebates: { enabled: false, title: "", body: "" },
   },
@@ -96,8 +103,8 @@ export const config: BrandConfigInput = {
     heroVariant: "summer",
     sections: [
       { key: "hero", enabled: true },
-      { key: "emergency", enabled: true },
       { key: "brandStrip", enabled: true },
+      { key: "emergency", enabled: true },
       { key: "services", enabled: true },
       { key: "whyChooseUs", enabled: true },
       { key: "expert", enabled: true },

@@ -41,7 +41,13 @@ export const config: BrandConfigInput = {
       linkLabel: "Reserve a time",
       href: "/book",
     },
-    supportedBrands: ["Lennox", "Carrier", "Bosch", "Mitsubishi Electric", "Rheem", "York"], // TODO
+    supportedBrands: [
+      { name: "Lennox" },
+      { name: "Carrier" },
+      { name: "Bosch" },
+      { name: "Mitsubishi Electric" },
+      { name: "Rheem" },
+    ], // TODO
     emergency24x7: false,
     rebates: { enabled: false, title: "", body: "" },
   },

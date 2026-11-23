@@ -18,6 +18,7 @@ export const copy: CopyOverrides = {
     primaryCta: "Book a service",
     badge: "Written estimates up front",
   },
+  brandStrip: { title: "We Service the Leading Air Conditioning Brands" },
   services: {
     eyebrow: "Our services",
     title: "Heating and cooling, handled start to finish",

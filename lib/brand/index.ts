@@ -37,6 +37,10 @@ function resolveAssets(brand: Brand): Brand {
       ...config,
       company: { ...config.company, logo: { light: path(config.company.logo.light), dark: path(config.company.logo.dark) } },
       seo: { ...config.seo, ogImage: path(config.seo.ogImage) },
+      offerings: {
+        ...config.offerings,
+        supportedBrands: config.offerings.supportedBrands.map((b) => ({ ...b, logo: path(b.logo) })),
+      },
       images: {
         hero: img(im.hero),
         about: img(im.about),

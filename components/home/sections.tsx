@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, Phone, Siren } from "lucide-react";
 import type { Brand, BrandConfig, Copy, Post, Service, Stat, WhyItem } from "@/lib/brand/schema";
 import { formatDate, formatNumber } from "@/lib/format";
-import { BrandImage } from "@/components/ui/brand-image";
+import { assetExists, BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Section, SectionHeading } from "@/components/ui/section";
@@ -35,25 +36,39 @@ export function EmergencyBanner({ config, copy }: { config: BrandConfig; copy: C
 
 /* ------------------------------ Brand strip ------------------------------ */
 
-export function BrandStrip({ brands, title }: { brands: string[]; title: string }) {
+export function BrandStrip({
+  brands,
+  title,
+}: {
+  brands: BrandConfig["offerings"]["supportedBrands"];
+  title: string;
+}) {
   if (brands.length === 0) return null;
   return (
-    <section aria-labelledby="brands-title" className="border-b border-line bg-surface py-10">
-      <div className="container-site flex flex-col gap-5 lg:flex-row lg:items-center lg:gap-10">
-        <h2 id="brands-title" className="shrink-0 text-sm font-bold tracking-[0.12em] text-muted uppercase lg:max-w-[13rem]">
+    <section aria-labelledby="brands-title" className="bg-surface-alt py-14 lg:py-20">
+      <div className="container-site">
+        <h2 id="brands-title" className="mx-auto max-w-3xl text-center text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl">
           {title}
         </h2>
-        <ul className="flex flex-wrap items-center gap-x-8 gap-y-3">
+        <ul className="mt-10 grid grid-cols-2 items-center gap-x-6 gap-y-8 sm:grid-cols-3 lg:mt-14 lg:grid-cols-5">
           {brands.map((b) => (
-            <li key={b} className="font-heading text-lg font-extrabold text-muted sm:text-xl">
-              {b}
+            <li key={b.name} className="flex h-16 items-center justify-center sm:h-20">
+              {assetExists(b.logo) ? (
+                <span className="relative block h-full w-full max-w-[13rem]">
+                  <Image src={b.logo} alt={b.name} fill sizes="(min-width: 1024px) 208px, 45vw" className="object-contain" />
+                </span>
+              ) : (
+                <span className="font-heading text-2xl font-extrabold tracking-wide text-primary uppercase sm:text-3xl">
+                  {b.name}
+                </span>
+              )}
             </li>
           ))}
         </ul>
+        <p className="mt-10 text-center text-xs text-muted">
+          Brand names and logos are trademarks of their respective owners. Listing does not imply endorsement or dealer status.
+        </p>
       </div>
-      <p className="container-site mt-4 text-xs text-muted">
-        Brand names are trademarks of their respective owners. Listing does not imply endorsement or dealer status.
-      </p>
     </section>
   );
 }
