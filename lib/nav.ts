@@ -1,5 +1,4 @@
 import type { Brand } from "@/lib/brand/schema";
-import { formatDate } from "@/lib/format";
 
 /** `hint` is a short second line shown under the label in dropdowns (e.g. a date or location). */
 export type NavLink = { label: string; href: string; hint?: string };
@@ -19,29 +18,13 @@ const present = <T>(items: (T | false)[]) => items.filter((i): i is T => i !== f
  * so new services, projects and posts appear automatically; empty sections are hidden.
  */
 export function getNav({ content }: Brand): NavItem[] {
+  // Plain links, no dropdowns. (Header still supports `children`/`all` if dropdowns are wanted later.)
   return present<NavItem>([
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
-    {
-      label: "Services",
-      href: "/services",
-      children: content.services.map((s) => ({ label: s.title, href: `/services/${s.slug}`, hint: s.summary })),
-      all: { label: "All Services", href: "/services" },
-    },
-    content.projects.length > 0 && {
-      label: "Projects",
-      href: "/projects",
-      children: content.projects.map((p) => ({ label: p.title, href: `/projects/${p.slug}`, hint: p.location })),
-      all: { label: "All Projects", href: "/projects" },
-    },
-    content.posts.length > 0 && {
-      label: "Blog",
-      href: "/blog",
-      children: [...content.posts]
-        .sort((a, b) => b.date.localeCompare(a.date))
-        .map((p) => ({ label: p.title, href: `/blog/${p.slug}`, hint: `${p.category} · ${formatDate(p.date)}` })),
-      all: { label: "All Articles", href: "/blog" },
-    },
+    { label: "Services", href: "/services" },
+    content.projects.length > 0 && { label: "Projects", href: "/projects" },
+    content.posts.length > 0 && { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ]);
 }
