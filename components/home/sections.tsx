@@ -50,9 +50,9 @@ export function BrandStrip({
         <h2 id="brands-title" className="mx-auto max-w-3xl text-center text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl">
           {title}
         </h2>
-        <ul className="mt-10 grid grid-cols-2 items-center gap-x-6 gap-y-8 sm:grid-cols-3 lg:mt-14 lg:grid-cols-5">
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-8 lg:mt-14 lg:gap-x-16">
           {brands.map((b) => (
-            <li key={b.name} className="flex h-16 items-center justify-center sm:h-20">
+            <li key={b.name} className="flex h-16 w-[calc(50%-1.25rem)] items-center justify-center sm:h-20 sm:w-48 lg:w-52">
               {assetExists(b.logo) ? (
                 <span className="relative block h-full w-full max-w-[13rem]">
                   <Image src={b.logo} alt={b.name} fill sizes="(min-width: 1024px) 208px, 45vw" className="object-contain" />
