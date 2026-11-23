@@ -107,6 +107,7 @@ Put the files in `public/brands/<slug>/` using **exactly** these names. JPG is s
 | `services/<service-slug>.jpg` | Service cards and service pages (`ac-repair`, `ac-installation`, `heating`, `maintenance`, `commercial`) | 1600 x 900 | 16:9 |
 | `posts/<post-slug>.jpg` | Blog cards and article header | 1600 x 900 | 16:9 |
 | `projects/<project-slug>.jpg` | Project gallery | 1600 x 1000 | 16:10 |
+| `testimonials/<name>.jpg` (optional, set `background` on a testimonial) | Review card background. Keep the left ~55% plain (wall/sky) so the quote stays readable; subject on the right. | 1200 x 900 | 4:3 |
 
 Until a logo file exists, a wordmark (initial plus company name) is shown. `npm run check:placeholders` lists every missing file by name. Use photos you own or have licensed. Never hotlink. Write meaningful `alt` text in config.
 

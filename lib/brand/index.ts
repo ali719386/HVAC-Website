@@ -55,6 +55,7 @@ function resolveAssets(brand: Brand): Brand {
       services: content.services.map((s) => ({ ...s, image: img(s.image) })),
       posts: content.posts.map((p) => ({ ...p, image: img(p.image) })),
       projects: content.projects.map((p) => ({ ...p, image: img(p.image) })),
+      testimonials: content.testimonials.map((t) => ({ ...t, background: path(t.background) })),
     },
   };
 }

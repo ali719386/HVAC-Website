@@ -105,6 +105,8 @@ export const testimonialSchema = z.object({
   name: nonEmpty,
   location: nonEmpty,
   service: nonEmpty.optional(),
+  /** Optional decorative card background (path in /public/brands/<slug>/). Keep the left side plain for text. */
+  background: assetPath.optional(),
   placeholder,
 });
 
