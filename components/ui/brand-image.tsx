@@ -10,6 +10,8 @@ const cache = new Map<string, boolean>();
 /** Server-side check so a missing file renders a placeholder instead of a broken image. */
 export function assetExists(src: string | undefined): src is string {
   if (!src || !src.startsWith("/brands/") || src.includes("..")) return false;
+  // In development, always re-check so images added while `npm run dev` is running appear on refresh.
+  if (process.env.NODE_ENV === "development") return existsSync(path.join(publicDir, ...src.split("/")));
   let hit = cache.get(src);
   if (hit === undefined) {
     hit = existsSync(path.join(publicDir, ...src.split("/")));
