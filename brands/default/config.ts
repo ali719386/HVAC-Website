@@ -85,7 +85,7 @@ export const config: BrandConfigInput = {
     sectionSpacing: "normal",
   },
   images: {
-    hero: { src: "hero.jpg", alt: "HVAC technician servicing an outdoor air conditioning unit" },
+    hero: { src: "hero.png", alt: "HVAC technician inspecting an outdoor air conditioning condenser with a flashlight" },
     about: { src: "about.jpg", alt: "Service team standing beside a company van" },
     services: { src: "services.jpg", alt: "Technician checking refrigerant pressure with gauges" },
     expert: { src: "expert.jpg", alt: "Technician explaining options to a homeowner" },
