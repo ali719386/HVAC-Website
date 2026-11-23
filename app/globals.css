@@ -119,6 +119,50 @@
   animation: rise 0.6s ease-out both;
 }
 
+/*
+ * Hero entrance animations. CSS only. The global prefers-reduced-motion rule
+ * shortens them to ~0ms, so content appears immediately for those users.
+ * Start opacity is 0.01 (not 0) so the browser still counts the hero for LCP.
+ */
+@keyframes fade-up {
+  from {
+    opacity: 0.01;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide-in {
+  from {
+    opacity: 0.01;
+    transform: translateX(56px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+@utility animate-fade-up {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility animate-slide-in {
+  animation: slide-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@utility animate-float {
+  animation: float 6s ease-in-out 1.2s infinite;
+}
+
 /* Long-form text (blog posts, legal pages). */
 @utility prose-site {
   color: var(--brand-text);
