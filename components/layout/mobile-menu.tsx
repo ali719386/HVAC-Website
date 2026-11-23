@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Menu, Phone as PhoneIcon, X } from "lucide-react";
 import type { Phone } from "@/lib/brand/schema";
 import type { NavItem } from "@/lib/nav";
+import { HomeLink } from "./home-link";
 
 /** Mobile/tablet navigation drawer. Escape closes, focus returns to the toggle. */
 export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: Phone; bookLabel: string }) {
@@ -15,6 +16,8 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
   const panelId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const close = () => setOpen(false);
 
   // Close when the route changes (adjusting state during render, per React docs).
   if (pathname !== lastPath) {
@@ -63,19 +66,31 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
           <ul className="divide-y divide-line">
             {nav.map((item) => (
               <li key={item.label} className="py-1">
-                <Link
-                  href={item.href}
-                  className="block py-3 font-heading text-lg font-bold text-ink"
-                  aria-current={pathname === item.href ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
+                {item.href === "/" ? (
+                  <HomeLink
+                    className="block py-3 font-heading text-lg font-bold text-ink"
+                    aria-current={pathname === "/" ? "page" : undefined}
+                    onNavigate={close}
+                  >
+                    {item.label}
+                  </HomeLink>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={close}
+                    className="block py-3 font-heading text-lg font-bold text-ink"
+                    aria-current={pathname === item.href ? "page" : undefined}
+                  >
+                    {item.label}
+                  </Link>
+                )}
                 {item.children?.length ? (
                   <ul className="mb-3 grid gap-1 border-l-2 border-line pl-4">
                     {item.children.map((c) => (
                       <li key={c.href}>
                         <Link
                           href={c.href}
+                          onClick={close}
                           className="block rounded-brand-sm py-2 aria-[current=page]:text-primary"
                           aria-current={pathname === c.href ? "page" : undefined}
                         >
@@ -86,7 +101,7 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
                     ))}
                     {item.all ? (
                       <li>
-                        <Link href={item.all.href} className="block py-2 text-sm font-bold text-primary">
+                        <Link href={item.all.href} onClick={close} className="block py-2 text-sm font-bold text-primary">
                           {item.all.label} →
                         </Link>
                       </li>
@@ -99,6 +114,7 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
           <div className="mt-6 grid gap-3 pb-24">
             <Link
               href="/book"
+              onClick={close}
               className="inline-flex h-12 items-center justify-center rounded-btn bg-accent font-semibold text-on-accent"
             >
               {bookLabel}

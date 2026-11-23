@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { HomeLink } from "@/components/layout/home-link";
 import Image from "next/image";
 import { assetExists } from "./brand-image";
 
@@ -14,7 +14,7 @@ export function Logo({
 }) {
   const initial = name.trim().charAt(0).toUpperCase();
   return (
-    <Link href="/" className="inline-flex shrink-0 items-center gap-2.5" aria-label={`${name}, home`}>
+    <HomeLink className="inline-flex shrink-0 items-center gap-2.5" aria-label={`${name}, home`}>
       {assetExists(src) ? (
         <Image src={src} alt="" width={180} height={48} className="h-10 w-auto sm:h-12" preload />
       ) : (
@@ -36,6 +36,6 @@ export function Logo({
           </span>
         </>
       )}
-    </Link>
+    </HomeLink>
   );
 }

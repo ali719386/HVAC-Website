@@ -4,6 +4,7 @@ import type { BrandConfig } from "@/lib/brand/schema";
 import type { NavItem } from "@/lib/nav";
 import { LinkButton } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
+import { HomeLink } from "./home-link";
 import { MobileMenu } from "./mobile-menu";
 
 const topLink =
@@ -30,9 +31,13 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
                 </li>
               ) : (
                 <li key={item.label}>
-                  <Link href={item.href} className={topLink}>
-                    {item.label}
-                  </Link>
+                  {item.href === "/" ? (
+                    <HomeLink className={topLink}>{item.label}</HomeLink>
+                  ) : (
+                    <Link href={item.href} className={topLink}>
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ),
             )}
