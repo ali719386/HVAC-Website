@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Brand } from "@/lib/brand/schema";
-import { legalLinks, type NavItem } from "@/lib/nav";
+import { getFooterLinks, legalLinks } from "@/lib/nav";
 import { Logo } from "@/components/ui/logo";
 import { TrustList } from "./trust-list";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
 
-export function Footer({ brand, nav }: { brand: Brand; nav: NavItem[] }) {
+export function Footer({ brand }: { brand: Brand }) {
   const { company, offerings } = brand.config;
   const cityPages = brand.content.cities.filter((c) => c.page);
-  const companyLinks = nav.filter((n) => !n.children && n.href !== "/");
+  const companyLinks = getFooterLinks(brand);
   const year = new Date().getFullYear();
   const heading = "mb-4 font-heading text-base font-bold text-on-primary";
   const link = "text-on-primary/75 transition-colors hover:text-on-primary";
@@ -59,11 +59,6 @@ export function Footer({ brand, nav }: { brand: Brand; nav: NavItem[] }) {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href="/service-areas" className={link}>
-                Service Areas
-              </Link>
-            </li>
           </ul>
         </nav>
 

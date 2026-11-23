@@ -6,6 +6,10 @@ import { LinkButton } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
 import { MobileMenu } from "./mobile-menu";
 
+const topLink =
+  "flex cursor-pointer items-center gap-1 rounded-btn px-2.5 py-2 text-[0.95rem] font-semibold text-ink hover:text-primary xl:px-3";
+const chevron = "size-4 transition-transform group-focus-within:rotate-180 group-hover:rotate-180";
+
 export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: NavItem[]; bookLabel: string }) {
   const { company } = config;
   return (
@@ -13,20 +17,24 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
       <div className="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
         <Logo name={company.name} src={company.logo.light} />
 
-        <nav aria-label="Main" className="hidden xl:block">
-          <ul className="flex items-center gap-1">
+        <nav aria-label="Main" className="hidden lg:block">
+          <ul className="flex items-center gap-0.5 xl:gap-1">
             {nav.map((item) =>
               item.children?.length ? (
-                <li key={item.href} className="group relative">
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-1 rounded-btn px-3 py-2 text-[0.95rem] font-semibold text-ink hover:text-primary"
-                  >
-                    {item.label}
-                    <ChevronDown className="size-4 transition-transform group-focus-within:rotate-180 group-hover:rotate-180" aria-hidden="true" />
-                  </Link>
+                <li key={item.label} className="group relative">
+                  {item.href ? (
+                    <Link href={item.href} className={topLink}>
+                      {item.label}
+                      <ChevronDown className={chevron} aria-hidden="true" />
+                    </Link>
+                  ) : (
+                    <button type="button" aria-haspopup="true" className={topLink}>
+                      {item.label}
+                      <ChevronDown className={chevron} aria-hidden="true" />
+                    </button>
+                  )}
                   <div className="invisible absolute top-full left-0 z-50 pt-2 opacity-0 transition duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-                    <ul className="w-64 rounded-brand border border-line bg-surface p-2 shadow-brand-lg">
+                    <ul className="max-h-[70vh] w-72 overflow-y-auto rounded-brand border border-line bg-surface p-2 shadow-brand-lg">
                       {item.children.map((child) => (
                         <li key={child.href}>
                           <Link
@@ -41,8 +49,8 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
                   </div>
                 </li>
               ) : (
-                <li key={item.href}>
-                  <Link href={item.href} className="block rounded-btn px-3 py-2 text-[0.95rem] font-semibold text-ink hover:text-primary">
+                <li key={item.label}>
+                  <Link href={item.href ?? "/"} className={topLink}>
                     {item.label}
                   </Link>
                 </li>
@@ -52,7 +60,7 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
         </nav>
 
         <div className="flex items-center gap-3">
-          <a href={`tel:${company.phone.tel}`} className="hidden items-center gap-3 md:flex" aria-label={`Call ${company.phone.display}`}>
+          <a href={`tel:${company.phone.tel}`} className="hidden items-center gap-3 md:flex lg:hidden 2xl:flex" aria-label={`Call ${company.phone.display}`}>
             <span className="grid size-11 place-items-center rounded-full bg-surface-alt text-primary">
               <Phone className="size-5" aria-hidden="true" />
             </span>
@@ -66,7 +74,7 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
           </LinkButton>
           <a
             href={`tel:${company.phone.tel}`}
-            className="grid size-11 place-items-center rounded-full bg-primary text-on-primary md:hidden"
+            className="grid size-11 place-items-center rounded-full bg-primary text-on-primary md:hidden lg:grid 2xl:hidden"
             aria-label={`Call ${company.phone.display}`}
           >
             <Phone className="size-5" aria-hidden="true" />

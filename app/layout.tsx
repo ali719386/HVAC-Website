@@ -66,7 +66,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>
-        <Footer brand={brand} nav={nav} />
+        <Footer brand={brand} />
         <JsonLd data={businessLd(brand)} />
         <StickyMobileCallBar phone={config.company.phone} bookLabel={bookLabel} />
       </body>

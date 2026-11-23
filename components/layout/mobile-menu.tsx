@@ -40,7 +40,7 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
   }, [open]);
 
   return (
-    <div className="xl:hidden">
+    <div className="lg:hidden">
       <button
         ref={toggleRef}
         type="button"
@@ -62,14 +62,18 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
         <nav aria-label="Mobile" className="container-site py-4">
           <ul className="divide-y divide-line">
             {nav.map((item) => (
-              <li key={item.href} className="py-1">
-                <Link
-                  href={item.href}
-                  className="block py-3 font-heading text-lg font-bold text-ink"
-                  aria-current={pathname === item.href ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
+              <li key={item.label} className="py-1">
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="block py-3 font-heading text-lg font-bold text-ink"
+                    aria-current={pathname === item.href ? "page" : undefined}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <p className="py-3 font-heading text-lg font-bold text-ink">{item.label}</p>
+                )}
                 {item.children?.length ? (
                   <ul className="mb-2 grid gap-1 pl-3">
                     {item.children.map((c) => (
