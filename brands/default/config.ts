@@ -94,7 +94,7 @@ export const config: BrandConfigInput = {
     hero: { src: "hero.png", alt: "HVAC technician inspecting an outdoor air conditioning condenser with a flashlight" },
     about: { src: "about-estimate.jpg", alt: "Technician in shoe covers reviewing a written estimate with a homeowner beside the furnace" },
     services: { src: "services.jpg", alt: "Technician checking refrigerant pressure with gauges" },
-    expert: { src: "expert.jpg", alt: "Technician explaining options to a homeowner" },
+    expert: { src: "expert-caller.jpg", alt: "Technician on the phone taking notes at the service van, with refrigerant gauges hanging inside" },
     projects: { src: "projects.jpg", alt: "Newly installed high-efficiency furnace" },
     promo: { src: "promo.jpg", alt: "Thermostat set to a comfortable temperature" },
   },

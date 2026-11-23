@@ -183,6 +183,7 @@ export function ExpertBlock({ config, copy }: { config: BrandConfig; copy: Copy[
             image={config.images.expert}
             rounded={false}
             aspect="aspect-[16/11] lg:aspect-auto lg:h-full"
+            imgClassName="object-[50%_25%]"
             sizes="(min-width: 1024px) 520px, 100vw"
           />
           <div className="p-8 sm:p-10 lg:p-14">
