@@ -1,8 +1,10 @@
 import type { Brand } from "@/lib/brand/schema";
+import { formatDate } from "@/lib/format";
 
-export type NavLink = { label: string; href: string };
-/** Items with children may omit href: they are menu groups (e.g. "Pages"), not pages. */
-export type NavItem = { label: string; href?: string; children?: NavLink[] };
+/** `hint` is a short second line shown under the label in dropdowns (e.g. a date or location). */
+export type NavLink = { label: string; href: string; hint?: string };
+/** Dropdown items list detail pages in `children`; `all` is the "view all" footer link. */
+export type NavItem = { label: string; href: string; children?: NavLink[]; all?: NavLink };
 
 export const legalLinks: NavLink[] = [
   { label: "Privacy Policy", href: "/privacy" },
@@ -13,38 +15,32 @@ export const legalLinks: NavLink[] = [
 const present = <T>(items: (T | false)[]) => items.filter((i): i is T => i !== false);
 
 /**
- * Site navigation derived from brand data, so every built page is reachable.
- * Pages a brand disables (no plans, financing off, no posts...) are omitted automatically.
+ * Main navigation, derived from brand data. Dropdowns are generated from content,
+ * so new services, projects and posts appear automatically; empty sections are hidden.
  */
-export function getNav({ config, content }: Brand): NavItem[] {
-  const pages = present<NavLink>([
-    { label: "About Us", href: "/about" },
-    { label: "Book a Service", href: "/book" },
-    { label: "Service Areas", href: "/service-areas" },
-    content.plans.length > 0 && { label: "Maintenance Plans", href: "/plans" },
-    config.offerings.financing.enabled && { label: "Financing", href: "/financing" },
-    ...legalLinks,
-  ]);
-
+export function getNav({ content }: Brand): NavItem[] {
   return present<NavItem>([
     { label: "Home", href: "/" },
-    { label: "Pages", children: pages },
+    { label: "About Us", href: "/about" },
     {
       label: "Services",
       href: "/services",
-      children: [
-        { label: "All Services", href: "/services" },
-        ...content.services.map((s) => ({ label: s.title, href: `/services/${s.slug}` })),
-      ],
+      children: content.services.map((s) => ({ label: s.title, href: `/services/${s.slug}`, hint: s.summary })),
+      all: { label: "All Services", href: "/services" },
     },
-    content.projects.length > 0 && { label: "Projects", href: "/projects" },
+    content.projects.length > 0 && {
+      label: "Projects",
+      href: "/projects",
+      children: content.projects.map((p) => ({ label: p.title, href: `/projects/${p.slug}`, hint: p.location })),
+      all: { label: "All Projects", href: "/projects" },
+    },
     content.posts.length > 0 && {
       label: "Blog",
       href: "/blog",
-      children: [
-        { label: "All Articles", href: "/blog" },
-        ...content.posts.map((p) => ({ label: p.title, href: `/blog/${p.slug}` })),
-      ],
+      children: [...content.posts]
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .map((p) => ({ label: p.title, href: `/blog/${p.slug}`, hint: `${p.category} · ${formatDate(p.date)}` })),
+      all: { label: "All Articles", href: "/blog" },
     },
     { label: "Contact", href: "/contact" },
   ]);

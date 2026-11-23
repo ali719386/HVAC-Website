@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...content.services.map((s) => entry(`/services/${s.slug}`, 0.9)),
     ...getCityPages().map((c) => entry(`/service-areas/${c.slug}`, 0.8)),
     ...content.posts.map((p) => entry(`/blog/${p.slug}`, 0.5, p.date)),
+    ...content.projects.map((p) => entry(`/projects/${p.slug}`, 0.5)),
     ...["/privacy", "/terms", "/sms-consent"].map((p) => entry(p, 0.2)),
   ];
 }

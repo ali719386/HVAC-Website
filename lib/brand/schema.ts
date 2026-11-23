@@ -132,6 +132,10 @@ export const projectSchema = z.object({
   service: serviceTypeSchema,
   summary: nonEmpty,
   image: imageSchema,
+  /** Detail page content (/projects/<slug>). */
+  challenge: z.string().default(""),
+  body: z.array(nonEmpty).default([]),
+  scope: z.array(nonEmpty).default([]),
   placeholder,
 });
 

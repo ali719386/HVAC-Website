@@ -63,30 +63,34 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
           <ul className="divide-y divide-line">
             {nav.map((item) => (
               <li key={item.label} className="py-1">
-                {item.href ? (
-                  <Link
-                    href={item.href}
-                    className="block py-3 font-heading text-lg font-bold text-ink"
-                    aria-current={pathname === item.href ? "page" : undefined}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <p className="py-3 font-heading text-lg font-bold text-ink">{item.label}</p>
-                )}
+                <Link
+                  href={item.href}
+                  className="block py-3 font-heading text-lg font-bold text-ink"
+                  aria-current={pathname === item.href ? "page" : undefined}
+                >
+                  {item.label}
+                </Link>
                 {item.children?.length ? (
-                  <ul className="mb-2 grid gap-1 pl-3">
+                  <ul className="mb-3 grid gap-1 border-l-2 border-line pl-4">
                     {item.children.map((c) => (
                       <li key={c.href}>
                         <Link
                           href={c.href}
-                          className="block py-2 text-[0.95rem] text-muted"
+                          className="block rounded-brand-sm py-2 aria-[current=page]:text-primary"
                           aria-current={pathname === c.href ? "page" : undefined}
                         >
-                          {c.label}
+                          <span className="block text-[0.95rem] leading-snug font-medium text-ink">{c.label}</span>
+                          {c.hint ? <span className="mt-0.5 line-clamp-1 block text-xs text-muted">{c.hint}</span> : null}
                         </Link>
                       </li>
                     ))}
+                    {item.all ? (
+                      <li>
+                        <Link href={item.all.href} className="block py-2 text-sm font-bold text-primary">
+                          {item.all.label} →
+                        </Link>
+                      </li>
+                    ) : null}
                   </ul>
                 ) : null}
               </li>

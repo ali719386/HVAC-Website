@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { MapPin } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, MapPin } from "lucide-react";
 import { getBrand } from "@/lib/brand";
 import { serviceTypeLabels } from "@/lib/lead/constants";
 import { pageMetadata } from "@/lib/seo/meta";
@@ -27,7 +28,7 @@ export default function ProjectsPage() {
       <div className="container-site section-y">
         <ul className="grid gap-8 md:grid-cols-2">
           {content.projects.map((p, i) => (
-            <li key={p.slug} className={`overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm ${i === 0 && content.projects.length % 2 === 1 ? "md:col-span-2" : ""}`}>
+            <li key={p.slug} className={`group relative overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md ${i === 0 && content.projects.length % 2 === 1 ? "md:col-span-2" : ""}`}>
               <BrandImage
                 image={p.image}
                 rounded={false}
@@ -42,8 +43,15 @@ export default function ProjectsPage() {
                     {p.location}
                   </span>
                 </p>
-                <h2 className="mt-4 text-2xl font-bold">{p.title}</h2>
+                <h2 className="mt-4 text-2xl font-bold">
+                  <Link href={`/projects/${p.slug}`} className="after:absolute after:inset-0 after:content-[''] group-hover:text-primary">
+                    {p.title}
+                  </Link>
+                </h2>
                 <p className="mt-2 leading-relaxed text-muted">{p.summary}</p>
+                <span aria-hidden="true" className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
+                  View project <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
               </div>
             </li>
           ))}

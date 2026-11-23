@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronDown, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, Phone } from "lucide-react";
 import type { BrandConfig } from "@/lib/brand/schema";
 import type { NavItem } from "@/lib/nav";
 import { LinkButton } from "@/components/ui/button";
@@ -22,35 +22,15 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
             {nav.map((item) =>
               item.children?.length ? (
                 <li key={item.label} className="group relative">
-                  {item.href ? (
-                    <Link href={item.href} className={topLink}>
-                      {item.label}
-                      <ChevronDown className={chevron} aria-hidden="true" />
-                    </Link>
-                  ) : (
-                    <button type="button" aria-haspopup="true" className={topLink}>
-                      {item.label}
-                      <ChevronDown className={chevron} aria-hidden="true" />
-                    </button>
-                  )}
-                  <div className="invisible absolute top-full left-0 z-50 pt-2 opacity-0 transition duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-                    <ul className="max-h-[70vh] w-72 overflow-y-auto rounded-brand border border-line bg-surface p-2 shadow-brand-lg">
-                      {item.children.map((child) => (
-                        <li key={child.href}>
-                          <Link
-                            href={child.href}
-                            className="block rounded-brand-sm px-3 py-2.5 text-sm font-medium text-ink hover:bg-surface-alt hover:text-primary"
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <Link href={item.href} className={topLink} aria-haspopup="true">
+                    {item.label}
+                    <ChevronDown className={chevron} aria-hidden="true" />
+                  </Link>
+                  <NavDropdown item={item} />
                 </li>
               ) : (
                 <li key={item.label}>
-                  <Link href={item.href ?? "/"} className={topLink}>
+                  <Link href={item.href} className={topLink}>
                     {item.label}
                   </Link>
                 </li>
@@ -83,5 +63,44 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
         </div>
       </div>
     </header>
+  );
+}
+
+/** Dropdown panel: shows on hover and on keyboard focus (focus-within), no JS. */
+function NavDropdown({ item }: { item: NavItem }) {
+  if (!item.children?.length) return null;
+  return (
+    <div className="invisible absolute top-full left-1/2 z-50 w-[22rem] -translate-x-1/2 translate-y-1 pt-3 opacity-0 transition duration-200 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="overflow-hidden rounded-brand border border-line bg-surface shadow-brand-lg">
+        <div aria-hidden="true" className="h-1 bg-primary" />
+        <ul className="max-h-[60vh] overflow-y-auto p-2">
+          {item.children.map((child) => (
+            <li key={child.href}>
+              <Link
+                href={child.href}
+                className="group/item flex items-start gap-3 rounded-brand-sm px-3 py-3 transition-colors hover:bg-surface-alt focus-visible:bg-surface-alt"
+              >
+                <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-accent" />
+                <span className="min-w-0 flex-1">
+                  <span className="line-clamp-2 text-[0.95rem] leading-snug font-semibold text-ink group-hover/item:text-primary">
+                    {child.label}
+                  </span>
+                  {child.hint ? <span className="mt-0.5 line-clamp-1 text-xs text-muted">{child.hint}</span> : null}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {item.all ? (
+          <Link
+            href={item.all.href}
+            className="flex items-center justify-between border-t border-line bg-surface-alt px-5 py-3.5 text-sm font-bold text-primary transition-colors hover:bg-primary hover:text-on-primary"
+          >
+            {item.all.label}
+            <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        ) : null}
+      </div>
+    </div>
   );
 }

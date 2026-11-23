@@ -121,6 +121,10 @@ export function getService(slug: string) {
   return getBrand().content.services.find((s) => s.slug === slug);
 }
 
+export function getProject(slug: string) {
+  return getBrand().content.projects.find((p) => p.slug === slug);
+}
+
 export function getPost(slug: string) {
   return getBrand().content.posts.find((p) => p.slug === slug);
 }
