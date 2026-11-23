@@ -55,7 +55,7 @@ export const config: BrandConfigInput = {
       { name: "Haier", logo: "logos/haier.svg" },
       { name: "Dawlance", logo: "logos/dawlance.svg" },
       { name: "Orient", logo: "logos/orient.svg" },
-      { name: "Daikin", logo: "logos/daikin.svg" },
+      { name: "Kenwood", logo: "logos/kenwood.svg" },
     ],
     emergency24x7: true, // TODO: set false if the client does not offer 24/7 service
     rebates: { enabled: false, title: "", body: "" },
