@@ -7,7 +7,7 @@ export const services: ServiceInput[] = [
     title: "AC Repair",
     summary: "Diagnosis and repair for warm air, short cycling, leaks and strange noises.",
     icon: "snowflake",
-    image: { src: "services/ac-repair.jpg", alt: "Technician checking refrigerant pressure on an outdoor AC unit with a gauge manifold" },
+    image: { src: "services/ac-repair-gauges.jpg", alt: "Technician checking refrigerant pressure on an outdoor AC unit with a gauge manifold" },
     intro:
       "When your air conditioner stops keeping up, a methodical diagnosis saves time and money. We find the cause first, then explain your options before any work begins.",
     body: [
