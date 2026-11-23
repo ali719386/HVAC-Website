@@ -18,9 +18,9 @@ Resume rule: after a restart, read CLAUDE.md and this file, then continue from t
 | Phase | Status | Commit | Remaining issues |
 |---|---|---|---|
 | 1 Foundation + homepage | done (build+lint PASS) | 3918a44 | images and real content pending (placeholders) |
-| 2 Inner pages | pending | - | - |
+| 2 Inner pages | done (build+lint PASS) | 30cfaf6 | form posts to /api/lead (built in Phase 3) |
 | 3 Lead backend | pending | - | - |
 | 4 SEO + a11y | pending | - | - |
 | 5 White-label verify + README | pending | - | - |
 
-Next step: Phase 2.
+Next step: Phase 3.
