@@ -1,4 +1,4 @@
-import { Clock, Flame, MapPin, Phone, ShieldCheck, Snowflake } from "lucide-react";
+import { Clock, MapPin, Phone, ShieldCheck } from "lucide-react";
 import type { Brand } from "@/lib/brand/schema";
 import { BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
@@ -13,7 +13,6 @@ export function Hero({ brand }: { brand: Brand }) {
   const variant = config.homepage.heroVariant;
   const copy = content.copy.hero;
   const text = copy[variant];
-  const SeasonIcon = variant === "winter" ? Flame : Snowflake;
   const firstHours = company.hours[0];
   const mainCity = content.cities[0];
 
@@ -33,10 +32,9 @@ export function Hero({ brand }: { brand: Brand }) {
       <div className="container-site grid items-center gap-12 pt-14 pb-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-24 lg:pb-20">
         <div>
           <p
-            className="animate-fade-up inline-flex items-center gap-2 rounded-full bg-surface px-5 py-2.5 text-[0.95rem] font-semibold shadow-brand-sm"
+            className="animate-fade-up inline-flex items-center rounded-full bg-surface px-6 py-2.5 text-[0.95rem] font-semibold shadow-brand-sm"
             style={delay(0)}
           >
-            <SeasonIcon className="size-4 text-accent" aria-hidden="true" />
             {text.eyebrow}
           </p>
           <h1

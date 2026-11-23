@@ -5,10 +5,11 @@ import type { CopyOverrides } from "@/content/types";
 export const copy: CopyOverrides = {
   hero: {
     summer: {
-      eyebrow: "Columbus heating & cooling",
-      title: "Cool, quiet comfort for Central Ohio homes",
+      eyebrow: "Welcome",
+      title: "Air Conditioning Service, Repair & Installation",
+      // TODO: "years of experience" and "certified professionals" are claims; keep only if true for the client.
       subtitle:
-        "AC repair, new system installation and seasonal tune-ups from local technicians. Written estimates before any work begins.",
+        "We specialize in providing top-notch heating, ventilation, and air conditioning solutions tailored to meet the unique needs of our clients. With years of experience serving the vibrant and diverse clients, our team of certified professionals is dedicated to ensuring your comfort.",
     },
     winter: {
       eyebrow: "Columbus heating & cooling",
