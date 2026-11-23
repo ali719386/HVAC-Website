@@ -49,13 +49,13 @@ export const config: BrandConfigInput = {
       linkLabel: "Book now",
       href: "/book",
     },
-    // TODO: confirm the brands the client services. Add official logo files (with permission) at the paths below.
+    // Logos: official files supplied by the client (cleaned to transparent PNG). TODO: confirm usage permission.
     supportedBrands: [
-      { name: "Gree", logo: "logos/gree.svg" },
-      { name: "Haier", logo: "logos/haier.svg" },
-      { name: "Dawlance", logo: "logos/dawlance.svg" },
-      { name: "Orient", logo: "logos/orient.svg" },
-      { name: "Kenwood", logo: "logos/kenwood.svg" },
+      { name: "Gree", logo: "logos/gree.png" },
+      { name: "Haier", logo: "logos/haier.png" },
+      { name: "Dawlance", logo: "logos/dawlance.png" },
+      { name: "Orient", logo: "logos/orient.png" },
+      { name: "Kenwood", logo: "logos/kenwood.png" },
     ],
     emergency24x7: true, // TODO: set false if the client does not offer 24/7 service
     rebates: { enabled: false, title: "", body: "" },
