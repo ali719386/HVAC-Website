@@ -51,10 +51,10 @@ export const config: BrandConfigInput = {
     },
     // Logos: official files supplied by the client (cleaned to transparent PNG). TODO: confirm usage permission.
     supportedBrands: [
-      { name: "Gree", logo: "logos/gree.png" },
-      { name: "Haier", logo: "logos/haier.png" },
-      { name: "Dawlance", logo: "logos/dawlance.png" },
-      { name: "Orient", logo: "logos/orient.png" },
+      { name: "Gree", logo: "logo-gree.png" },
+      { name: "Haier", logo: "logo-haier.png" },
+      { name: "Dawlance", logo: "logo-dawlance.png" },
+      { name: "Orient", logo: "logo-orient.png" },
     ],
     emergency24x7: true, // TODO: set false if the client does not offer 24/7 service
     rebates: { enabled: false, title: "", body: "" },

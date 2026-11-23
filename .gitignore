@@ -9,3 +9,6 @@ next-env.d.ts
 .vercel
 npm-debug.log*
 .DS_Store
+
+# Raw uploads kept next to the site images but not committed or deployed
+public/brands/*/images/originals/

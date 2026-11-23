@@ -51,7 +51,7 @@ lib/lead/                Lead constants, shared zod/mini schema, server delivery
 lib/seo/                 Per-page metadata helper and JSON-LD builders
 lib/legal.ts             Draft Privacy / Terms / SMS templates built from brand config
 components/              Shared UI. Receives data only through typed props.
-public/brands/<slug>/    Logos and images per brand
+public/brands/<slug>/images/   ALL images for the brand, one flat folder (originals/ = raw uploads, git-ignored)
 scripts/check-placeholders.mjs
 ```
 
@@ -67,7 +67,7 @@ How it fits together:
 2. **Edit `config.ts`.** Set `slug: "acme-air"` (it must match the folder name), then company info, offerings, SEO, tokens, image alt text and homepage sections. Remove TODO comments as you verify each value.
 3. **Edit `content/*.ts`.** Add services, FAQs, cities (with ZIPs), plans, posts, projects, real testimonials and copy overrides. Set `placeholder: true` only on content that is not final.
 4. **Register the brand.** In `lib/brand/index.ts`, add `import acmeAir from "@/brands/acme-air";` and `"acme-air": acmeAir,` to the `registry` object. This is the only shared file you touch.
-5. **Add assets and build.** Put images in `public/brands/acme-air/` (see section 5), set `NEXT_PUBLIC_BRAND=acme-air` in `.env.local`, then run `npm run check:placeholders -- acme-air` and `npm run build`.
+5. **Add assets and build.** Put images in `public/brands/acme-air/images/` (see section 5), set `NEXT_PUBLIC_BRAND=acme-air` in `.env.local`, then run `npm run check:placeholders -- acme-air` and `npm run build`.
 
 ## 4. Design tokens (`config.tokens`)
 
@@ -93,7 +93,7 @@ How it fits together:
 
 ## 5. Logos and images
 
-Put the files in `public/brands/<slug>/` using **exactly** these names. JPG is shown below, but any `.jpg/.jpeg/.png/.webp/.avif` works if you update the `src` in config. Missing files never break the layout: a neutral, token-colored placeholder renders in the same box. In `npm run dev` the placeholder shows the expected path.
+**All images for a brand live in one folder: `public/brands/<slug>/images/`.** No subfolders; names use a prefix (`service-`, `post-`, `project-`, `review-`, `logo-`) so the folder stays easy to scan. In config and content, write just the file name (e.g. `src: "service-heating-furnace.jpg"`). Raw, unedited uploads can go in `images/originals/`, which is git-ignored so it is never deployed. Put the files in that folder using **exactly** these names. JPG is shown below, but any `.jpg/.jpeg/.png/.webp/.avif` works if you update the `src` in config. Missing files never break the layout: a neutral, token-colored placeholder renders in the same box. In `npm run dev` the placeholder shows the expected path.
 
 | File | Used for | Recommended size (px) | Aspect |
 |---|---|---|---|
@@ -106,14 +106,14 @@ Put the files in `public/brands/<slug>/` using **exactly** these names. JPG is s
 | `services.jpg` | /services page header | 1000 x 800 | tall crop |
 | `projects.jpg` | /projects page header | 1000 x 800 | tall crop |
 | `promo.jpg` | /plans and /financing page headers | 1000 x 800 | tall crop |
-| `services/<service-slug>.jpg` | Service cards and service pages (`ac-repair`, `ac-installation`, `heating`, `maintenance`, `commercial`) | 1600 x 900 | 16:9 |
-| `posts/<post-slug>.jpg` | Blog cards and article header | 1600 x 900 | 16:9 |
-| `projects/<project-slug>.jpg` | Project gallery | 1600 x 1000 | 16:10 |
-| `testimonials/<name>.jpg` (optional, set `background` on a testimonial) | Review card background. Keep the left ~55% plain (wall/sky) so the quote stays readable; subject on the right. | 1200 x 900 | 4:3 |
+| `service-<name>.jpg` | Service cards and service pages (`ac-repair`, `ac-installation`, `heating`, `maintenance`, `commercial`) | 1600 x 900 | 16:9 |
+| `post-<name>.jpg` | Blog cards and article header | 1600 x 900 | 16:9 |
+| `project-<name>.jpg` | Project gallery | 1600 x 1000 | 16:10 |
+| `review-<name>.jpg` (optional, set `background` on a testimonial) | Review card background. Keep the left ~55% plain (wall/sky) so the quote stays readable; subject on the right. | 1200 x 900 | 4:3 |
 
 Until a logo file exists, a wordmark (initial plus company name) is shown. `npm run check:placeholders` lists every missing file by name. Use photos you own or have licensed. Never hotlink. Write meaningful `alt` text in config.
 
-Supported equipment brands (`offerings.supportedBrands`) appear in the brand strip under the hero as `{ name, logo? }`. Put official logo files at the configured path, e.g. `public/brands/default/logos/gree.svg` (SVG or a transparent PNG, ~400 x 160). A text wordmark shows until the file exists. Use only official logo files the client has permission to display (e.g. from the manufacturer dealer portal). A trademark disclaimer is shown under the strip.
+Supported equipment brands (`offerings.supportedBrands`) appear in the brand strip under the hero as `{ name, logo? }`. Put official logo files at the configured path, e.g. `public/brands/default/images/logo-gree.png` (SVG or a transparent PNG, ~400 x 160). A text wordmark shows until the file exists. Use only official logo files the client has permission to display (e.g. from the manufacturer dealer portal). A trademark disclaimer is shown under the strip.
 
 ## 6. Editing content
 

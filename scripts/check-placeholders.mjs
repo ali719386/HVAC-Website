@@ -46,7 +46,7 @@ for (const slug of slugs) {
     });
   }
 
-  const missing = [...images].filter((img) => !existsSync(path.join(root, "public", "brands", slug, ...img.split("/"))));
+  const missing = [...images].filter((img) => !existsSync(path.join(root, "public", "brands", slug, "images", ...img.split("/"))));
   const count = placeholders.length + todos.length + missing.length;
   total += count;
 
@@ -55,7 +55,7 @@ for (const slug of slugs) {
   placeholders.forEach((p) => console.log(`  - ${p}`));
   console.log(`\nTODOs: ${todos.length}`);
   todos.forEach((t) => console.log(`  - ${t}`));
-  console.log(`\nMissing images in public/brands/${slug}/: ${missing.length} of ${images.size}`);
+  console.log(`\nMissing images in public/brands/${slug}/images/: ${missing.length} of ${images.size}`);
   missing.sort().forEach((m) => console.log(`  - ${m}`));
 }
 

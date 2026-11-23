@@ -11,7 +11,7 @@ export const testimonials: TestimonialInput[] = [
     name: "Customer name",
     location: "Columbus, OH",
     service: "AC Repair",
-    background: "testimonials/columbus-ac-repair-crop.jpg",
+    background: "review-columbus-ac-repair.jpg",
     placeholder: true,
   },
   {
@@ -19,7 +19,7 @@ export const testimonials: TestimonialInput[] = [
     name: "Customer name",
     location: "Dublin, OH",
     service: "Heating",
-    background: "testimonials/dublin-heating-crop.jpg",
+    background: "review-dublin-heating.jpg",
     placeholder: true,
   },
   {
@@ -27,7 +27,7 @@ export const testimonials: TestimonialInput[] = [
     name: "Customer name",
     location: "Westerville, OH",
     service: "Maintenance",
-    background: "testimonials/westerville-maintenance-crop.jpg",
+    background: "review-westerville-maintenance.jpg",
     placeholder: true,
   },
   {
@@ -35,7 +35,7 @@ export const testimonials: TestimonialInput[] = [
     name: "Customer name",
     location: "Hilliard, OH",
     service: "Commercial HVAC",
-    background: "testimonials/hilliard-commercial-crop.jpg",
+    background: "review-hilliard-commercial.jpg",
     placeholder: true,
   },
 ];

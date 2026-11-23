@@ -8,7 +8,7 @@ export const projects: ProjectInput[] = [
     location: "Dublin, OH",
     service: "ac-installation",
     summary: "Replaced an aging split system with a variable-speed heat pump and new line set.",
-    image: { src: "projects/two-story-heat-pump.jpg", alt: "Outdoor heat pump beside a two-story house" },
+    image: { src: "project-two-story-heat-pump.jpg", alt: "Outdoor heat pump beside a two-story house" },
     challenge: "The upstairs bedrooms ran several degrees warmer than the main floor every summer, and the 15-year-old system was due for replacement.",
     body: [
       "We started with a room-by-room load calculation and found the original system was oversized for the main floor and under-delivering upstairs.",
@@ -23,7 +23,7 @@ export const projects: ProjectInput[] = [
     location: "Westerville, OH",
     service: "heating",
     summary: "Swapped a standard-efficiency furnace for a condensing model with new PVC venting.",
-    image: { src: "projects/furnace-upgrade.jpg", alt: "New furnace installed in a basement" },
+    image: { src: "project-furnace-upgrade.jpg", alt: "New furnace installed in a basement" },
     challenge: "An older standard-efficiency furnace was short cycling and the homeowner wanted lower winter gas bills.",
     body: [
       "We replaced the furnace with a condensing model, which required new PVC intake and exhaust venting and a condensate drain.",
@@ -38,7 +38,7 @@ export const projects: ProjectInput[] = [
     location: "Columbus, OH",
     service: "commercial",
     summary: "Seasonal maintenance and belt replacement on four rooftop units.",
-    image: { src: "projects/retail-rooftop-units.jpg", alt: "Row of rooftop HVAC units" },
+    image: { src: "project-retail-rooftop-units.jpg", alt: "Row of rooftop HVAC units" },
     challenge: "A retail plaza needed seasonal service on four rooftop units with minimal disruption to open stores.",
     body: [
       "We scheduled the work before opening hours and serviced one unit at a time so each storefront kept conditioned air.",

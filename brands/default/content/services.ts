@@ -7,7 +7,7 @@ export const services: ServiceInput[] = [
     title: "AC Repair",
     summary: "Diagnosis and repair for warm air, short cycling, leaks and strange noises.",
     icon: "snowflake",
-    image: { src: "services/ac-repair-gauges.jpg", alt: "Technician checking refrigerant pressure on an outdoor AC unit with a gauge manifold" },
+    image: { src: "service-ac-repair-gauges.jpg", alt: "Technician checking refrigerant pressure on an outdoor AC unit with a gauge manifold" },
     intro:
       "When your air conditioner stops keeping up, a methodical diagnosis saves time and money. We find the cause first, then explain your options before any work begins.",
     body: [
@@ -30,7 +30,7 @@ export const services: ServiceInput[] = [
     title: "AC Installation",
     summary: "Properly sized central air and heat pump systems, installed to manufacturer specs.",
     icon: "fan",
-    image: { src: "services/ac-installation.jpg", alt: "Two technicians leveling a new central air conditioner on a concrete pad" },
+    image: { src: "service-ac-installation.jpg", alt: "Two technicians leveling a new central air conditioner on a concrete pad" },
     intro:
       "A new cooling system is a long-term investment. Correct sizing and a clean installation matter as much as the equipment brand you choose.",
     body: [
@@ -53,7 +53,7 @@ export const services: ServiceInput[] = [
     title: "Heating Services",
     summary: "Furnace and heat pump repair, replacement and safety checks for Ohio winters.",
     icon: "flame",
-    image: { src: "services/heating-furnace.jpg", alt: "Technician inspecting the burners and controls of an open gas furnace with a flashlight" },
+    image: { src: "service-heating-furnace.jpg", alt: "Technician inspecting the burners and controls of an open gas furnace with a flashlight" },
     intro:
       "Cold Ohio nights are no time for a furnace failure. We repair and replace gas furnaces, heat pumps and air handlers, with safety checks on every visit.",
     body: [
@@ -76,7 +76,7 @@ export const services: ServiceInput[] = [
     title: "Maintenance & Tune-Ups",
     summary: "Seasonal tune-ups that catch small problems before they become breakdowns.",
     icon: "wrench",
-    image: { src: "services/maintenance-filter.jpg", alt: "Technician replacing the air filter on a home furnace during a tune-up" },
+    image: { src: "service-maintenance-filter.jpg", alt: "Technician replacing the air filter on a home furnace during a tune-up" },
     intro:
       "Regular maintenance helps equipment run efficiently and can extend its life. Many manufacturers also require it to keep warranties valid.",
     body: [
@@ -94,7 +94,7 @@ export const services: ServiceInput[] = [
     title: "Commercial HVAC",
     summary: "Rooftop units, split systems and planned maintenance for local businesses.",
     icon: "building",
-    image: { src: "services/commercial-rooftop.jpg", alt: "Technician checking a commercial rooftop HVAC unit with a tablet" },
+    image: { src: "service-commercial-rooftop.jpg", alt: "Technician checking a commercial rooftop HVAC unit with a tablet" },
     intro:
       "Downtime costs money. We service rooftop units and split systems for offices, retail spaces and restaurants, with scheduling that works around your hours.",
     body: [

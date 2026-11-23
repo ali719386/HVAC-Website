@@ -27,7 +27,8 @@ function mergeCopy(input: BrandInput): Record<string, unknown> {
 }
 
 function resolveAssets(brand: Brand): Brand {
-  const base = `/brands/${brand.config.slug}/`;
+  // Every brand image lives in ONE folder: public/brands/<slug>/images/
+  const base = `/brands/${brand.config.slug}/images/`;
   const img = (i: ImageAsset): ImageAsset => ({ ...i, src: base + i.src });
   const path = (p: string | undefined) => (p ? base + p : undefined);
   const { config, content } = brand;

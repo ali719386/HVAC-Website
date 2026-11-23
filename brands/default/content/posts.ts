@@ -10,7 +10,7 @@ export const posts: PostInput[] = [
     author: "Coolwren Service Team",
     category: "Cooling",
     readMinutes: 4,
-    image: { src: "posts/ac-not-cooling-vent.jpg", alt: "Homeowner checking airflow at a floor vent" },
+    image: { src: "post-ac-not-cooling-vent.jpg", alt: "Homeowner checking airflow at a floor vent" },
     body: [
       {
         paragraphs: [
@@ -44,7 +44,7 @@ export const posts: PostInput[] = [
     author: "Coolwren Service Team",
     category: "Heating",
     readMinutes: 5,
-    image: { src: "posts/furnace-tune-up-blower.jpg", alt: "Technician inspecting a furnace blower with a flashlight during a tune-up" },
+    image: { src: "post-furnace-tune-up-blower.jpg", alt: "Technician inspecting a furnace blower with a flashlight during a tune-up" },
     body: [
       {
         paragraphs: [
@@ -74,7 +74,7 @@ export const posts: PostInput[] = [
     author: "Coolwren Service Team",
     category: "Buying guide",
     readMinutes: 6,
-    image: { src: "posts/ac-size-measuring.jpg", alt: "Technician measuring a living room with a laser meter and floor plan for a load calculation" },
+    image: { src: "post-ac-size-measuring.jpg", alt: "Technician measuring a living room with a laser meter and floor plan for a load calculation" },
     body: [
       {
         paragraphs: [

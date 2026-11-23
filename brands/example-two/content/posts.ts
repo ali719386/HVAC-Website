@@ -10,7 +10,7 @@ export const posts: PostInput[] = [
     author: "Summit Ridge Team",
     category: "Heating",
     readMinutes: 5,
-    image: { src: "posts/heat-pumps-at-altitude.jpg", alt: "Heat pump with snow on the ground" },
+    image: { src: "post-heat-pumps-at-altitude.jpg", alt: "Heat pump with snow on the ground" },
     body: [
       { paragraphs: ["Heat pump technology has improved a lot. Cold-climate models are designed to keep heating at low outdoor temperatures."] },
       { heading: "Dual fuel", paragraphs: ["Pairing a heat pump with a gas furnace lets the system switch to gas on the coldest nights."] },
@@ -25,7 +25,7 @@ export const posts: PostInput[] = [
     author: "Summit Ridge Team",
     category: "Indoor air",
     readMinutes: 3,
-    image: { src: "posts/dry-air-and-your-hvac.jpg", alt: "Whole-home humidifier on a furnace" },
+    image: { src: "post-dry-air-and-your-hvac.jpg", alt: "Whole-home humidifier on a furnace" },
     body: [{ paragraphs: ["Very dry indoor air can be uncomfortable. A whole-home humidifier connected to your furnace is one option."] }],
     placeholder: true,
   },

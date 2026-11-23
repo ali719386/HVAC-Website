@@ -8,7 +8,7 @@ export const projects: ProjectInput[] = [
     location: "Lakewood, CO",
     service: "ac-installation",
     summary: "Added cooling to a home without ductwork using a three-zone ductless system.",
-    image: { src: "projects/mini-split-bungalow.jpg", alt: "Indoor mini-split unit above a window" },
+    image: { src: "project-mini-split-bungalow.jpg", alt: "Indoor mini-split unit above a window" },
     placeholder: true,
   },
   {
@@ -17,7 +17,7 @@ export const projects: ProjectInput[] = [
     location: "Arvada, CO",
     service: "heating",
     summary: "Paired a cold-climate heat pump with a new furnace for year-round comfort.",
-    image: { src: "projects/dual-fuel-upgrade.jpg", alt: "Heat pump and furnace installation" },
+    image: { src: "project-dual-fuel-upgrade.jpg", alt: "Heat pump and furnace installation" },
     placeholder: true,
   },
 ];
