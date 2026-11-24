@@ -28,7 +28,7 @@ export function Hero({ brand }: { brand: Brand }) {
   ].filter((q) => q !== undefined);
 
   return (
-    <section aria-labelledby="hero-title" className="relative overflow-hidden bg-surface-alt text-ink">
+    <section aria-labelledby="hero-title" data-tone="alt" className="relative overflow-hidden bg-surface-alt text-ink">
       <div className="container-site grid items-center gap-12 pt-14 pb-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-24 lg:pb-20">
         <div>
           <p

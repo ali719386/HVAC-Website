@@ -17,7 +17,7 @@ export function Footer({ brand }: { brand: Brand }) {
   const link = "text-on-primary/75 transition-colors hover:text-on-primary";
 
   return (
-    <footer className="bg-surface-dark pb-20 text-on-primary/80 md:pb-0">
+    <footer className="bg-surface-dark pb-[calc(5rem+env(safe-area-inset-bottom))] text-on-primary/80 md:pb-0">
       <Reveal variant="fade-in" className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
         <div className="lg:col-span-4">
           <Logo name={company.name} src={company.logo.dark} onDark />

@@ -97,6 +97,18 @@
   padding-block: var(--brand-section-y);
 }
 
+/*
+ * Two adjacent sections with the same background would stack both paddings (a double gap).
+ * The first section's bottom padding already provides the gap, so the second drops its top padding.
+ * Sections opt in with data-tone. Unlayered on purpose so it overrides padding utilities.
+ */
+[data-tone="light"] + [data-tone="light"],
+[data-tone="alt"] + [data-tone="alt"],
+[data-tone="dark"] + [data-tone="dark"],
+[data-tone="primary"] + [data-tone="primary"] {
+  padding-top: 0;
+}
+
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar {

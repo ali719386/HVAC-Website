@@ -47,7 +47,7 @@ export function BrandStrip({
 }) {
   if (brands.length === 0) return null;
   return (
-    <section aria-labelledby="brands-title" className="bg-surface-alt py-14 lg:py-20">
+    <section aria-labelledby="brands-title" data-tone="alt" className="bg-surface-alt py-14 lg:py-20">
       <div className="container-site">
         <h2 id="brands-title" className="mx-auto max-w-3xl text-center text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl">
           {title}
@@ -178,7 +178,7 @@ export function WhyChooseUs({ brand }: { brand: Brand }) {
 
 export function ExpertBlock({ config, copy }: { config: BrandConfig; copy: Copy["expert"] }) {
   return (
-    <section aria-labelledby="expert-title" className="bg-surface section-y">
+    <section aria-labelledby="expert-title" data-tone="light" className="bg-surface section-y">
       <div className="container-site">
         <div className="grid overflow-hidden rounded-brand bg-primary text-on-primary shadow-brand-lg lg:grid-cols-[0.9fr_1.1fr]">
           <BrandImage
@@ -221,7 +221,7 @@ export function ExpertBlock({ config, copy }: { config: BrandConfig; copy: Copy[
 export function StatsCounter({ stats, copy }: { stats: Stat[]; copy: Copy["stats"] }) {
   if (stats.length === 0) return null;
   return (
-    <section aria-labelledby="stats-title" className="border-y border-line bg-surface py-14 lg:py-16">
+    <section aria-labelledby="stats-title" data-tone="light" className="bg-surface py-14 lg:py-16">
       <div className="container-site">
         <h2 id="stats-title" className="sr-only">
           {copy.title}

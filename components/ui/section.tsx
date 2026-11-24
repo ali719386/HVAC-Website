@@ -23,7 +23,7 @@ export function Section({
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={labelledBy} className={`section-y ${tones[tone]} ${className}`}>
+    <section id={id} aria-labelledby={labelledBy} data-tone={tone} className={`section-y ${tones[tone]} ${className}`}>
       <div className="container-site">{children}</div>
     </section>
   );
