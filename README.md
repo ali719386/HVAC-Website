@@ -103,7 +103,10 @@ How it fits together:
 | `apple-icon.png` | iOS home-screen icon | PNG on solid background, 180 x 180 | 1:1 |
 | `og.jpg` | Social share image (OpenGraph/Twitter) | 1200 x 630 | 1.91:1 |
 | `hero.jpg` | Homepage hero (preloaded) | 1400 x 1450 | ~1:1 (4:3 on mobile) |
-| `about.jpg` | Why Choose Us block, About page | 1200 x 1020 | ~4:3.4 |
+| `about.jpg` | Why Choose Us block, About page "Our mission" (technician with homeowner) | 1200 x 1020 | ~4:3.4 |
+| `images.aboutStory` (optional) | About page "Our story" photo, e.g. technician at an indoor unit. Falls back to `about` | 1100 x 1375 | 4:5 (4:3 on mobile) |
+| `images.aboutStoryInset` (optional) | Smaller photo overlapping the story photo (tablet and desktop) | 600 x 450 | 4:3 |
+| `images.aboutCta` (optional) | About page final CTA background, e.g. home exterior. Left side is covered by a dark overlay for text | 1920 x 1080 | 16:9 |
 | `expert.jpg` | Expert / quote block | 1100 x 1000 | ~1:1 |
 | `services.jpg` | /services page header | 1000 x 800 | tall crop |
 | `projects.jpg` | /projects page header | 1000 x 800 | tall crop |

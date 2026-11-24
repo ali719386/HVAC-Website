@@ -1,16 +1,39 @@
 import Image from "next/image";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
 import { assetExists } from "@/components/ui/brand-image";
 import type { Copy, Testimonial } from "@/lib/brand/schema";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { SliderControls } from "./slider-controls";
 import { Reveal } from "@/components/motion/reveal";
 
-export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy: Copy["testimonials"] }) {
+/** Stars from the review's real rating. Not color alone: the text label carries the value. */
+function Stars({ rating }: { rating: number }) {
+  return (
+    <p className="mt-5 flex items-center gap-0.5" aria-label={`Rated ${rating} out of 5`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <Star
+          key={i}
+          aria-hidden="true"
+          className={`size-5 ${i < rating ? "fill-accent text-accent" : "fill-transparent text-line"}`}
+        />
+      ))}
+    </p>
+  );
+}
+
+export function TestimonialSlider({
+  items,
+  copy,
+  tone = "alt",
+}: {
+  items: Testimonial[];
+  copy: Copy["testimonials"];
+  tone?: "light" | "alt";
+}) {
   if (items.length === 0) return null;
   const trackId = "testimonial-track";
   return (
-    <Section tone="alt" labelledBy="reviews-title">
+    <Section tone={tone} labelledBy="reviews-title">
       <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <SectionHeading id="reviews-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
         {items.length > 1 ? <SliderControls trackId={trackId} label="reviews" /> : null}
@@ -44,6 +67,7 @@ export function TestimonialSlider({ items, copy }: { items: Testimonial[]; copy:
                     <span className="rounded-full border border-line px-2.5 py-0.5 text-xs font-semibold text-muted">Sample</span>
                   ) : null}
                 </div>
+                {t.rating ? <Stars rating={t.rating} /> : null}
                 <blockquote className="mt-5 flex-1 text-lg leading-relaxed">
                   <p>{t.quote}</p>
                 </blockquote>

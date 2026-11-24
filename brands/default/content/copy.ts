@@ -34,15 +34,51 @@ export const copy: CopyOverrides = {
   about: {
     title: "About Coolwren Heating & Air",
     intro: "A Columbus heating and cooling company focused on honest recommendations and careful work.",
-    body: [
-      "TODO: Replace with the client's real story: when and why the company started, who leads it, and what makes the team different.",
-      "TODO: Describe the service area, the types of homes and businesses served, and any community involvement.",
-    ],
-    values: [
-      { icon: "check", title: "Honest recommendations", body: "TODO: describe in the client's words.", placeholder: true },
-      { icon: "users", title: "Trained technicians", body: "TODO: describe training and qualifications.", placeholder: true },
-      { icon: "home", title: "Respect for your home", body: "TODO: describe jobsite standards.", placeholder: true },
-    ],
+    story: {
+      eyebrow: "Our story",
+      title: "More Than Heating & Cooling. We're Here for Your Comfort.",
+      intro:
+        "At Coolwren Heating & Air, we believe indoor comfort starts with dependable service and thoughtful solutions. From air conditioning repairs to complete system installations, our focus is on helping homeowners enjoy a comfortable environment with confidence.",
+      points: ["Personalized HVAC Solutions", "Quality-Focused Workmanship", "Customer-First Approach"],
+    },
+    why: {
+      eyebrow: "Why Coolwren",
+      title: "Why Homeowners Choose Coolwren",
+      intro: "Comfort is personal. That's why we focus on delivering service built around your needs.",
+      items: [
+        { icon: "shield", title: "Trusted Service", body: "Dependable HVAC support with attention to your comfort and needs." },
+        { icon: "award", title: "Quality Workmanship", body: "Every project receives careful attention and a focus on doing things right." },
+        { icon: "message", title: "Honest Recommendations", body: "Clear communication and solutions that make sense for your space." },
+        { icon: "heart-handshake", title: "Customer-First Approach", body: "A service experience designed around your comfort and satisfaction." },
+      ],
+    },
+    mission: {
+      eyebrow: "Our mission",
+      title: "Making Indoor Comfort Simple, Reliable & Stress-Free.",
+      intro:
+        "Our mission is to provide thoughtful heating and cooling solutions that help create comfortable spaces. We value honest communication, quality service, and lasting customer relationships.",
+      values: [
+        { icon: "scale", title: "Integrity" },
+        { icon: "badge-check", title: "Quality" },
+        { icon: "handshake", title: "Commitment" },
+      ],
+    },
+    services: {
+      eyebrow: "What we do",
+      title: "Complete Comfort. One Trusted Team.",
+      items: [
+        { slug: "ac-installation", summary: "Professional air conditioning installation designed around your property's cooling needs." },
+        { slug: "ac-repair", summary: "Reliable diagnostic and repair services to help restore your indoor comfort." },
+        { slug: "maintenance", title: "HVAC Maintenance", summary: "Routine system care to support performance, efficiency, and long-term reliability." },
+      ],
+    },
+    testimonials: { eyebrow: "Reviews", title: "Comfort Speaks for Itself.", intro: "" },
+    cta: {
+      title: "Let's Make Your Comfort Our Priority.",
+      body: "Whether you need a quick repair or a complete HVAC installation, we're ready to help.",
+      cta: "Schedule a Service",
+      call: "Call Now",
+    },
   },
   ctaBand: {
     title: "Too hot, too cold, or just not right?",

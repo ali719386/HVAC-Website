@@ -51,6 +51,11 @@ export const iconKeys = [
   "map-pin",
   "wind",
   "gauge",
+  "message",
+  "heart-handshake",
+  "handshake",
+  "scale",
+  "badge-check",
 ] as const;
 export const iconKeySchema = z.enum(iconKeys);
 
@@ -107,6 +112,8 @@ export const testimonialSchema = z.object({
   service: nonEmpty.optional(),
   /** Optional decorative card background (path in /public/brands/<slug>/). Keep the left side plain for text. */
   background: assetPath.optional(),
+  /** Star rating from the real review (1 to 5). Stars render only when set. Never invent a rating. */
+  rating: z.number().int().min(1).max(5).optional(),
   placeholder,
 });
 
@@ -177,6 +184,8 @@ export const statSchema = z.object({
 const heroCopy = z.object({ eyebrow: nonEmpty, title: nonEmpty, subtitle: nonEmpty });
 /** eyebrow may be "" to hide the small label above a heading. */
 const sectionCopy = z.object({ eyebrow: z.string().default(""), title: nonEmpty, intro: z.string().default("") });
+/** Icon + title (+ optional short line). Used for About page cards and values. */
+const aboutItemSchema = z.object({ icon: iconKeySchema, title: nonEmpty, body: z.string().default("") });
 
 /** Marketing copy. Every key has a default in /content/defaults.ts, brands override per section. */
 export const copySchema = z.object({
@@ -194,7 +203,26 @@ export const copySchema = z.object({
   posts: sectionCopy,
   ctaBand: z.object({ title: nonEmpty, body: nonEmpty, cta: nonEmpty }),
   emergency: z.object({ title: nonEmpty, body: nonEmpty }),
-  about: z.object({ title: nonEmpty, intro: nonEmpty, body: z.array(nonEmpty).min(1), values: z.array(whyItemSchema) }),
+  /** About page. Sections follow the page order; empty item lists fall back as noted. */
+  about: z.object({
+    title: nonEmpty,
+    intro: nonEmpty,
+    /** intro = the story paragraph; points = short supporting points with check marks. */
+    story: sectionCopy.extend({ points: z.array(nonEmpty).default([]) }),
+    /** Empty items: falls back to content.whyChooseUs. */
+    why: sectionCopy.extend({ items: z.array(aboutItemSchema).default([]) }),
+    /** Hidden when intro and values are both empty. */
+    mission: sectionCopy.extend({ values: z.array(aboutItemSchema).default([]) }),
+    /** Picks services by slug with optional wording overrides. Empty: first three services. */
+    services: sectionCopy.extend({
+      items: z
+        .array(z.object({ slug: serviceTypeSchema, title: nonEmpty.optional(), summary: nonEmpty.optional() }))
+        .default([]),
+    }),
+    testimonials: sectionCopy,
+    /** cta links to /book; call is the label of the click-to-call button. */
+    cta: z.object({ title: nonEmpty, body: nonEmpty, cta: nonEmpty, call: nonEmpty }),
+  }),
   projects: sectionCopy,
   contact: sectionCopy,
   book: sectionCopy,
@@ -336,6 +364,12 @@ export const brandConfigSchema = z.object({
     promo: imageSchema,
     /** Optional. When set, the FAQ block shows questions left + this photo right (no call box). */
     faq: imageSchema.optional(),
+    /** About page "Our story" photo (portrait crop, e.g. technician at an indoor unit). Falls back to `about`. */
+    aboutStory: imageSchema.optional(),
+    /** Optional smaller photo overlapping the story photo on tablet and desktop. */
+    aboutStoryInset: imageSchema.optional(),
+    /** About page final CTA background photo (wide, e.g. home exterior). */
+    aboutCta: imageSchema.optional(),
   }),
   homepage: z.object({
     heroVariant: z.enum(["summer", "winter"]),

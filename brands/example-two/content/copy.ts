@@ -29,8 +29,12 @@ export const copy: CopyOverrides = {
   about: {
     title: "About Summit Ridge Comfort Co.",
     intro: "A Front Range heating and cooling contractor.",
-    body: ["TODO: Replace with the client's real story."],
-    values: [],
+    story: {
+      eyebrow: "Our story",
+      title: "Front Range comfort, done carefully",
+      intro: "TODO: Replace with the client's real story.",
+      points: [],
+    },
   },
   ctaBand: { title: "Ready for a more comfortable home?", body: "Book online or call during business hours.", cta: "Schedule a visit" },
 };

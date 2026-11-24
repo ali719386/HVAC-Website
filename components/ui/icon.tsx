@@ -1,6 +1,11 @@
 import {
   Award,
+  BadgeCheck,
   BadgeDollarSign,
+  Handshake,
+  HeartHandshake,
+  MessagesSquare,
+  Scale,
   Building2,
   CalendarCheck,
   Check,
@@ -45,6 +50,11 @@ const icons: Record<IconKey, LucideIcon> = {
   "map-pin": MapPin,
   wind: Wind,
   gauge: Gauge,
+  message: MessagesSquare,
+  "heart-handshake": HeartHandshake,
+  handshake: Handshake,
+  scale: Scale,
+  "badge-check": BadgeCheck,
 };
 
 export function Icon({ name, className }: { name: IconKey; className?: string }) {
