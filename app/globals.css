@@ -279,38 +279,6 @@ html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:
  * Only opacity and transform animate, so nothing triggers layout work.
  */
 
-/* Page enter: a quick fade on every navigation (app/template.tsx remounts per route).
-   Opacity only: a transform here would break position: fixed children such as the reading bar. */
-@keyframes page-in {
-  from {
-    opacity: 0.01;
-  }
-  to {
-    opacity: 1;
-  }
-}
-html[data-motion="on"] .page-enter {
-  /* backwards: no lasting stacking context once the fade ends (keeps z-index layering intact). */
-  animation: page-in calc(var(--motion-duration) * 0.45) ease-out backwards;
-}
-
-/* Header: a soft shadow once the page scrolls (scroll-driven animation, where supported). */
-@keyframes header-raise {
-  from {
-    box-shadow: none;
-  }
-  to {
-    box-shadow: var(--brand-shadow-md);
-  }
-}
-@supports (animation-timeline: scroll()) {
-  html[data-motion="on"] .site-header {
-    animation: header-raise linear both;
-    animation-timeline: scroll();
-    animation-range: 0 120px;
-  }
-}
-
 /* FAQ: the answer fades up when a question opens. */
 @keyframes answer-in {
   from {
