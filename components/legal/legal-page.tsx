@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion/reveal";
 import { TriangleAlert } from "lucide-react";
 import type { BrandConfig } from "@/lib/brand/schema";
 import type { LegalDoc } from "@/lib/legal";
@@ -9,7 +10,7 @@ export function LegalPage({ doc, path, legal }: { doc: LegalDoc; path: string; l
     <>
       <PageHeader title={doc.title} crumbs={[{ name: doc.title, href: path }]} />
       <div className="container-site section-y">
-        <article className="prose-site mx-auto max-w-3xl">
+        <Reveal as="article" variant="fade-up" className="prose-site mx-auto max-w-3xl">
           {!legal.reviewed ? (
             <p role="note" className="mb-8 flex gap-3 rounded-brand-sm border border-accent-dark/40 bg-accent/8 p-4 text-sm">
               <TriangleAlert className="mt-0.5 size-5 shrink-0 text-accent-dark" aria-hidden="true" />
@@ -38,7 +39,7 @@ export function LegalPage({ doc, path, legal }: { doc: LegalDoc; path: string; l
               ) : null}
             </section>
           ))}
-        </article>
+        </Reveal>
       </div>
     </>
   );

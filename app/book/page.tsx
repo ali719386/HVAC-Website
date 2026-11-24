@@ -7,6 +7,7 @@ import { brandLeadFormProps } from "@/components/forms/brand-lead-form";
 import { LeadForm } from "@/components/forms/lead-form";
 import { ContactCard } from "@/components/layout/contact-card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Reveal } from "@/components/motion/reveal";
 
 export function generateMetadata(): Metadata {
   const { config, content } = getBrand();
@@ -29,14 +30,14 @@ export default function BookPage() {
         <Suspense fallback={<LeadForm {...formProps} />}>
           <BookForm {...formProps} issues={issues} />
         </Suspense>
-        <aside aria-label="Contact details">
+        <Reveal as="aside" variant="fade-up" delay={150} aria-label="Contact details">
           <ContactCard
             config={config}
             copy={content.copy.contactPage.info}
             badge={{ open: content.copy.contactPage.hero.openNow, closed: content.copy.contactPage.hero.closedNow }}
             className="lg:sticky lg:top-28 lg:self-start"
           />
-        </aside>
+        </Reveal>
       </div>
     </>
   );

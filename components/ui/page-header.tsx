@@ -35,6 +35,9 @@ function BlendedBackground({ image }: { image: ImageAsset }) {
   );
 }
 
+/** Entrance stagger for hero text (CSS only; off with reduced motion or brand motion disabled). */
+const stagger = (step: number) => ({ animationDelay: `calc(var(--motion-stagger) * ${step})` });
+
 /** Inner-page hero band with breadcrumbs (visual + BreadcrumbList JSON-LD). */
 export function PageHeader({
   title,
@@ -90,11 +93,11 @@ export function PageHeader({
       {/* Desktop height about 380 to 440px: a minimum height, with content vertically centered. */}
       <div className={`container-site relative flex flex-col justify-center lg:min-h-[23.75rem] ${compact ? "py-12" : "py-14 lg:py-16"}`}>
         <Breadcrumbs items={trail} onDark />
-        {eyebrow ? <p className={`${compact ? "mt-5" : "mt-6"} text-sm font-bold tracking-[0.14em] text-on-primary/80 uppercase`}>{eyebrow}</p> : null}
-        <h1 className={`${eyebrow ? "mt-2" : "mt-6"} max-w-3xl ${aside ? "lg:max-w-[calc(100%-25rem)]" : "lg:max-w-[58%]"} text-4xl leading-tight font-extrabold sm:text-5xl`}>{title}</h1>
-        {intro ? <p className={`mt-4 max-w-[40rem] text-lg leading-relaxed text-balance text-on-primary/85 ${aside ? "lg:max-w-[calc(100%-25rem)]" : ""}`}>{intro}</p> : null}
+        {eyebrow ? <p style={stagger(1)} className={`animate-fade-up ${compact ? "mt-5" : "mt-6"} text-sm font-bold tracking-[0.14em] text-on-primary/80 uppercase`}>{eyebrow}</p> : null}
+        <h1 style={stagger(2)} className={`animate-fade-up ${eyebrow ? "mt-2" : "mt-6"} max-w-3xl ${aside ? "lg:max-w-[calc(100%-25rem)]" : "lg:max-w-[58%]"} text-4xl leading-tight font-extrabold sm:text-5xl`}>{title}</h1>
+        {intro ? <p style={stagger(3)} className={`animate-fade-up mt-4 max-w-[40rem] text-lg leading-relaxed text-balance text-on-primary/85 ${aside ? "lg:max-w-[calc(100%-25rem)]" : ""}`}>{intro}</p> : null}
         {ctas?.primary || ctas?.call ? (
-          <div className={`${compact ? "mt-7" : "mt-8"} flex flex-col gap-3 sm:flex-row`}>
+          <div style={stagger(4)} className={`animate-fade-up ${compact ? "mt-7" : "mt-8"} flex flex-col gap-3 sm:flex-row`}>
             {ctas.primary ? (
               <LinkButton href={ctas.primary.href} variant="accent" size="lg">
                 {ctas.primary.label}
@@ -116,7 +119,7 @@ export function PageHeader({
           </div>
         ) : null}
         {stats && stats.length > 0 ? (
-          <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+          <dl style={stagger(5)} className="animate-fade-up mt-8 flex flex-wrap gap-x-10 gap-y-4">
             {stats.map((s) => (
               <div key={s.label} className="flex flex-col">
                 <dt className="order-last text-sm text-on-primary/75">{s.label}</dt>
@@ -125,9 +128,9 @@ export function PageHeader({
             ))}
           </dl>
         ) : null}
-        {children ? <div className={compact ? "mt-6" : "mt-8"}>{children}</div> : null}
+        {children ? <div style={stagger(5)} className={`animate-fade-up ${compact ? "mt-6" : "mt-8"}`}>{children}</div> : null}
         {/* Right-side slot (e.g. a contact card): below the text on phones, vertically centered on the right from lg. */}
-        {aside ? <div className="mt-8 lg:absolute lg:top-1/2 lg:right-6 lg:mt-0 lg:w-[22rem] lg:-translate-y-1/2">{aside}</div> : null}
+        {aside ? <div style={stagger(4)} className="animate-fade-up mt-8 lg:absolute lg:top-1/2 lg:right-6 lg:mt-0 lg:w-[22rem] lg:-translate-y-1/2">{aside}</div> : null}
       </div>
     </section>
   );

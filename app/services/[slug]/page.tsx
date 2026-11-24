@@ -11,6 +11,7 @@ import { Icon } from "@/components/ui/icon";
 import { PageHeader } from "@/components/ui/page-header";
 import { CtaBand } from "@/components/home/sections";
 import { AvailableIn } from "@/components/geo/sections";
+import { Reveal, RevealGroup } from "@/components/motion/reveal";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -60,7 +61,7 @@ export default async function ServicePage({ params }: Props) {
 
       <div className="container-site section-y grid gap-12 lg:grid-cols-[1fr_22rem] lg:gap-16">
         <article>
-          <BrandImage image={service.image} sizes="(min-width: 1024px) 760px, 100vw" aspect="aspect-[16/9]" />
+          <BrandImage image={service.image} sizes="(min-width: 1024px) 760px, 100vw" aspect="aspect-[16/9]" reveal="mask-up" />
           <div className="mt-10 grid gap-5 text-lg leading-relaxed text-muted">
             {service.body.map((p) => (
               <p key={p}>{p}</p>
@@ -68,26 +69,26 @@ export default async function ServicePage({ params }: Props) {
           </div>
 
           <h2 className="mt-12 text-2xl font-extrabold sm:text-3xl">What&apos;s included</h2>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          <RevealGroup as="ul" variant="fade-up" className="mt-6 grid gap-4 sm:grid-cols-2">
             {service.features.map((f) => (
               <li key={f} className="flex items-start gap-3 rounded-brand-sm border border-line bg-surface-alt p-4 font-medium">
                 <Check className="mt-0.5 size-5 shrink-0 text-accent" aria-hidden="true" />
                 {f}
               </li>
             ))}
-          </ul>
+          </RevealGroup>
 
           {service.signs.length > 0 ? (
             <>
               <h2 className="mt-12 text-2xl font-extrabold sm:text-3xl">Signs you may need service</h2>
-              <ul className="mt-6 grid gap-3">
+              <RevealGroup as="ul" variant="fade-up" className="mt-6 grid gap-3">
                 {service.signs.map((s) => (
                   <li key={s} className="flex items-start gap-3">
                     <CircleAlert className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
                     {s}
                   </li>
                 ))}
-              </ul>
+              </RevealGroup>
             </>
           ) : null}
           <div className="mt-12 rounded-brand border border-line p-6">
@@ -95,7 +96,7 @@ export default async function ServicePage({ params }: Props) {
           </div>
         </article>
 
-        <aside className="grid content-start gap-6 lg:sticky lg:top-28">
+        <Reveal as="aside" variant="fade-up" delay={150} className="grid content-start gap-6 lg:sticky lg:top-28 lg:self-start">
           <div className="rounded-brand bg-primary p-7 text-on-primary">
             <span className="grid size-12 place-items-center rounded-brand-sm bg-on-primary/10">
               <Icon name={service.icon} className="size-6" />
@@ -120,7 +121,7 @@ export default async function ServicePage({ params }: Props) {
               ))}
             </ul>
           </nav>
-        </aside>
+        </Reveal>
       </div>
 
       <CtaBand config={config} copy={content.copy.ctaBand} />

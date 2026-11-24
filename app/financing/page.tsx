@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ExternalLink } from "lucide-react";
 import { getBrand } from "@/lib/brand";
+import { Reveal } from "@/components/motion/reveal";
 import { pageMetadata } from "@/lib/seo/meta";
 import { buttonClass, CallButton } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
@@ -26,7 +27,7 @@ export default function FinancingPage() {
     <>
       <PageHeader image={config.images.promo} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Financing", href: "/financing" }]} />
       <div className="container-site section-y">
-        <div className="mx-auto max-w-3xl">
+        <Reveal variant="fade-up" className="mx-auto max-w-3xl">
           {f.description ? <p className="text-xl leading-relaxed">{f.description}</p> : null}
           {f.provider ? (
             <p className="mt-6 text-muted">
@@ -47,7 +48,7 @@ export default function FinancingPage() {
             All financing is subject to credit approval by the lender. Rates, terms and eligibility are set by the lender and may
             change. {config.company.name} does not make credit decisions. Ask the lender for complete terms before applying.
           </p>
-        </div>
+        </Reveal>
       </div>
       <CtaBand config={config} copy={content.copy.ctaBand} />
     </>

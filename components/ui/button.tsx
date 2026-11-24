@@ -24,7 +24,8 @@ const sizes: Record<Size, string> = {
 export function buttonClass(variant: Variant = "primary", size: Size = "md", extra = "") {
   return [
     "inline-flex items-center justify-center gap-2 rounded-btn font-semibold whitespace-nowrap",
-    "transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-60",
+    // Press feedback: a slight scale (transform only, no layout). Off with reduced motion.
+    "transition-[color,background-color,border-color,scale] duration-200 active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-60",
     variants[variant],
     sizes[size],
     extra,

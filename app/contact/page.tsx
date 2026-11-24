@@ -14,6 +14,7 @@ import { WhereWeWork } from "@/components/geo/sections";
 import { CtaBand, FaqAccordion } from "@/components/home/sections";
 import { ContactCard } from "@/components/layout/contact-card";
 import { PageHero } from "@/components/ui/page-header";
+import { Reveal } from "@/components/motion/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
 export function generateMetadata(): Metadata {
@@ -46,10 +47,12 @@ export default function ContactPage() {
               {cp.form.title}
             </h2>
             <div className="grid gap-10 lg:grid-cols-[22rem_minmax(0,1fr)] lg:gap-12">
-              <aside aria-label={cp.info.title} className="lg:sticky lg:top-28 lg:self-start">
+              <Reveal as="aside" variant="fade-up" aria-label={cp.info.title} className="lg:sticky lg:top-28 lg:self-start">
                 <ContactCard config={config} copy={cp.info} badge={badge} />
-              </aside>
-              <BrandLeadForm simple title={cp.form.title} />
+              </Reveal>
+              <Reveal variant="fade-up" delay={120}>
+                <BrandLeadForm simple title={cp.form.title} />
+              </Reveal>
             </div>
           </Section>
         );

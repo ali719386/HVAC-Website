@@ -2,13 +2,14 @@ import { Check } from "lucide-react";
 import type { Plan } from "@/lib/brand/schema";
 import { formatUsd } from "@/lib/format";
 import { LinkButton } from "@/components/ui/button";
+import { RevealGroup } from "@/components/motion/reveal";
 
 /** Maintenance plan cards. Price shows only when configured; otherwise "Call for pricing". */
 export function PlanCards({ plans }: { plans: Plan[] }) {
   if (plans.length === 0) return null;
   const cols = plans.length >= 3 ? "lg:grid-cols-3" : "md:grid-cols-2 lg:max-w-4xl";
   return (
-    <ul className={`grid gap-6 ${cols}`}>
+    <RevealGroup as="ul" variant="fade-up" className={`grid gap-6 ${cols}`}>
       {plans.map((p) => (
         <li
           key={p.id}
@@ -51,6 +52,6 @@ export function PlanCards({ plans }: { plans: Plan[] }) {
           </LinkButton>
         </li>
       ))}
-    </ul>
+    </RevealGroup>
   );
 }

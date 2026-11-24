@@ -15,7 +15,7 @@ const chevron = "size-4 transition-transform group-focus-within:rotate-180 group
 export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: NavItem[]; bookLabel: string }) {
   const { company } = config;
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-surface">
+    <header className="site-header sticky top-0 z-40 border-b border-line bg-surface">
       <div className="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
         <Logo name={company.name} src={company.logo.light} />
 

@@ -102,7 +102,7 @@ export function ProjectExplorer({
   return (
     <div>
       {/* Sticky below the header from md up (on phones it would cover too much of the screen). */}
-      <div className="z-30 -mx-4 border-y border-line bg-surface/95 px-4 py-4 backdrop-blur-sm sm:-mx-6 sm:px-6 md:sticky md:top-[4.5rem] lg:top-20">
+      <div className="z-30 -mx-4 border-y border-line bg-surface px-4 py-4 sm:-mx-6 sm:px-6 md:sticky md:top-[4.5rem] lg:top-20">
         <div role="tablist" aria-label={t.categoryLabel} className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
           {cats.map((c) => {
             const selected = c === cat;
