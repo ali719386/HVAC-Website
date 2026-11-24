@@ -443,7 +443,7 @@ export const posts: PostInput[] = [
     date: "2025-12-04",
     updated: "2026-01-15",
     authorId: "coolwren-team",
-    cover: { src: "post-indoor-air-quality-basics.jpg", alt: "Indoor humidity monitor on a shelf in a bright living room" },
+    cover: { src: "post-indoor-air-quality-basics.jpg", alt: "New pleated air filter and a humidity gauge on a sunny windowsill" },
     season: "winter",
     takeaways: [
       "Filtration, humidity control and ventilation work together.",
