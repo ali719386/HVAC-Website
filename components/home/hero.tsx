@@ -31,7 +31,7 @@ export function Hero({ brand }: { brand: Brand }) {
 
   return (
     <section aria-labelledby="hero-title" data-tone="alt" className="relative overflow-hidden bg-surface-alt text-ink">
-      <div className="container-site grid items-center gap-12 pt-14 pb-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-24 lg:pb-20">
+      <div className="container-site grid items-center gap-12 pt-10 pb-14 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:pt-14 lg:pb-20">
         <div>
           <p
             className="animate-fade-up inline-flex items-center rounded-full bg-surface px-6 py-2.5 text-[0.95rem] font-semibold shadow-brand-sm"
@@ -66,7 +66,7 @@ export function Hero({ brand }: { brand: Brand }) {
             image={config.images.hero}
             preload
             sizes="(min-width: 1024px) 580px, 100vw"
-            aspect="aspect-[4/3] lg:aspect-square"
+            aspect="aspect-[4/3] lg:aspect-[5/4]"
             className="rounded-[calc(var(--brand-radius)*2)] shadow-brand-lg"
           />
           <div
