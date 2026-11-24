@@ -10,6 +10,7 @@ import { getBrand, getSiteUrl } from "@/lib/brand";
 import { tokensToCss } from "@/lib/brand/tokens";
 import { fontVars } from "@/lib/fonts";
 import { getNav } from "@/lib/nav";
+import { coverageCounts, coverageLabel } from "@/lib/geo/coverage";
 import { businessLd, JsonLd } from "@/lib/seo/jsonld";
 import { assetExists } from "@/components/ui/brand-image";
 
@@ -79,7 +80,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to main content
         </a>
         <PromoBar promo={config.offerings.promoBar} />
-        <TopBar config={config} />
+        <TopBar config={config} coverageText={coverageLabel(content.copy.serviceAreas.topBar, coverageCounts())} />
         <Header config={config} nav={nav} bookLabel={bookLabel} />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}

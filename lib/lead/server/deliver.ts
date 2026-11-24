@@ -20,6 +20,9 @@ export type LeadRecord = {
   phoneDisplay: string;
   email: string | null;
   address: string;
+  /** From the coverage selects; null when not chosen, "Not listed" for the other option. */
+  serviceState: string | null;
+  serviceCity: string | null;
   serviceType: string;
   serviceLabel: string;
   urgency: string;
@@ -29,6 +32,9 @@ export type LeadRecord = {
   consent: { sms: boolean; textVersion: string; text: string; timestamp: string };
   pageUrl: string;
 };
+
+/** "other" is the form's "Not listed" option. */
+const placeLabel = (v: string | undefined) => (v === "other" ? "Not listed" : v || null);
 
 export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: string; name: string }): LeadRecord {
   const now = new Date().toISOString();
@@ -42,6 +48,8 @@ export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: 
     phoneDisplay: formatUsPhone(phoneE164),
     email: input.email || null,
     address: input.address,
+    serviceState: placeLabel(input.serviceState),
+    serviceCity: placeLabel(input.serviceCity),
     serviceType: input.serviceType,
     serviceLabel: serviceTypeLabels[input.serviceType],
     urgency: input.urgency,
@@ -86,6 +94,8 @@ function rows(r: LeadRecord): [string, string][] {
     ["Phone", r.phoneDisplay],
     ["Email", r.email ?? "-"],
     ["Address / ZIP", r.address],
+    ["Service state", r.serviceState ?? "-"],
+    ["Service city", r.serviceCity ?? "-"],
     ["Service", r.serviceLabel],
     ["Urgency", r.urgencyLabel],
     ["Preferred time", r.preferredTime ?? "No preference"],

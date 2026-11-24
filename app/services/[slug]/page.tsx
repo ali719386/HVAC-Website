@@ -10,6 +10,7 @@ import { CallButton, LinkButton } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { PageHeader } from "@/components/ui/page-header";
 import { CtaBand } from "@/components/home/sections";
+import { AvailableIn } from "@/components/geo/sections";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -39,7 +40,7 @@ export default async function ServicePage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={serviceLd(service, brand)} />
+      <JsonLd data={serviceLd(service)} />
       <PageHeader
         eyebrow="Services"
         title={service.title}
@@ -89,6 +90,9 @@ export default async function ServicePage({ params }: Props) {
               </ul>
             </>
           ) : null}
+          <div className="mt-12 rounded-brand border border-line p-6">
+            <AvailableIn copy={content.copy.serviceAreas} />
+          </div>
         </article>
 
         <aside className="grid content-start gap-6 lg:sticky lg:top-28">

@@ -3,6 +3,7 @@ import type { Brand } from "@/lib/brand/schema";
 import { BrandImage } from "@/components/ui/brand-image";
 import { CallButton, LinkButton } from "@/components/ui/button";
 import { TrustList } from "@/components/layout/trust-list";
+import { coverageCounts, coverageLabel } from "@/lib/geo/coverage";
 
 /** Hero text entrance stagger: n x the brand motion stagger (CSS only; off when motion is disabled). */
 const delay = (step: number) => ({ animationDelay: `calc(var(--motion-stagger) * ${step})` });
@@ -14,18 +15,18 @@ export function Hero({ brand }: { brand: Brand }) {
   const copy = content.copy.hero;
   const text = copy[variant];
   const firstHours = company.hours[0];
-  const mainCity = content.cities[0];
+  const counts = coverageCounts();
 
   const quick = [
     { icon: Phone, label: "Call us", value: company.phone.display, href: `tel:${company.phone.tel}` },
     firstHours && { icon: Clock, label: firstHours.days, value: firstHours.hours },
-    mainCity && {
+    counts.cities + counts.states > 0 && {
       icon: MapPin,
-      label: "Serving",
-      value: `${mainCity.city}, ${mainCity.state} & nearby`,
+      label: content.copy.serviceAreas.section.eyebrow,
+      value: coverageLabel(content.copy.serviceAreas.topBar, counts),
       href: "/service-areas",
     },
-  ].filter((q) => q !== undefined);
+  ].filter((q) => q !== undefined && q !== false);
 
   return (
     <section aria-labelledby="hero-title" data-tone="alt" className="relative overflow-hidden bg-surface-alt text-ink">

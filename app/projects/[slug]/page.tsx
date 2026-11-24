@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MapPin } from "lucide-react";
-import { absoluteUrl, getBrand, getProject, getServiceZips } from "@/lib/brand";
+import { absoluteUrl, getBrand, getProject } from "@/lib/brand";
+import { clientAreas, projectCity } from "@/lib/geo/coverage";
 import type { ProjectImage } from "@/lib/brand/schema";
 import { serviceTypeLabels } from "@/lib/lead/constants";
 import { categoryService, cityLabel, relatedProjects } from "@/lib/projects";
 import { pageMetadata } from "@/lib/seo/meta";
 import { ServiceAreaChecker } from "@/components/forms/area-checker";
-import { LeadForm } from "@/components/forms/lead-form";
+import { BrandLeadForm } from "@/components/forms/brand-lead-form";
 import { CtaBand } from "@/components/home/sections";
 import { TestimonialFigure } from "@/components/home/testimonials";
 import { TrustList } from "@/components/layout/trust-list";
@@ -74,6 +76,7 @@ export default async function ProjectPage({ params }: Props) {
   const [before, after] = existing([p.before, p.after]).length === 2 ? [p.before, p.after] : [];
   const review = p.testimonialId ? content.testimonials.find((t) => t.id === p.testimonialId) : undefined;
   const url = absoluteUrl(`/projects/${p.slug}`);
+  const city = projectCity(p);
 
   return (
     <>
@@ -87,10 +90,17 @@ export default async function ProjectPage({ params }: Props) {
         ]}
       >
         <p className="flex flex-wrap items-center gap-3 text-on-primary/90">
-          <span className="inline-flex items-center gap-2">
-            <MapPin className="size-4" aria-hidden="true" />
-            {cityLabel(p)}
-          </span>
+          {city ? (
+            <Link href={city.href} className="inline-flex items-center gap-2 underline-offset-4 hover:underline">
+              <MapPin className="size-4" aria-hidden="true" />
+              {city.label}
+            </Link>
+          ) : (
+            <span className="inline-flex items-center gap-2">
+              <MapPin className="size-4" aria-hidden="true" />
+              {cityLabel(p)}
+            </span>
+          )}
           <span className="rounded-full border border-on-primary/25 bg-on-primary/8 px-3 py-1 text-sm font-semibold">{p.systemType}</span>
         </p>
       </PageHero>
@@ -166,11 +176,10 @@ export default async function ProjectPage({ params }: Props) {
         <aside aria-label={d.quoteTitle} className="grid content-start gap-6 lg:sticky lg:top-28 lg:self-start">
           <CallButton phone={company.phone} variant="primary" size="lg" className="w-full" />
           <div className="text-ink">
-            <LeadForm
-              companyName={company.name}
-              phone={company.phone}
+            <BrandLeadForm
               defaultService={service ? serviceType : undefined}
-              serviceOptions={content.services.map((s) => s.slug)}
+              defaultState={city?.stateAbbr}
+              defaultCity={city?.name}
               title={d.quoteTitle}
               compact
             />
@@ -179,7 +188,7 @@ export default async function ProjectPage({ params }: Props) {
           <div className="rounded-brand border border-line p-6">
             <p className="font-heading text-lg font-bold">{d.areaTitle}</p>
             <div className="mt-4">
-              <ServiceAreaChecker areas={getServiceZips()} phone={company.phone} />
+              <ServiceAreaChecker areas={clientAreas()} phone={company.phone} />
             </div>
           </div>
         </aside>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CalendarDays, Clock, MapPin } from "lucide-react";
-import type { BrandConfig, City, Copy, Project, Stat } from "@/lib/brand/schema";
+import type { BrandConfig, Copy, Project, Stat } from "@/lib/brand/schema";
+import type { AreaCity } from "@/lib/geo/coverage";
 import { cityLabel } from "@/lib/projects";
 import { CountUp } from "@/components/motion/count-up";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
@@ -113,24 +114,23 @@ export function StatsBand({ stats, copy, before, after }: { stats: Stat[]; copy:
 
 /* ------------------------------ Cities served ------------------------------ */
 
-/** Chips for cities that have a real /service-areas page (no thin pages). */
-export function CitiesServed({ cities, copy }: { cities: City[]; copy: Pp["cities"] }) {
-  const withPages = cities.filter((c) => c.page);
-  if (withPages.length === 0) return null;
+/** Chips linking to each configured city page. */
+export function CitiesServed({ cities, copy }: { cities: AreaCity[]; copy: Pp["cities"] }) {
+  if (cities.length === 0) return null;
   return (
     <Section tone="light" labelledBy="cities-title">
       <Reveal variant="fade-up">
         <SectionHeading id="cities-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} align="center" />
       </Reveal>
       <RevealGroup as="ul" variant="fade-up" className="mt-10 flex flex-wrap justify-center gap-3">
-        {withPages.map((c) => (
-          <li key={c.slug}>
+        {cities.map((c) => (
+          <li key={c.href}>
             <Link
-              href={`/service-areas/${c.slug}`}
+              href={c.href}
               className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-5 py-2.5 font-semibold transition-colors hover:border-primary hover:bg-primary/8 hover:text-primary"
             >
               <MapPin className="size-4 text-accent" aria-hidden="true" />
-              {c.city}, {c.state}
+              {c.label}
             </Link>
           </li>
         ))}

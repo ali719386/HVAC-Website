@@ -1,6 +1,7 @@
 import { z } from "zod";
 import defaultBrand from "@/brands/default";
 import exampleTwo from "@/brands/example-two";
+import { defaultClimate } from "@/content/climate";
 import { defaultCopy, defaultFaqs, defaultWhyChooseUs } from "@/content/defaults";
 import type { BrandInput } from "@/content/types";
 import { brandSchema, type Brand, type ImageAsset } from "./schema";
@@ -112,6 +113,7 @@ function loadBrand(): Brand {
       ...input.content,
       whyChooseUs: input.content.whyChooseUs ?? defaultWhyChooseUs,
       faqs: input.content.faqs ?? defaultFaqs,
+      climate: input.content.climate ?? defaultClimate,
       copy: mergeCopy(input),
     },
   });
@@ -142,11 +144,6 @@ export function absoluteUrl(path = "/"): string {
   return `${getSiteUrl()}${path === "/" ? "" : path}`;
 }
 
-/** Cities that have real local content. Only these get /service-areas/[city] pages. */
-export function getCityPages() {
-  return getBrand().content.cities.filter((c) => c.page !== undefined);
-}
-
 export function getService(slug: string) {
   return getBrand().content.services.find((s) => s.slug === slug);
 }
@@ -157,11 +154,6 @@ export function getProject(slug: string) {
 
 export function getPost(slug: string) {
   return getBrand().content.posts.find((p) => p.slug === slug);
-}
-
-/** All ZIPs served, for the client-side ServiceAreaChecker. */
-export function getServiceZips(): { zip: string; city: string; state: string }[] {
-  return getBrand().content.cities.flatMap((c) => c.zips.map((zip) => ({ zip, city: c.city, state: c.state })));
 }
 
 export type { Brand };

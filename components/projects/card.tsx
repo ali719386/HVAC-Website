@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import type { Copy, Project } from "@/lib/brand/schema";
 import { cityLabel } from "@/lib/projects";
+import { projectCity } from "@/lib/geo/coverage";
 import { BrandImage } from "@/components/ui/brand-image";
 
 type Pp = Copy["projectsPage"];
@@ -9,6 +10,7 @@ type Pp = Copy["projectsPage"];
 /** Grid card. Border only at rest; lift, shadow and image zoom on hover. Fixed 4:3 image box (no layout shift). */
 export function ProjectCard({ project: p, copy, headingLevel = "h3" }: { project: Project; copy: Pick<Pp, "categories" | "card" | "featured">; headingLevel?: "h2" | "h3" }) {
   const H = headingLevel;
+  const city = projectCity(p);
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-brand border border-line bg-surface transition duration-300 hover:-translate-y-1 hover:shadow-brand-md motion-reduce:hover:translate-y-0">
       <div className="relative">
@@ -31,10 +33,21 @@ export function ProjectCard({ project: p, copy, headingLevel = "h3" }: { project
             ) : null}
           </span>
         </div>
-        <p className="absolute bottom-4 left-4 flex items-center gap-1.5 text-sm font-semibold text-on-primary">
-          <MapPin className="size-4" aria-hidden="true" />
-          {cityLabel(p)}
-        </p>
+        {/* Links to the city page only when the city is configured; sits above the card's stretched link. */}
+        {city ? (
+          <Link
+            href={city.href}
+            className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 text-sm font-semibold text-on-primary underline-offset-4 hover:underline"
+          >
+            <MapPin className="size-4" aria-hidden="true" />
+            {city.label}
+          </Link>
+        ) : (
+          <p className="absolute bottom-4 left-4 flex items-center gap-1.5 text-sm font-semibold text-on-primary">
+            <MapPin className="size-4" aria-hidden="true" />
+            {cityLabel(p)}
+          </p>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-6">
         <H className="text-xl leading-snug font-bold">

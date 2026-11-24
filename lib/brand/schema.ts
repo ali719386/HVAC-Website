@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { serviceTypes } from "@/lib/lead/constants";
+import { isStateAbbr } from "@/lib/geo/states";
 import { contrastRatio, requiredPairs } from "./contrast";
 
 /* ------------------------------------------------------------------ */
@@ -73,6 +74,7 @@ export const sectionKeys = [
   "plans",
   "financing",
   "serviceArea",
+  "serviceAreas",
   "rebates",
   "faq",
   "posts",
@@ -249,21 +251,74 @@ export const planSchema = z.object({
   placeholder,
 });
 
-export const citySchema = z.object({
-  slug,
-  city: nonEmpty,
-  state: usState,
-  zips: z.array(zip).min(1),
-  /** City pages are generated ONLY when intro and localNotes are both present (no thin pages). */
-  page: z
-    .object({
-      intro: nonEmpty,
-      localNotes: z.array(nonEmpty).min(1),
-      neighborhoods: z.array(nonEmpty).default([]),
-    })
-    .optional(),
+/* ------------------------------ Coverage (multi-state) ------------------------------ */
+
+export const climates = ["cooling", "heating", "mixed"] as const;
+export type Climate = (typeof climates)[number];
+
+const stateAbbr = usState.refine(isStateAbbr, { error: (i) => `"${String(i.input)}" is not a US state or DC abbreviation` });
+
+/** A covered state. placeholder: true pages render noindex and stay out of the sitemap. */
+export const coverageStateSchema = z.object({
+  abbr: stateAbbr,
+  climate: z.enum(climates),
+  /** State-specific intro. Falls back to the climate template. */
+  intro: nonEmpty.optional(),
   placeholder,
 });
+
+/** A covered city. Never invent ZIP codes: leave zips empty until real data is provided (npm run geo:zips). */
+export const coverageCitySchema = z.object({
+  name: nonEmpty,
+  stateAbbr,
+  slug,
+  primary: z.boolean().default(false),
+  zips: z.array(zip).default([]),
+  intro: nonEmpty.optional(),
+  localNotes: z.array(nonEmpty).default([]),
+  neighborhoods: z.array(nonEmpty).default([]),
+  placeholder,
+});
+
+export const coverageSchema = z
+  .object({
+    /** Optional headquarters text for the top bar, e.g. "Headquartered in Columbus, OH". */
+    headquarters: nonEmpty.optional(),
+    states: z.array(coverageStateSchema).min(1),
+    cities: z.array(coverageCitySchema),
+  })
+  .superRefine((c, ctx) => {
+    const states = new Set<string>();
+    c.states.forEach((s, i) => {
+      if (states.has(s.abbr)) ctx.addIssue({ code: "custom", path: ["states", i, "abbr"], message: `State ${s.abbr} is listed twice in coverage.states` });
+      states.add(s.abbr);
+    });
+    const slugs = new Set<string>();
+    c.cities.forEach((city, i) => {
+      if (!states.has(city.stateAbbr)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["cities", i, "stateAbbr"],
+          message: `City "${city.name}" uses state ${city.stateAbbr}, which is not in coverage.states. Add the state first.`,
+        });
+      }
+      const key = `${city.stateAbbr}/${city.slug}`;
+      if (slugs.has(key)) ctx.addIssue({ code: "custom", path: ["cities", i, "slug"], message: `City slug "${city.slug}" is used twice in ${city.stateAbbr}` });
+      slugs.add(key);
+    });
+  });
+
+/** Generic climate wording only (no local statistics, utilities, rebates or landmarks). {city} and {state} are replaced. */
+export const climateProfileSchema = z.object({
+  label: nonEmpty,
+  /** Service slugs in the order they are emphasized on state and city pages. */
+  services: z.array(serviceTypeSchema).min(1),
+  headline: nonEmpty,
+  promo: nonEmpty,
+  intro: nonEmpty,
+  faqs: z.array(faqSchema).min(1),
+});
+export const climateProfilesSchema = z.object({ cooling: climateProfileSchema, heating: climateProfileSchema, mixed: climateProfileSchema });
 
 export const statSchema = z.object({
   value: z.number().nonnegative(),
@@ -349,6 +404,48 @@ export const copySchema = z.object({
     reviews: sectionCopy.extend({ googleLabel: nonEmpty }),
     faq: sectionCopy,
     cta: sectionCopy,
+  }),
+  /**
+   * Multi-state coverage UI. Tokens: {cities} and {states} (counts), {city} and {state} (names), {number}.
+   * The /service-areas header and checker headings reuse copy.serviceArea.
+   */
+  serviceAreas: z.object({
+    topBar: nonEmpty,
+    climates: z.object({ all: nonEmpty, cooling: nonEmpty, heating: nonEmpty, mixed: nonEmpty }),
+    filterLabel: nonEmpty,
+    searchLabel: nonEmpty,
+    searchPlaceholder: nonEmpty,
+    empty: nonEmpty,
+    viewAll: nonEmpty,
+    availableIn: nonEmpty,
+    citiesCount: nonEmpty,
+    statCities: nonEmpty,
+    statStates: nonEmpty,
+    checkTitle: nonEmpty,
+    section: sectionCopy.extend({ cta: nonEmpty }),
+    whereWeWork: sectionCopy,
+    state: z.object({
+      eyebrow: nonEmpty,
+      title: nonEmpty,
+      citiesTitle: nonEmpty,
+      noCities: nonEmpty,
+      servicesTitle: nonEmpty,
+      faqTitle: nonEmpty,
+      license: nonEmpty,
+    }),
+    city: z.object({
+      eyebrow: nonEmpty,
+      title: nonEmpty,
+      notesTitle: nonEmpty,
+      servicesTitle: nonEmpty,
+      neighborhoodsTitle: nonEmpty,
+      zipsTitle: nonEmpty,
+      faqTitle: nonEmpty,
+      nearbyTitle: nonEmpty,
+      projectsTitle: nonEmpty,
+      formTitle: nonEmpty,
+    }),
+    placeholderNotice: nonEmpty,
   }),
   /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,
@@ -514,7 +611,10 @@ export const brandConfigSchema = z.object({
     address: z.object({ street: nonEmpty, city: nonEmpty, state: usState, zip }),
     hours: z.array(z.object({ days: nonEmpty, hours: nonEmpty })).min(1),
     socials: z.array(z.object({ network: z.enum(["facebook", "instagram", "youtube", "linkedin", "x"]), url })),
+    /** Default license shown on pages without a state context. Leave undefined unless it applies everywhere it is shown. */
     licenseNumber: nonEmpty.optional(),
+    /** Per-state licenses. A license number shows only on pages for that state. Verify every number before publishing. */
+    licenses: z.array(z.object({ stateAbbr, number: nonEmpty })).default([]),
     insured: z.boolean(),
     bonded: z.boolean(),
     certifications: z.array(nonEmpty),
@@ -528,6 +628,8 @@ export const brandConfigSchema = z.object({
     homesServed: z.number().int().positive().optional(),
     stats: z.array(statSchema),
   }),
+  /** States and cities served (multi-state). Drives /service-areas, the area checker and lead form selects. */
+  coverage: coverageSchema,
   offerings: z.object({
     financing: z.object({
       enabled: z.boolean(),
@@ -625,7 +727,8 @@ export const brandContentSchema = z.object({
   posts: z.array(postSchema),
   projects: z.array(projectSchema),
   plans: z.array(planSchema),
-  cities: z.array(citySchema).min(1),
+  /** Generic climate profiles; the loader fills these from content/climate.ts unless a brand overrides them. */
+  climate: climateProfilesSchema,
   /** /services problem picker (content/symptoms.ts). Empty hides the section. */
   symptoms: z.array(symptomSchema).default([]),
   /** /services process steps (content/process.ts), 4 to 5 recommended. Empty hides the section. */
@@ -651,7 +754,9 @@ export type Faq = z.infer<typeof faqSchema>;
 export type Post = z.infer<typeof postSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Plan = z.infer<typeof planSchema>;
-export type City = z.infer<typeof citySchema>;
+export type CoverageState = z.infer<typeof coverageStateSchema>;
+export type CoverageCity = z.infer<typeof coverageCitySchema>;
+export type ClimateProfile = z.infer<typeof climateProfileSchema>;
 export type Stat = z.infer<typeof statSchema>;
 export type Symptom = z.infer<typeof symptomSchema>;
 export type ProjectImage = z.infer<typeof projectImageSchema>;

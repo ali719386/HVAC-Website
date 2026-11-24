@@ -70,8 +70,8 @@ export const projects: ProjectInput[] = [
   {
     slug: "furnace-safety-repair",
     title: "Furnace safety repair before winter",
-    city: "Golden",
-    state: "CO",
+    city: "Cheyenne",
+    state: "WY",
     category: "repair",
     systemType: "Gas furnace",
     buildingType: "residential",
@@ -92,8 +92,8 @@ export const projects: ProjectInput[] = [
   {
     slug: "restaurant-rooftop-unit",
     title: "Rooftop unit replacement for a restaurant",
-    city: "Denver",
-    state: "CO",
+    city: "Cheyenne",
+    state: "WY",
     category: "commercial",
     systemType: "Rooftop unit",
     buildingType: "commercial",
@@ -119,7 +119,7 @@ export const projects: ProjectInput[] = [
   {
     slug: "seasonal-care-visit",
     title: "Seasonal care visits for a mountain home",
-    city: "Wheat Ridge",
+    city: "Arvada",
     state: "CO",
     category: "maintenance",
     systemType: "Furnace and AC",
@@ -140,7 +140,7 @@ export const projects: ProjectInput[] = [
   {
     slug: "office-split-system",
     title: "Split system for a small office suite",
-    city: "Denver",
+    city: "Lakewood",
     state: "CO",
     category: "commercial",
     systemType: "Split system",

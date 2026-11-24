@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { ArrowRight, MapPin } from "lucide-react";
-import { getBrand, getServiceZips } from "@/lib/brand";
+import { getBrand } from "@/lib/brand";
+import { clientAreas, coverageCounts } from "@/lib/geo/coverage";
 import { pageMetadata } from "@/lib/seo/meta";
 import { ServiceAreaChecker } from "@/components/forms/area-checker";
-import { PageHeader } from "@/components/ui/page-header";
+import { CoverageBrowser } from "@/components/geo/coverage-browser";
 import { CtaBand } from "@/components/home/sections";
+import { PageHero } from "@/components/ui/page-header";
+import { Section, SectionHeading } from "@/components/ui/section";
 
 export function generateMetadata(): Metadata {
   const { config, content } = getBrand();
-  const names = content.cities.map((c) => c.city).join(", ");
+  const { cities, states } = coverageCounts();
   return pageMetadata({
-    title: "Service Areas",
-    description: `${config.company.name} provides heating and cooling service in ${names}.`,
+    title: content.copy.serviceArea.title,
+    description: `${config.company.name} service areas: ${cities} cities in ${states} states. Check your city or ZIP code.`,
     path: "/service-areas",
   });
 }
@@ -20,42 +21,39 @@ export function generateMetadata(): Metadata {
 export default function ServiceAreasPage() {
   const { config, content } = getBrand();
   const c = content.copy.serviceArea;
+  const sa = content.copy.serviceAreas;
+  const counts = coverageCounts();
+  const areas = clientAreas();
   return (
     <>
-      <PageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Service Areas", href: "/service-areas" }]} />
-      <div className="container-site section-y grid gap-12 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <h2 className="text-2xl font-extrabold">Communities we serve</h2>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-            {content.cities.map((city) => (
-              <li key={city.slug}>
-                {city.page ? (
-                  <Link
-                    href={`/service-areas/${city.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-brand-sm border border-line bg-surface p-4 font-semibold transition-colors hover:border-primary hover:text-primary"
-                  >
-                    <span className="flex items-center gap-2">
-                      <MapPin className="size-4 text-accent" aria-hidden="true" />
-                      {city.city}, {city.state}
-                    </span>
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
-                ) : (
-                  <span className="flex items-center gap-2 rounded-brand-sm border border-line bg-surface-alt p-4 font-semibold">
-                    <MapPin className="size-4 text-accent" aria-hidden="true" />
-                    {city.city}, {city.state}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
+      <PageHero
+        eyebrow={c.eyebrow}
+        title={c.title}
+        intro={c.intro || undefined}
+        crumbs={[{ name: "Service Areas", href: "/service-areas" }]}
+        stats={[
+          { value: String(counts.cities), label: sa.statCities },
+          { value: String(counts.states), label: sa.statStates },
+        ]}
+        ctas={{ primary: { label: content.copy.hero.primaryCta, href: "/book" }, call: { label: content.copy.servicesPage.hero.callCta, phone: config.company.phone } }}
+      />
+      <Section tone="light" labelledBy="areas-list-title">
+        <SectionHeading id="areas-list-title" eyebrow={sa.section.eyebrow} title={sa.section.title} intro={sa.section.intro} />
+        <div className="mt-8">
+          <CoverageBrowser areas={areas} labels={sa} variant="full" />
         </div>
-        <div>
-          <h2 className="mb-6 text-2xl font-extrabold">Check your ZIP code</h2>
-          <ServiceAreaChecker areas={getServiceZips()} phone={config.company.phone} />
+      </Section>
+      <Section tone="alt" labelledBy="areas-check-title">
+        <div className="mx-auto max-w-3xl">
+          <h2 id="areas-check-title" className="mb-6 text-2xl font-extrabold sm:text-3xl">
+            {sa.checkTitle}
+          </h2>
+          <ServiceAreaChecker areas={areas} phone={config.company.phone} />
         </div>
+      </Section>
+      <div className="pt-[var(--brand-section-y)]">
+        <CtaBand config={config} copy={content.copy.ctaBand} />
       </div>
-      <CtaBand config={config} copy={content.copy.ctaBand} />
     </>
   );
 }

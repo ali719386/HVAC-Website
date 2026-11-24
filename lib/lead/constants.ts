@@ -30,6 +30,8 @@ export const LIMITS = {
   name: 100,
   email: 254,
   address: 200,
+  /** State and city select values. */
+  place: 100,
   message: 2000,
   pageUrl: 500,
   /** Max accepted request body in bytes. */

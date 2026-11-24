@@ -17,6 +17,7 @@ type Sort = "newest" | "oldest" | "featured";
 export type ProjectMeta = {
   slug: string;
   category: ProjectCategory;
+  /** Configured coverage city label, or "" when the project's city is not in coverage. */
   city: string;
   systemType: string;
   year: number;
@@ -46,7 +47,7 @@ export function ProjectExplorer({
   const uid = useId();
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const cities = [...new Set(items.map((i) => i.city))].sort();
+  const cities = [...new Set(items.map((i) => i.city).filter(Boolean))].sort();
   const systems = [...new Set(items.map((i) => i.systemType))].sort();
   const pc = params.get("cat");
   const cat: Cat = isCat(pc) ? pc : "all";

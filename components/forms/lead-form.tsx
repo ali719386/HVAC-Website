@@ -5,6 +5,7 @@ import Script from "next/script";
 import { useId, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { CircleAlert, CircleCheck, LoaderCircle, Terminal } from "lucide-react";
 import type { Phone } from "@/lib/brand/schema";
+import type { ClientArea } from "@/lib/geo/coverage";
 import {
   LIMITS,
   preferredTimeLabels,
@@ -44,9 +45,17 @@ export function LeadForm({
   title,
   compact = false,
   serviceOptions = serviceTypes,
+  areas = [],
+  defaultState,
+  defaultCity,
 }: {
   /** Service choices in the dropdown (pass the brand's own service slugs). Defaults to every type. */
   serviceOptions?: readonly ServiceType[];
+  /** Coverage for the state and city selects (hidden when empty). */
+  areas?: ClientArea[];
+  /** Prefill: state abbreviation and city name from coverage (e.g. on a city page). */
+  defaultState?: string;
+  defaultCity?: string;
   companyName: string;
   phone: Phone;
   defaultService?: ServiceType;
@@ -58,6 +67,10 @@ export function LeadForm({
 }) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [errors, setErrors] = useState<FieldErrors>({});
+  const known = (abbr?: string) => (abbr && areas.some((a) => a.abbr === abbr) ? abbr : "");
+  const [placeState, setPlaceState] = useState(known(defaultState));
+  const stateArea = areas.find((a) => a.abbr === placeState);
+  const initialCity = stateArea?.cities.some((c) => c.name === defaultCity) ? (defaultCity ?? "") : "";
   const formRef = useRef<HTMLFormElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const uid = useId();
@@ -75,6 +88,8 @@ export function LeadForm({
       phone: str("phone"),
       email: str("email"),
       address: str("address"),
+      serviceState: str("serviceState"),
+      serviceCity: str("serviceCity"),
       serviceType: str("serviceType"),
       urgency: str("urgency"),
       preferredTime: str("preferredTime"),
@@ -208,6 +223,47 @@ export function LeadForm({
         <Field id={id("address")} label="Address or ZIP code" required error={errors.address}>
           <input id={id("address")} name="address" autoComplete="street-address" maxLength={LIMITS.address} {...aria("address", errors, id)} className={`${input} h-12`} />
         </Field>
+        {areas.length > 0 ? (
+          <>
+            <Field id={id("serviceState")} label="State" error={errors.serviceState}>
+              <select
+                id={id("serviceState")}
+                name="serviceState"
+                value={placeState}
+                onChange={(e) => setPlaceState(e.target.value)}
+                {...aria("serviceState", errors, id)}
+                className={`${input} h-12`}
+              >
+                <option value="">Choose a state</option>
+                {areas.map((a) => (
+                  <option key={a.abbr} value={a.abbr}>
+                    {a.name}
+                  </option>
+                ))}
+                <option value="other">Not listed</option>
+              </select>
+            </Field>
+            <Field id={id("serviceCity")} label="City" error={errors.serviceCity}>
+              {/* key: reset the city when the state changes. */}
+              <select
+                key={placeState}
+                id={id("serviceCity")}
+                name="serviceCity"
+                defaultValue={initialCity}
+                {...aria("serviceCity", errors, id)}
+                className={`${input} h-12`}
+              >
+                <option value="">{stateArea ? "Choose a city" : "Choose a state first"}</option>
+                {stateArea?.cities.map((c) => (
+                  <option key={c.slug} value={c.name}>
+                    {c.name}
+                  </option>
+                ))}
+                <option value="other">Not listed</option>
+              </select>
+            </Field>
+          </>
+        ) : null}
         <Field id={id("serviceType")} label="Service needed" required error={errors.serviceType}>
           <select id={id("serviceType")} name="serviceType" defaultValue={defaultService ?? ""} {...aria("serviceType", errors, id)} className={`${input} h-12`}>
             <option value="" disabled>

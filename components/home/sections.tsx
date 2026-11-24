@@ -11,6 +11,8 @@ import { Icon } from "@/components/ui/icon";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { TrustList } from "@/components/layout/trust-list";
 import { ServiceAreaChecker } from "@/components/forms/area-checker";
+import { AvailableIn } from "@/components/geo/sections";
+import { clientAreas } from "@/lib/geo/coverage";
 
 /* ------------------------------ Emergency ------------------------------ */
 
@@ -390,31 +392,19 @@ export function CtaBand({ config, copy }: { config: BrandConfig; copy: Copy["cta
 
 /* ------------------------------ Service area ------------------------------ */
 
-/** Heading + served cities + inline ZIP checker (no external API). */
-export function ServiceAreaBlock({
-  brand,
-  areas,
-  tone = "light",
-}: {
-  brand: Brand;
-  areas: { zip: string; city: string; state: string }[];
-  tone?: "light" | "alt";
-}) {
+/** Heading + primary cities + inline area checker (no external API). */
+export function ServiceAreaBlock({ brand, tone = "light" }: { brand: Brand; tone?: "light" | "alt" }) {
   const c = brand.content.copy.serviceArea;
   return (
     <Section tone={tone} labelledBy="area-title">
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <Reveal variant="fade-up">
           <SectionHeading id="area-title" eyebrow={c.eyebrow} title={c.title} intro={c.intro} />
-          <ul className="mt-6 flex flex-wrap gap-2">
-            {brand.content.cities.map((city) => (
-              <li key={city.slug} className={`rounded-full border border-line px-3.5 py-1.5 text-sm font-semibold ${tone === "alt" ? "bg-surface" : "bg-surface-alt"}`}>
-                {city.city}, {city.state}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-6">
+            <AvailableIn copy={brand.content.copy.serviceAreas} />
+          </div>
         </Reveal>
-        <ServiceAreaChecker areas={areas} phone={brand.config.company.phone} />
+        <ServiceAreaChecker areas={clientAreas()} phone={brand.config.company.phone} />
       </div>
     </Section>
   );

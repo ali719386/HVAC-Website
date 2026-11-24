@@ -1,4 +1,5 @@
 import type { BrandConfigInput } from "@/lib/brand/schema";
+import { coverage } from "./content/cities";
 
 /**
  * Default brand. Everything here is PLACEHOLDER data for the template.
@@ -24,6 +25,7 @@ export const config: BrandConfigInput = {
     ], // TODO: confirm hours
     socials: [], // TODO: add real profile URLs, e.g. { network: "facebook", url: "https://..." }
     licenseNumber: undefined, // TODO: add state HVAC license number. Hidden while undefined.
+    licenses: [], // TODO: add { stateAbbr, number } for each state where a license is held. Shown only on that state's pages.
     insured: false, // TODO: set true only if verified
     bonded: false, // TODO: set true only if verified
     certifications: [], // TODO: e.g. "NATE-certified technicians" only if true
@@ -38,6 +40,7 @@ export const config: BrandConfigInput = {
       { value: 6, suffix: "", label: "Communities served", placeholder: true }, // TODO
     ],
   },
+  coverage, // states and cities: see content/cities.ts
   offerings: {
     financing: {
       enabled: true,
@@ -152,7 +155,7 @@ export const config: BrandConfigInput = {
       { key: "testimonials", enabled: true },
       { key: "plans", enabled: false },
       { key: "financing", enabled: false },
-      { key: "serviceArea", enabled: true },
+      { key: "serviceAreas", enabled: true },
       { key: "rebates", enabled: false },
       { key: "faq", enabled: true },
       { key: "posts", enabled: true },

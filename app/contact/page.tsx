@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getBrand } from "@/lib/brand";
 import { pageMetadata } from "@/lib/seo/meta";
-import { LeadForm } from "@/components/forms/lead-form";
+import { BrandLeadForm } from "@/components/forms/brand-lead-form";
 import { ContactCard } from "@/components/layout/contact-card";
+import { WhereWeWork } from "@/components/geo/sections";
 import { PageHeader } from "@/components/ui/page-header";
 
 export function generateMetadata(): Metadata {
@@ -25,13 +26,9 @@ export default function ContactPage() {
         <aside aria-label="Contact details">
           <ContactCard config={config} />
         </aside>
-        <LeadForm
-          companyName={config.company.name}
-          phone={config.company.phone}
-          serviceOptions={content.services.map((s) => s.slug)}
-          title="Send us a message"
-        />
+        <BrandLeadForm title="Send us a message" />
       </div>
+      <WhereWeWork copy={content.copy.serviceAreas} />
     </>
   );
 }

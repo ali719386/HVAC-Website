@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { BrandStrip, ServiceCards } from "@/components/home/sections";
 import { TestimonialSlider } from "@/components/home/testimonials";
 import { AboutMission, AboutStory, AboutWhy, PhotoCta } from "@/components/about/sections";
+import { WhereWeWork } from "@/components/geo/sections";
 
 export function generateMetadata(): Metadata {
   const { config, content } = getBrand();
@@ -47,6 +48,7 @@ export default function AboutPage() {
       {services.length > 0 ? <ServiceCards services={services} copy={about.services} /> : null}
       <BrandStrip brands={config.offerings.supportedBrands} title={content.copy.brandStrip.title} />
       <TestimonialSlider items={content.testimonials} copy={about.testimonials} tone="light" />
+      <WhereWeWork copy={content.copy.serviceAreas} />
       <PhotoCta copy={about.cta} image={images.aboutCta} phone={config.company.phone} />
     </>
   );

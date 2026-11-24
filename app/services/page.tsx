@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Fragment, type ReactNode } from "react";
-import { getBrand, getServiceZips } from "@/lib/brand";
+import { getBrand } from "@/lib/brand";
 import type { ServicesSectionKey } from "@/lib/brand/schema";
 import { pageMetadata } from "@/lib/seo/meta";
 import { TrustList } from "@/components/layout/trust-list";
@@ -98,7 +98,7 @@ export default function ServicesPage() {
       case "plansFinancing":
         return <PlanFinancingStrip brand={brand} copy={sp} />;
       case "serviceArea":
-        return <ServiceAreaBlock brand={brand} areas={getServiceZips()} />;
+        return <ServiceAreaBlock brand={brand} />;
       case "brands":
         return <BrandStrip brands={offerings.supportedBrands} title={content.copy.brandStrip.title} />;
       case "reviews":
@@ -114,7 +114,7 @@ export default function ServicesPage() {
         );
       case "cta":
         return (
-          <LeadCtaBand config={config} copy={sp.cta} serviceOptions={content.services.map((s) => s.slug)} before={toneAt(i - 1)} />
+          <LeadCtaBand config={config} copy={sp.cta} before={toneAt(i - 1)} />
         );
     }
   };

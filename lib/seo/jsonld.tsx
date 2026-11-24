@@ -1,4 +1,5 @@
-import type { Brand, City, Service } from "@/lib/brand/schema";
+import type { Brand, Service } from "@/lib/brand/schema";
+import { getCoverage, type AreaCity, type AreaState } from "@/lib/geo/coverage";
 import { absoluteUrl } from "@/lib/brand";
 import { assetExists } from "@/components/ui/brand-image";
 
@@ -29,16 +30,24 @@ export function breadcrumbLd(trail: { name: string; href: string }[]): Ld {
 
 const businessId = () => `${absoluteUrl("/")}#business`;
 
-const place = (c: Pick<City, "city" | "state">) => ({
+const statePlace = (s: Pick<AreaState, "name">) => ({ "@type": "State", name: s.name });
+const cityPlace = (c: Pick<AreaCity, "name" | "stateName">) => ({
   "@type": "City",
-  name: `${c.city}, ${c.state}`,
+  name: c.name,
+  containedInPlace: { "@type": "State", name: c.stateName },
 });
+
+/** Every configured state and city. No per-city addresses or phone numbers are ever emitted. */
+const coverageAreas = () => {
+  const { states, cities } = getCoverage();
+  return [...states.map(statePlace), ...cities.map(cityPlace)];
+};
 
 /**
  * HVACBusiness (a LocalBusiness subtype). Built only from config.
  * Deliberately no aggregateRating/review markup and no FAQPage markup.
  */
-export function businessLd({ config, content }: Brand): Ld {
+export function businessLd({ config }: Brand): Ld {
   const { company, seo } = config;
   const ld: Ld = {
     "@context": "https://schema.org",
@@ -59,7 +68,7 @@ export function businessLd({ config, content }: Brand): Ld {
       postalCode: company.address.zip,
       addressCountry: "US",
     },
-    areaServed: content.cities.map(place),
+    areaServed: coverageAreas(),
     currenciesAccepted: "USD",
   };
   if (assetExists(company.logo.light)) ld.logo = absoluteUrl(company.logo.light);
@@ -69,7 +78,7 @@ export function businessLd({ config, content }: Brand): Ld {
   return ld;
 }
 
-export function serviceLd(service: Service, brand: Brand): Ld {
+export function serviceLd(service: Service): Ld {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -78,19 +87,32 @@ export function serviceLd(service: Service, brand: Brand): Ld {
     description: service.seoDescription,
     url: absoluteUrl(`/services/${service.slug}`),
     provider: { "@id": businessId() },
-    areaServed: brand.content.cities.map(place),
+    areaServed: coverageAreas(),
   };
 }
 
-/** City page: references the business and narrows areaServed to that city. */
-export function cityLd(city: City): Ld {
+/** City page: references the business and narrows areaServed to that city (inside its state). */
+export function cityLd(city: AreaCity, name: string): Ld {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: `HVAC services in ${city.city}, ${city.state}`,
+    name,
     serviceType: "Heating and air conditioning services",
-    url: absoluteUrl(`/service-areas/${city.slug}`),
+    url: absoluteUrl(city.href),
     provider: { "@id": businessId() },
-    areaServed: { ...place(city), containedInPlace: { "@type": "State", name: city.state } },
+    areaServed: cityPlace(city),
+  };
+}
+
+/** State page: same, narrowed to the state. */
+export function stateLd(state: AreaState, name: string): Ld {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    serviceType: "Heating and air conditioning services",
+    url: absoluteUrl(state.href),
+    provider: { "@id": businessId() },
+    areaServed: statePlace(state),
   };
 }

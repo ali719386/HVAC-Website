@@ -11,24 +11,29 @@ const isServiceType = (v: string | null): v is ServiceType => serviceTypes.some(
 export type IssuePrefill = Record<string, { service: ServiceType; message: string }>;
 
 /**
- * LeadForm with URL prefill: ?service=<type> and/or ?issue=<symptom id>. Unknown values are ignored.
+ * LeadForm with URL prefill: ?service=<type>, ?issue=<symptom id>, ?state=<abbr>&city=<name>. Unknown values are ignored.
  * Render inside <Suspense> with a plain LeadForm fallback.
  */
 export function BookForm({
   issues = {},
   ...props
-}: Omit<ComponentProps<typeof LeadForm>, "defaultService" | "defaultMessage"> & { issues?: IssuePrefill }) {
+}: Omit<ComponentProps<typeof LeadForm>, "defaultService" | "defaultMessage" | "defaultState" | "defaultCity"> & { issues?: IssuePrefill }) {
   const params = useSearchParams();
   const issueKey = params.get("issue");
   const issue = issueKey && Object.hasOwn(issues, issueKey) ? issues[issueKey] : undefined;
   const param = params.get("service");
   const defaultService = isServiceType(param) ? param : issue?.service;
+  // ?state=TX&city=Houston (unknown values are ignored by LeadForm).
+  const defaultState = params.get("state")?.toUpperCase() ?? undefined;
+  const defaultCity = params.get("city") ?? undefined;
   return (
     <LeadForm
-      key={`${defaultService ?? "none"}-${issueKey ?? ""}`}
+      key={`${defaultService ?? "none"}-${issueKey ?? ""}-${defaultState ?? ""}-${defaultCity ?? ""}`}
       {...props}
       defaultService={defaultService}
       defaultMessage={issue?.message}
+      defaultState={defaultState}
+      defaultCity={defaultCity}
     />
   );
 }

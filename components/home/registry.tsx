@@ -18,8 +18,9 @@ import {
   WhyChooseUs,
 } from "./sections";
 import { TestimonialSlider } from "./testimonials";
+import { ServiceAreasSection } from "@/components/geo/sections";
 
-type Render = (brand: Brand, areas: { zip: string; city: string; state: string }[]) => ReactNode;
+type Render = (brand: Brand) => ReactNode;
 
 /**
  * Homepage section registry. Order and visibility come from config.homepage.sections.
@@ -47,15 +48,16 @@ const registry: Record<SectionKey, Render> = {
     );
   },
   financing: (b) => <FinancingBlock config={b.config} copy={b.content.copy.financing} />,
-  serviceArea: (b, areas) => <ServiceAreaBlock brand={b} areas={areas} />,
+  serviceArea: (b) => <ServiceAreaBlock brand={b} />,
+  serviceAreas: (b) => <ServiceAreasSection brand={b} />,
   rebates: (b) => <RebatesBlock rebates={b.config.offerings.rebates} />,
   faq: (b) => <FaqAccordion faqs={b.content.faqs} copy={b.content.copy.faq} phone={b.config.company.phone} image={b.config.images.faq} />,
   posts: (b) => <PostCards posts={b.content.posts} copy={b.content.copy.posts} />,
   ctaBand: (b) => <CtaBand config={b.config} copy={b.content.copy.ctaBand} />,
 };
 
-export function HomeSections({ brand, areas }: { brand: Brand; areas: { zip: string; city: string; state: string }[] }) {
+export function HomeSections({ brand }: { brand: Brand }) {
   return brand.config.homepage.sections
     .filter((s) => s.enabled)
-    .map((s) => <Fragment key={s.key}>{registry[s.key](brand, areas)}</Fragment>);
+    .map((s) => <Fragment key={s.key}>{registry[s.key](brand)}</Fragment>);
 }

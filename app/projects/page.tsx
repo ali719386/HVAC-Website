@@ -5,6 +5,7 @@ import { getBrand } from "@/lib/brand";
 import type { ProjectsSectionKey } from "@/lib/brand/schema";
 import { formatNumber } from "@/lib/format";
 import { cityLabel } from "@/lib/projects";
+import { getCoverage, projectCity } from "@/lib/geo/coverage";
 import { pageMetadata } from "@/lib/seo/meta";
 import { FaqAccordion } from "@/components/home/sections";
 import { TestimonialSlider } from "@/components/home/testimonials";
@@ -68,7 +69,7 @@ export default function ProjectsPage() {
     stats: company.stats.length > 0,
     process: content.process.length > 0,
     testimonials: linkedReviews.length > 0,
-    cities: content.cities.some((city) => city.page),
+    cities: getCoverage().cities.length > 0,
     faq: content.projectFaqs.length > 0,
     cta: true,
   };
@@ -82,7 +83,8 @@ export default function ProjectsPage() {
   const meta: ProjectMeta[] = projects.map((p) => ({
     slug: p.slug,
     category: p.category,
-    city: cityLabel(p),
+    // Only configured coverage cities appear in the city filter.
+    city: projectCity(p)?.label ?? "",
     systemType: p.systemType,
     year: p.completedYear,
     featured: p.featured,
@@ -112,12 +114,12 @@ export default function ProjectsPage() {
       case "testimonials":
         return <TestimonialSlider items={linkedReviews} copy={pp.testimonials} />;
       case "cities":
-        return <CitiesServed cities={content.cities} copy={pp.cities} />;
+        return <CitiesServed cities={getCoverage().cities} copy={pp.cities} />;
       case "faq":
         return <FaqAccordion faqs={content.projectFaqs} copy={{ ...content.copy.faq, ...pp.faq }} phone={company.phone} />;
       case "cta":
         return (
-          <LeadCtaBand config={config} copy={pp.cta} serviceOptions={content.services.map((s) => s.slug)} before={toneNear(i, -1)} />
+          <LeadCtaBand config={config} copy={pp.cta} before={toneNear(i, -1)} />
         );
     }
   };

@@ -3,7 +3,10 @@ import type {
   BrandConfigInput,
   CopyInput,
   brandContentSchema,
-  citySchema,
+  climateProfilesSchema,
+  coverageCitySchema,
+  coverageSchema,
+  coverageStateSchema,
   faqSchema,
   planSchema,
   postSchema,
@@ -19,7 +22,8 @@ export type {
   Brand,
   BrandConfig,
   BrandContent,
-  City,
+  CoverageCity,
+  CoverageState,
   Copy,
   Faq,
   ImageAsset,
@@ -43,15 +47,19 @@ export type FaqInput = z.input<typeof faqSchema>;
 export type PostInput = z.input<typeof postSchema>;
 export type ProjectInput = z.input<typeof projectSchema>;
 export type PlanInput = z.input<typeof planSchema>;
-export type CityInput = z.input<typeof citySchema>;
+export type CoverageStateInput = z.input<typeof coverageStateSchema>;
+export type CoverageCityInput = z.input<typeof coverageCitySchema>;
+export type CoverageInput = z.input<typeof coverageSchema>;
 export type SymptomInput = z.input<typeof symptomSchema>;
 export type ProcessStepInput = z.input<typeof processStepSchema>;
 
-export type BrandContentInput = Omit<z.input<typeof brandContentSchema>, "copy" | "whyChooseUs" | "faqs"> & {
+export type BrandContentInput = Omit<z.input<typeof brandContentSchema>, "copy" | "whyChooseUs" | "faqs" | "climate"> & {
   copy?: CopyOverrides;
   /** Falls back to content/defaults.ts when omitted. */
   whyChooseUs?: WhyItemInput[];
   faqs?: FaqInput[];
+  /** Falls back to content/climate.ts when omitted. */
+  climate?: z.input<typeof climateProfilesSchema>;
 };
 
 /** What every /brands/<slug>/index.ts exports. */

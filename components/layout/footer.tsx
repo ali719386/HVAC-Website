@@ -4,13 +4,18 @@ import type { Brand } from "@/lib/brand/schema";
 import { getFooterLinks, legalLinks } from "@/lib/nav";
 import { Logo } from "@/components/ui/logo";
 import { TrustList } from "./trust-list";
+import { getCoverage, licenseFor, primaryCities } from "@/lib/geo/coverage";
 import { Reveal } from "@/components/motion/reveal";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
 
 export function Footer({ brand }: { brand: Brand }) {
   const { company, offerings } = brand.config;
-  const cityPages = brand.content.cities.filter((c) => c.page);
+  // Up to 8 primary cities (falls back to the first 8 configured cities).
+  const primary = primaryCities(8);
+  const footerCities = primary.length > 0 ? primary : getCoverage().cities.slice(0, 8);
+  const sa = brand.content.copy.serviceAreas;
+  const license = licenseFor(company);
   const companyLinks = getFooterLinks(brand);
   const year = new Date().getFullYear();
   const heading = "mb-4 font-heading text-base font-bold text-on-primary";
@@ -106,17 +111,22 @@ export function Footer({ brand }: { brand: Brand }) {
               </dl>
             </li>
           </ul>
-          {cityPages.length > 0 ? (
+          {footerCities.length > 0 ? (
             <>
-              <h2 className={`${heading} mt-8`}>Areas we serve</h2>
+              <h2 className={`${heading} mt-8`}>{sa.whereWeWork.title}</h2>
               <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-                {cityPages.map((c) => (
-                  <li key={c.slug}>
-                    <Link href={`/service-areas/${c.slug}`} className={link}>
-                      {c.city}, {c.state}
+                {footerCities.map((c) => (
+                  <li key={c.href}>
+                    <Link href={c.href} className={link}>
+                      {c.label}
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link href="/service-areas" className={`${link} font-semibold text-on-primary`}>
+                    {sa.viewAll}
+                  </Link>
+                </li>
               </ul>
             </>
           ) : null}
@@ -127,7 +137,7 @@ export function Footer({ brand }: { brand: Brand }) {
         <div className="container-site flex flex-col gap-4 py-6 text-sm md:flex-row md:items-center md:justify-between">
           <p>
             &copy; {year} {company.legalName}. All rights reserved.
-            {company.licenseNumber ? <span> License #{company.licenseNumber}.</span> : null}
+            {license ? <span> License #{license}.</span> : null}
           </p>
           <ul className="flex flex-wrap gap-x-5 gap-y-2">
             {legalLinks.map((l) => (

@@ -65,7 +65,7 @@ How it fits together:
 
 1. **Copy a brand folder.** Duplicate `brands/default` to `brands/acme-air`. Use a lowercase-hyphen slug.
 2. **Edit `config.ts`.** Set `slug: "acme-air"` (it must match the folder name), then company info, offerings, SEO, tokens, image alt text and homepage sections. Remove TODO comments as you verify each value.
-3. **Edit `content/*.ts`.** Add services, FAQs, cities (with ZIPs), plans, posts, projects, real testimonials and copy overrides. Set `placeholder: true` only on content that is not final.
+3. **Edit `content/*.ts`.** Add services, FAQs, coverage (states and cities, see "Add or remove coverage"), plans, posts, projects, real testimonials and copy overrides. Set `placeholder: true` only on content that is not final.
 4. **Register the brand.** In `lib/brand/index.ts`, add `import acmeAir from "@/brands/acme-air";` and `"acme-air": acmeAir,` to the `registry` object. This is the only shared file you touch.
 5. **Add assets and build.** Put images in `public/brands/acme-air/images/` (see section 5), set `NEXT_PUBLIC_BRAND=acme-air` in `.env.local`, then run `npm run check:placeholders -- acme-air` and `npm run build`.
 
@@ -136,11 +136,11 @@ Supported equipment brands (`offerings.supportedBrands`) appear in the brand str
 | Projects (`/projects` and `/projects/<slug>`) | `content/projects.ts`: slug, title, city, state, category (`ac-installation`, `heating`, `repair`, `maintenance`, `commercial`), systemType, buildingType, buildingSize, completedYear, duration, summary, overview, challenge, solution, equipment, timeline, results, featured, cover, gallery, before, after, videoUrl, testimonialId. Only real jobs with customer permission. `results` must be real, measured numbers (the block is hidden when empty). Gallery, before/after and video sections show only when their files or URL exist. `videoUrl` is an https embed URL, loaded only after the visitor clicks play. |
 | Projects FAQ | `content/project-faqs.ts` (timeline, permits, warranty, financing). No FAQPage markup. |
 | Project hero stats | `company.projectsCompleted`, `company.homesServed`, `company.yearsInBusiness`. Each is hidden while undefined. |
-| Cities, ZIPs and city pages | `content/cities.ts`. A `/service-areas/<slug>` page is created **only** when a city has `page` content (intro + local notes), to avoid thin duplicate pages. |
+| States, cities, ZIPs and area pages | `content/cities.ts` (imported into `config.coverage`). See "Add or remove coverage" below. |
 | Plans | `content/plans.ts`. Omit `priceUsd` to show "Call for pricing". |
 | Blog posts, projects, FAQs, testimonials, why-choose-us | matching files in `content/` |
 
-**Trust items appear only when set.** These are `licenseNumber`, `insured`, `bonded`, `certifications`, `googleRating`, `yearsInBusiness`, and `foundedYear` (JSON-LD). All are empty in the examples. Do not fill them in unless they are verified.
+**Trust items appear only when set.** These are `licenses` (per state, shown only on that state's pages), `licenseNumber` (default, shown on pages without a state), `insured`, `bonded`, `certifications`, `googleRating`, `yearsInBusiness`, and `foundedYear` (JSON-LD). All are empty in the examples. Do not fill them in unless they are verified.
 
 **Testimonials** marked `placeholder: true` show a visible "Sample" tag. Publishing invented reviews is illegal under the FTC rule on fake reviews, so replace them with real reviews you have permission to use.
 
@@ -160,7 +160,8 @@ Supported equipment brands (`offerings.supportedBrands`) appear in the brand str
 | `testimonials` | Scroll-snap testimonial slider |
 | `plans` | Maintenance plan cards |
 | `financing` | Financing teaser (only when financing is enabled) |
-| `serviceArea` | ZIP code checker |
+| `serviceArea` | Primary cities and the area checker |
+| `serviceAreas` | Climate tabs (Cooling, Heating, Mixed) with city chips, the area checker and a CTA |
 | `rebates` | Rebates block (disabled by default; never invent amounts) |
 | `faq` | FAQ accordion (no FAQPage markup) |
 | `posts` | Latest blog posts |
@@ -200,12 +201,30 @@ To add a new section type, add its key to `sectionKeys` in `lib/brand/schema.ts`
 | `stats` | Navy band with count-up numbers from `company.stats` |
 | `process` | Steps from `content/process.ts` |
 | `testimonials` | Slider of testimonials linked from a project's `testimonialId` |
-| `cities` | Links to cities that have a `/service-areas` page |
+| `cities` | Links to every configured city page |
 | `faq` | `content/project-faqs.ts` |
 | `cta` | Navy band with the compact lead form |
 
 Project detail pages show only the fields a project has. The sidebar quote form pre-selects the service mapped from the project category. JSON-LD on the detail page is BreadcrumbList only (plus the site-wide LocalBusiness from the layout).
 
+## 7b. Add or remove coverage
+
+Coverage drives `/service-areas`, `/service-areas/<state>` and `/service-areas/<state>/<city>`, the top bar label, the homepage Service Areas section, the footer cities, the area checker and the lead form state and city selects.
+
+1. **Edit `brands/<slug>/content/cities.ts`** (imported into `config.coverage`). Keep one entry per line.
+   - `states`: `{ abbr, climate: "cooling" | "heating" | "mixed", intro?, placeholder }`. The build fails with a clear message for an unknown abbreviation or a duplicate.
+   - `cities`: `{ name, stateAbbr, slug, primary?, zips, intro?, localNotes?, neighborhoods?, placeholder }`. A city's state must be listed in `states`. Up to 8 `primary` cities show in the footer and "Available in" chips.
+   - A state with no cities gets a state page only.
+   - `headquarters` (optional) shows in the top bar.
+2. **Set the climate.** It picks the climate profile in `content/climate.ts`: service emphasis order, headline, seasonal suggestion, 4 FAQs and an intro template with `{city}` and `{state}`. The wording is generic on purpose. Write real local content in `intro` and `localNotes`; never invent local statistics, temperatures, landmarks, utilities, rebates or competitors.
+3. **Add licenses** in `config.company.licenses` as `{ stateAbbr, number }`. A number shows only on that state's pages and on its city pages. `company.licenseNumber` is the default shown where there is no state (top bar, footer); leave it empty unless it applies everywhere.
+4. **Add ZIP codes** only from real data. Get a CSV of ZIP, city and state, then run `npm run geo:zips -- data/zips.csv "St. Louis" MO` and paste the printed `zips: [...]` line into that city. Cities without ZIPs are still checkable with the state and city picker.
+5. **Publish a page** by writing real content and setting `placeholder: false` on the state or city. Placeholder pages render with `robots: noindex`, are left out of `sitemap.xml` and show a "Placeholder content" notice in development only.
+6. **Remove a location** by deleting its line. Links, the sitemap, JSON-LD `areaServed` and the selects update automatically.
+
+`npm run check:placeholders` lists placeholder states and cities, states without a configured license, and cities without ZIP data.
+
+**Licensing and insurance rules vary by state (and sometimes by city or county).** Verify the license, registration and insurance requirements for every state and city before advertising it, and do not list a location the business is not allowed to serve.
 ## 8. Environment variables
 
 Copy `.env.example` to `.env.local`. Only the `NEXT_PUBLIC_*` values reach the browser. Everything else is server-only.
@@ -304,7 +323,7 @@ Without Upstash, the limiter is **in-memory and best-effort**. On serverless hos
 - **Fonts** come from Google Fonts via `next/font` and are self-hosted at build time, so the build needs network access.
 - **Brand selection is build-time** (`NEXT_PUBLIC_BRAND`). There is no runtime or domain-based switching, which keeps every page static.
 - **Phone numbers** in the examples use the fictional 555-01XX range. Example sites use `example.com` / `example.org`.
-- **Service area checking** happens in the browser against configured ZIPs. No external API is called.
+- **Service area checking** happens in the browser against configured ZIPs, with a state and city picker for cities that have no ZIP data. No external API is called, and an unlisted place is never described as covered.
 - **No map embed.** Embedding Google Maps needs an API key and third-party scripts, so it is left out.
 - **The 24/7 flag** controls the banner, top-bar line and hero chip. It is not expressed as 24/7 opening hours in JSON-LD, because that would contradict office hours.
 - **Missing images** render token-colored SVG placeholders. Nothing is downloaded or generated.

@@ -1,4 +1,5 @@
 import type { BrandConfigInput } from "@/lib/brand/schema";
+import { coverage } from "./content/cities";
 
 /**
  * Second example brand used to verify white-labeling. All data is PLACEHOLDER.
@@ -22,6 +23,7 @@ export const config: BrandConfigInput = {
     ],
     socials: [],
     licenseNumber: undefined, // TODO: Colorado jurisdictions license HVAC contractors locally; add if applicable
+    licenses: [], // TODO: add { stateAbbr, number } for each state where a license is held. Shown only on that state's pages.
     insured: false, // TODO
     bonded: false, // TODO
     certifications: [], // TODO
@@ -35,6 +37,7 @@ export const config: BrandConfigInput = {
       { value: 100, suffix: "%", label: "Written estimates", placeholder: true }, // TODO
     ],
   },
+  coverage, // states and cities: see content/cities.ts
   offerings: {
     financing: { enabled: false, provider: "", description: "" },
     promoBar: {
@@ -130,7 +133,7 @@ export const config: BrandConfigInput = {
       { key: "stats", enabled: true },
       { key: "whyChooseUs", enabled: true },
       { key: "plans", enabled: true },
-      { key: "serviceArea", enabled: true },
+      { key: "serviceAreas", enabled: true },
       { key: "testimonials", enabled: true },
       { key: "expert", enabled: true },
       { key: "brandStrip", enabled: false },

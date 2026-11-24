@@ -1,12 +1,17 @@
 import { Award, BadgeCheck, CalendarClock, ShieldCheck, Star } from "lucide-react";
 import type { BrandConfig } from "@/lib/brand/schema";
+import { licenseFor } from "@/lib/geo/coverage";
 
 type TrustItem = { key: string; icon: typeof Star; text: string; href?: string };
 
-/** Builds trust items ONLY from fields present in config. Nothing is shown by default. */
-export function getTrustItems(company: BrandConfig["company"]): TrustItem[] {
+/**
+ * Builds trust items ONLY from fields present in config. Nothing is shown by default.
+ * License: with `stateAbbr`, only that state's configured license; without, only the default licenseNumber.
+ */
+export function getTrustItems(company: BrandConfig["company"], stateAbbr?: string): TrustItem[] {
   const items: TrustItem[] = [];
-  if (company.licenseNumber) items.push({ key: "license", icon: BadgeCheck, text: `Licensed, #${company.licenseNumber}` });
+  const license = licenseFor(company, stateAbbr);
+  if (license) items.push({ key: "license", icon: BadgeCheck, text: stateAbbr ? `${stateAbbr} license #${license}` : `Licensed, #${license}` });
   if (company.insured || company.bonded) {
     const parts = [company.insured && "Insured", company.bonded && "Bonded"].filter(Boolean).join(" & ");
     items.push({ key: "insured", icon: ShieldCheck, text: parts });
@@ -25,8 +30,11 @@ export function TrustList({
   onDark = false,
   variant = "inline",
   only,
+  stateAbbr,
   className = "",
 }: {
+  /** State context of the page: shows that state's license only (if configured). */
+  stateAbbr?: string;
   company: BrandConfig["company"];
   onDark?: boolean;
   /** chips: pill-shaped items (e.g. in a page header). */
@@ -35,7 +43,7 @@ export function TrustList({
   only?: ("license" | "insured" | "years" | "rating" | "cert")[];
   className?: string;
 }) {
-  const items = getTrustItems(company).filter((i) => !only || only.some((k) => i.key === k || i.key.startsWith(`${k}-`)));
+  const items = getTrustItems(company, stateAbbr).filter((i) => !only || only.some((k) => i.key === k || i.key.startsWith(`${k}-`)));
   if (items.length === 0) return null;
   const chips = variant === "chips";
   const chip = onDark ? "border-on-primary/20 bg-on-primary/8" : "border-line bg-surface";

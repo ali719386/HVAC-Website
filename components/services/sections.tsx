@@ -3,7 +3,7 @@ import { ArrowRight, BadgeDollarSign, CalendarCheck, Check, Phone, Siren } from 
 import type { Brand, BrandConfig, Copy, ProcessStep, Service, Symptom } from "@/lib/brand/schema";
 import { formatUsd } from "@/lib/format";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
-import { LeadForm } from "@/components/forms/lead-form";
+import { BrandLeadForm } from "@/components/forms/brand-lead-form";
 import { TrustList } from "@/components/layout/trust-list";
 import { BrandImage } from "@/components/ui/brand-image";
 import { CallButton } from "@/components/ui/button";
@@ -266,13 +266,16 @@ export function PlanFinancingStrip({ brand, copy }: { brand: Brand; copy: Pick<S
 export function LeadCtaBand({
   config,
   copy,
-  serviceOptions,
   before,
+  defaultState,
+  defaultCity,
 }: {
   config: BrandConfig;
   copy: Sp["cta"];
-  serviceOptions: Service["slug"][];
   before?: Tone;
+  /** Prefill the form location (state abbreviation, city name). */
+  defaultState?: string;
+  defaultCity?: string;
 }) {
   const { company } = config;
   return (
@@ -291,7 +294,7 @@ export function LeadCtaBand({
           <TrustList company={company} onDark variant="chips" className="mt-8" />
         </Reveal>
         <Reveal variant="fade-up" delay={120} className="text-ink">
-          <LeadForm companyName={company.name} phone={company.phone} serviceOptions={serviceOptions} compact />
+          <BrandLeadForm compact defaultState={defaultState} defaultCity={defaultCity} />
         </Reveal>
       </div>
     </Section>

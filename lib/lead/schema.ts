@@ -25,6 +25,9 @@ export const leadSchema = z.object({
     z.minLength(5, "Please enter your street address or 5-digit ZIP code."),
     z.maxLength(LIMITS.address, "Address is too long."),
   ),
+  /** Service location from the coverage selects. "Not listed" submits as "other". Optional. */
+  serviceState: z.optional(z.string().check(z.trim(), z.maxLength(LIMITS.place, "Please choose a state from the list."))),
+  serviceCity: z.optional(z.string().check(z.trim(), z.maxLength(LIMITS.place, "Please choose a city from the list."))),
   serviceType: z.enum(serviceTypes, "Please choose a service."),
   urgency: z.enum(urgencies, "Please choose how soon you need service."),
   preferredTime: z.union([z.literal(""), z.enum(preferredTimes)]),

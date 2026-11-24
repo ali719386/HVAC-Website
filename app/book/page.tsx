@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { getBrand } from "@/lib/brand";
 import { pageMetadata } from "@/lib/seo/meta";
 import { BookForm } from "@/components/forms/book-form";
+import { brandLeadFormProps } from "@/components/forms/brand-lead-form";
 import { LeadForm } from "@/components/forms/lead-form";
 import { ContactCard } from "@/components/layout/contact-card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -19,11 +20,7 @@ export function generateMetadata(): Metadata {
 export default function BookPage() {
   const { config, content } = getBrand();
   const c = content.copy.book;
-  const formProps = {
-    companyName: config.company.name,
-    phone: config.company.phone,
-    serviceOptions: content.services.map((s) => s.slug),
-  };
+  const formProps = brandLeadFormProps();
   const issues = Object.fromEntries(content.symptoms.map((s) => [s.id, { service: s.service, message: s.message }]));
   return (
     <>
