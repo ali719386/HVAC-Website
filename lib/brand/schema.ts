@@ -488,6 +488,7 @@ export const copySchema = z.object({
       noCities: nonEmpty,
       servicesTitle: nonEmpty,
       faqTitle: nonEmpty,
+      whyTitle: nonEmpty,
       license: nonEmpty,
     }),
     city: z.object({

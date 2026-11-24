@@ -106,6 +106,7 @@ export const defaultCopy: CopyInput = {
       noCities: "We have not listed individual cities in {state} yet. Call us to ask about your area.",
       servicesTitle: "Services for {state} homes",
       faqTitle: "Questions from {state} homeowners",
+      whyTitle: "Why {state} homeowners call us",
       license: "{state} license #{number}",
     },
     city: {

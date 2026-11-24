@@ -10,9 +10,12 @@ import { CoverageBrowser } from "./coverage-browser";
 
 type Sa = Copy["serviceAreas"];
 
-/** Development-only banner on pages whose data is still placeholder (those pages are also noindex). */
+/**
+ * Optional reminder banner on pages whose data is still placeholder (those pages stay noindex either way).
+ * Hidden by default; set SHOW_PLACEHOLDER_NOTICE=true in .env.local (development only) to see it.
+ */
 export function PlaceholderNotice({ show, text }: { show: boolean; text: string }) {
-  if (!show || process.env.NODE_ENV !== "development") return null;
+  if (!show || process.env.NODE_ENV !== "development" || process.env.SHOW_PLACEHOLDER_NOTICE !== "true") return null;
   return (
     <div role="note" className="border-b border-accent/40 bg-accent/10">
       <p className="container-site flex items-start gap-2 py-3 text-sm font-semibold">

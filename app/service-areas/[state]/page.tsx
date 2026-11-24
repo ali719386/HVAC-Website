@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getBrand } from "@/lib/brand";
-import { fillTokens, findState, getCoverage, licenseFor } from "@/lib/geo/coverage";
+import { emphasizedServices, fillTokens, findState, getCoverage, licenseFor } from "@/lib/geo/coverage";
 import { JsonLd, stateLd } from "@/lib/seo/jsonld";
 import { pageMetadata } from "@/lib/seo/meta";
 import { CityLinks, EmphasizedServices, PromoNote } from "@/components/geo/area-page";
@@ -10,6 +10,8 @@ import { CtaBand, FaqAccordion } from "@/components/home/sections";
 import { TrustList } from "@/components/layout/trust-list";
 import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/ui/page-header";
+import { BrandImage } from "@/components/ui/brand-image";
+import { Icon } from "@/components/ui/icon";
 import { Section, SectionHeading } from "@/components/ui/section";
 
 type Props = { params: Promise<{ state: string }> };
@@ -49,12 +51,14 @@ export default async function StatePage({ params }: Props) {
   const { brand, state, profile, sa, title, intro } = d;
   const { config, content } = brand;
   const license = licenseFor(config.company, state.abbr);
+  const topService = emphasizedServices(content.services, state.climate)[0];
 
   return (
     <>
       <JsonLd data={stateLd(state, title)} />
       <PlaceholderNotice show={Boolean(state.placeholder)} text={sa.placeholderNotice} />
       <PageHero
+        image={config.images.serviceAreas}
         eyebrow={`${sa.state.eyebrow} · ${profile.label}`}
         title={title}
         intro={intro}
@@ -80,6 +84,34 @@ export default async function StatePage({ params }: Props) {
             </div>
             {license ? (
               <p className="mt-6 text-sm font-semibold">{sa.state.license.replace("{state}", state.name).replace("{number}", license)}</p>
+            ) : null}
+            {/* Photo of the service this climate leans on most (from the brand's own service images). */}
+            {topService ? (
+              <BrandImage
+                image={topService.image}
+                aspect="aspect-[4/3]"
+                sizes="(min-width: 1024px) 560px, 100vw"
+                className="mt-8 shadow-brand-md"
+                reveal="mask-up"
+              />
+            ) : null}
+            {content.whyChooseUs.length > 0 ? (
+              <div className="mt-8 rounded-brand border border-line bg-surface-alt p-6">
+                <h3 className="text-xl font-bold">{fillTokens(sa.state.whyTitle, { state: state.name })}</h3>
+                <ul className="mt-5 grid gap-4">
+                  {content.whyChooseUs.map((it) => (
+                    <li key={it.title} className="flex gap-3">
+                      <span className="grid size-10 shrink-0 place-items-center rounded-brand-sm bg-surface text-accent shadow-brand-sm">
+                        <Icon name={it.icon} className="size-5" />
+                      </span>
+                      <span>
+                        <span className="block font-semibold">{it.title}</span>
+                        <span className="mt-0.5 block text-sm leading-relaxed text-muted">{it.body}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : null}
           </Reveal>
           <div>

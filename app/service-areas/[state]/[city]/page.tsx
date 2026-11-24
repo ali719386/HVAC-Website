@@ -66,6 +66,7 @@ export default async function CityPage({ params }: Props) {
       <JsonLd data={cityLd(city, title)} />
       <PlaceholderNotice show={Boolean(city.placeholder)} text={sa.placeholderNotice} />
       <PageHero
+        image={config.images.serviceAreas}
         eyebrow={`${sa.city.eyebrow} · ${profile.label}`}
         title={title}
         intro={intro}
