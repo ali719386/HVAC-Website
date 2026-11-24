@@ -4,11 +4,12 @@ import type { BrandConfig } from "@/lib/brand/schema";
 import type { NavItem } from "@/lib/nav";
 import { LinkButton } from "@/components/ui/button";
 import { Logo } from "@/components/ui/logo";
-import { HomeLink } from "./home-link";
+import { NavLink } from "./nav-link";
 import { MobileMenu } from "./mobile-menu";
 
+/** Active item: primary color plus an accent underline (not color alone). */
 const topLink =
-  "flex cursor-pointer items-center gap-1 rounded-btn px-2.5 py-2 text-[0.95rem] font-semibold text-ink hover:text-primary xl:px-3";
+  "relative flex cursor-pointer items-center gap-1 rounded-btn px-2.5 py-2 text-[0.95rem] font-semibold text-ink hover:text-primary xl:px-3 aria-[current=page]:text-primary aria-[current=page]:after:absolute aria-[current=page]:after:inset-x-2.5 aria-[current=page]:after:-bottom-0.5 aria-[current=page]:after:h-0.5 aria-[current=page]:after:rounded-full aria-[current=page]:after:bg-accent aria-[current=page]:after:content-['']";
 const chevron = "size-4 transition-transform group-focus-within:rotate-180 group-hover:rotate-180";
 
 export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: NavItem[]; bookLabel: string }) {
@@ -31,13 +32,9 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
                 </li>
               ) : (
                 <li key={item.label}>
-                  {item.href === "/" ? (
-                    <HomeLink className={topLink}>{item.label}</HomeLink>
-                  ) : (
-                    <Link href={item.href} className={topLink}>
-                      {item.label}
-                    </Link>
-                  )}
+                  <NavLink href={item.href} className={topLink}>
+                    {item.label}
+                  </NavLink>
                 </li>
               ),
             )}

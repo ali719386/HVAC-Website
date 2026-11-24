@@ -90,6 +90,22 @@ export const config: BrandConfigInput = {
     projects: { src: "projects.jpg", alt: "Completed ductless mini-split installation" },
     promo: { src: "promo.jpg", alt: "Furnace filter being replaced" },
   },
+  // /services page sections: reorder or set enabled: false to hide.
+  servicesPage: {
+    sections: [
+      { key: "filters", enabled: true },
+      { key: "cards", enabled: true },
+      { key: "problemPicker", enabled: true },
+      { key: "emergency", enabled: true }, // also needs offerings.emergency24x7
+      { key: "process", enabled: true },
+      { key: "plansFinancing", enabled: true },
+      { key: "serviceArea", enabled: true },
+      { key: "brands", enabled: true },
+      { key: "reviews", enabled: true },
+      { key: "faq", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
   homepage: {
     heroVariant: "winter",
     sections: [

@@ -37,4 +37,14 @@ export const copy: CopyOverrides = {
     },
   },
   ctaBand: { title: "Ready for a more comfortable home?", body: "Book online or call during business hours.", cta: "Schedule a visit" },
+  // TODO: review /services page copy with the client.
+  servicesPage: {
+    hero: { primaryCta: "Schedule a visit", callCta: "Call us" },
+    problemPicker: { eyebrow: "Start here", title: "What is your system doing?", intro: "Choose the closest match and we will take it from there." },
+    process: { eyebrow: "Our process", title: "From first call to finished job", intro: "" },
+    plans: { title: "Seasonal care plans", body: "Spring and fall visits, scheduled for you.", cta: "See care plans" },
+    reviews: { eyebrow: "Reviews", title: "Front Range homeowners on our work", intro: "", googleLabel: "on Google" },
+    faq: { eyebrow: "FAQ", title: "Questions about service", intro: "" },
+    cta: { eyebrow: "Request a visit", title: "Tell us about your home", intro: "Send a request and we will confirm a time during business hours." },
+  },
 };

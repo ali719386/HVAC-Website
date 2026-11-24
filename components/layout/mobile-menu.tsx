@@ -6,7 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Menu, Phone as PhoneIcon, X } from "lucide-react";
 import type { Phone } from "@/lib/brand/schema";
 import type { NavItem } from "@/lib/nav";
-import { HomeLink } from "./home-link";
+import { NavLink } from "./nav-link";
 
 /** Mobile/tablet navigation drawer. Escape closes, focus returns to the toggle. */
 export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: Phone; bookLabel: string }) {
@@ -66,24 +66,13 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
           <ul className="divide-y divide-line">
             {nav.map((item) => (
               <li key={item.label} className="py-1">
-                {item.href === "/" ? (
-                  <HomeLink
-                    className="block py-3 font-heading text-lg font-bold text-ink"
-                    aria-current={pathname === "/" ? "page" : undefined}
-                    onNavigate={close}
-                  >
-                    {item.label}
-                  </HomeLink>
-                ) : (
-                  <Link
-                    href={item.href}
-                    onClick={close}
-                    className="block py-3 font-heading text-lg font-bold text-ink"
-                    aria-current={pathname === item.href ? "page" : undefined}
-                  >
-                    {item.label}
-                  </Link>
-                )}
+                <NavLink
+                  href={item.href}
+                  onNavigate={close}
+                  className="flex items-center gap-3 py-3 font-heading text-lg font-bold text-ink aria-[current=page]:text-primary aria-[current=page]:before:h-5 aria-[current=page]:before:w-1 aria-[current=page]:before:rounded-full aria-[current=page]:before:bg-accent aria-[current=page]:before:content-['']"
+                >
+                  {item.label}
+                </NavLink>
                 {item.children?.length ? (
                   <ul className="mb-3 grid gap-1 border-l-2 border-line pl-4">
                     {item.children.map((c) => (

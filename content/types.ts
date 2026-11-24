@@ -7,6 +7,8 @@ import type {
   faqSchema,
   planSchema,
   postSchema,
+  processStepSchema,
+  symptomSchema,
   projectSchema,
   serviceSchema,
   testimonialSchema,
@@ -42,6 +44,8 @@ export type PostInput = z.input<typeof postSchema>;
 export type ProjectInput = z.input<typeof projectSchema>;
 export type PlanInput = z.input<typeof planSchema>;
 export type CityInput = z.input<typeof citySchema>;
+export type SymptomInput = z.input<typeof symptomSchema>;
+export type ProcessStepInput = z.input<typeof processStepSchema>;
 
 export type BrandContentInput = Omit<z.input<typeof brandContentSchema>, "copy" | "whyChooseUs" | "faqs"> & {
   copy?: CopyOverrides;

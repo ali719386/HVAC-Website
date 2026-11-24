@@ -1,4 +1,6 @@
 import {
+  AudioLines,
+  ClipboardList,
   Award,
   BadgeCheck,
   BadgeDollarSign,
@@ -55,6 +57,8 @@ const icons: Record<IconKey, LucideIcon> = {
   handshake: Handshake,
   scale: Scale,
   "badge-check": BadgeCheck,
+  volume: AudioLines,
+  clipboard: ClipboardList,
 };
 
 export function Icon({ name, className }: { name: IconKey; className?: string }) {

@@ -93,6 +93,27 @@ export const copy: CopyOverrides = {
       call: "Call Now",
     },
   },
+  // TODO: review /services page copy with the client.
+  servicesPage: {
+    // TODO: keep "free estimate" only if the client really offers free estimates.
+    hero: { primaryCta: "Get a free estimate", callCta: "Call now" },
+    problemPicker: {
+      eyebrow: "Not sure what you need?",
+      title: "Tell us what your system is doing",
+      intro: "Pick the closest match and we will point you to the right service.",
+    },
+    emergency: { callCta: "Call now" },
+    process: { eyebrow: "How it works", title: "Simple from the first call", intro: "Clear steps, so you always know what happens next." },
+    plans: { title: "Maintenance plans", body: "Seasonal tune-ups scheduled for you, so small issues get caught early.", cta: "View plans" },
+    financing: { title: "Financing options", body: "Payment options for qualifying customers on new systems.", cta: "Financing details" },
+    reviews: { eyebrow: "Reviews", title: "What Central Ohio homeowners say", intro: "", googleLabel: "on Google" },
+    faq: { eyebrow: "FAQ", title: "Questions about our services", intro: "Quick answers before you book." },
+    cta: {
+      eyebrow: "Request service",
+      title: "Tell us what you need",
+      intro: "Send a quick request and our Columbus team will confirm a time. For emergencies, call us.",
+    },
+  },
   ctaBand: {
     title: "Too hot, too cold, or just not right?",
     body: "Call our Columbus team or book online. We will confirm your arrival window.",

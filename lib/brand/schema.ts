@@ -56,6 +56,8 @@ export const iconKeys = [
   "handshake",
   "scale",
   "badge-check",
+  "volume",
+  "clipboard",
 ] as const;
 export const iconKeySchema = z.enum(iconKeys);
 
@@ -82,6 +84,28 @@ export type SectionKey = z.infer<typeof sectionKeySchema>;
 export const serviceTypeSchema = z.enum(serviceTypes);
 export type ServiceType = z.infer<typeof serviceTypeSchema>;
 
+/** /services page filter values. A service can belong to several of each. */
+export const serviceCategories = ["cooling", "heating", "maintenance"] as const;
+export type ServiceCategory = (typeof serviceCategories)[number];
+export const serviceAudiences = ["residential", "commercial"] as const;
+export type ServiceAudience = (typeof serviceAudiences)[number];
+
+/** /services page sections, in render order when listed in config.servicesPage.sections. */
+export const servicesSectionKeys = [
+  "filters",
+  "cards",
+  "problemPicker",
+  "emergency",
+  "process",
+  "plansFinancing",
+  "serviceArea",
+  "brands",
+  "reviews",
+  "faq",
+  "cta",
+] as const;
+export type ServicesSectionKey = (typeof servicesSectionKeys)[number];
+
 const placeholder = z.boolean().optional();
 
 /* ------------------------------------------------------------------ */
@@ -100,8 +124,29 @@ export const serviceSchema = z.object({
   signs: z.array(nonEmpty).default([]),
   seoTitle: nonEmpty,
   seoDescription: nonEmpty,
+  /** /services filters. */
+  category: z.array(z.enum(serviceCategories)).min(1),
+  audience: z.array(z.enum(serviceAudiences)).min(1),
+  /** Shows a 24/7 badge, but only when offerings.emergency24x7 is also true. */
+  emergency: z.boolean().default(false),
+  /** Optional "Starting at" price in USD. Only from the client's real price list; never invent. */
+  startingAt: z.number().positive().optional(),
   placeholder,
 });
+
+/** /services problem picker. action "service" links to the service page; "book" opens /book prefilled. */
+export const symptomSchema = z.object({
+  id: slug,
+  label: nonEmpty,
+  icon: iconKeySchema,
+  service: serviceTypeSchema,
+  action: z.enum(["service", "book"]).default("book"),
+  /** Prefilled into the booking form message when action is "book". */
+  message: nonEmpty,
+  placeholder,
+});
+
+export const processStepSchema = z.object({ title: nonEmpty, body: nonEmpty, icon: iconKeySchema, placeholder });
 
 export const whyItemSchema = z.object({ title: nonEmpty, body: nonEmpty, icon: iconKeySchema, placeholder });
 
@@ -230,6 +275,34 @@ export const copySchema = z.object({
     testimonials: sectionCopy,
     /** cta links to /book; call is the label of the click-to-call button. */
     cta: z.object({ title: nonEmpty, body: nonEmpty, cta: nonEmpty, call: nonEmpty }),
+  }),
+  /**
+   * /services page. The header reuses copy.services (eyebrow, title, intro); the emergency band reuses
+   * copy.emergency and the area checker reuses copy.serviceArea.
+   */
+  servicesPage: z.object({
+    hero: z.object({ primaryCta: nonEmpty, callCta: nonEmpty }),
+    filters: z.object({
+      categoryLabel: nonEmpty,
+      all: nonEmpty,
+      cooling: nonEmpty,
+      heating: nonEmpty,
+      maintenance: nonEmpty,
+      audienceLabel: nonEmpty,
+      anyAudience: nonEmpty,
+      residential: nonEmpty,
+      commercial: nonEmpty,
+      empty: nonEmpty,
+    }),
+    cards: z.object({ learnMore: nonEmpty, startingAt: nonEmpty, emergencyBadge: nonEmpty }),
+    problemPicker: sectionCopy,
+    emergency: z.object({ callCta: nonEmpty }),
+    process: sectionCopy,
+    plans: z.object({ title: nonEmpty, body: nonEmpty, cta: nonEmpty }),
+    financing: z.object({ title: nonEmpty, body: nonEmpty, cta: nonEmpty }),
+    reviews: sectionCopy.extend({ googleLabel: nonEmpty }),
+    faq: sectionCopy,
+    cta: sectionCopy,
   }),
   projects: sectionCopy,
   contact: sectionCopy,
@@ -390,6 +463,15 @@ export const brandConfigSchema = z.object({
       .min(1)
       .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each homepage section key may appear only once"),
   }),
+  /** /services page sections: order and visibility. Omitted: every section, in default order. */
+  servicesPage: z
+    .object({
+      sections: z
+        .array(z.object({ key: z.enum(servicesSectionKeys), enabled: z.boolean() }))
+        .min(1)
+        .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each services page section key may appear only once"),
+    })
+    .default({ sections: servicesSectionKeys.map((key) => ({ key, enabled: true })) }),
   placeholder,
 });
 
@@ -402,6 +484,10 @@ export const brandContentSchema = z.object({
   projects: z.array(projectSchema),
   plans: z.array(planSchema),
   cities: z.array(citySchema).min(1),
+  /** /services problem picker (content/symptoms.ts). Empty hides the section. */
+  symptoms: z.array(symptomSchema).default([]),
+  /** /services process steps (content/process.ts), 4 to 5 recommended. Empty hides the section. */
+  process: z.array(processStepSchema).default([]),
   copy: copySchema,
 });
 
@@ -423,6 +509,8 @@ export type Project = z.infer<typeof projectSchema>;
 export type Plan = z.infer<typeof planSchema>;
 export type City = z.infer<typeof citySchema>;
 export type Stat = z.infer<typeof statSchema>;
+export type Symptom = z.infer<typeof symptomSchema>;
+export type ProcessStep = z.infer<typeof processStepSchema>;
 
 /** Input shapes brands author against (defaults applied by the schema). */
 export type BrandConfigInput = z.input<typeof brandConfigSchema>;

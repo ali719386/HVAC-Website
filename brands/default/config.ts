@@ -106,6 +106,22 @@ export const config: BrandConfigInput = {
     aboutMission: { src: "about-mission-consult.jpg", alt: "Technician showing a homeowner service details on a tablet in her living room" },
     aboutCta: { src: "about-cta-home.jpg", alt: "Modern two-story home with a stone and wood facade and a green front lawn" },
   },
+  // /services page sections: reorder or set enabled: false to hide.
+  servicesPage: {
+    sections: [
+      { key: "filters", enabled: true },
+      { key: "cards", enabled: true },
+      { key: "problemPicker", enabled: true },
+      { key: "emergency", enabled: true }, // also needs offerings.emergency24x7
+      { key: "process", enabled: true },
+      { key: "plansFinancing", enabled: true },
+      { key: "serviceArea", enabled: true },
+      { key: "brands", enabled: true },
+      { key: "reviews", enabled: true },
+      { key: "faq", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
   homepage: {
     heroVariant: "summer",
     sections: [

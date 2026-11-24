@@ -1,6 +1,5 @@
 import { Fragment, type ReactNode } from "react";
 import type { Brand, SectionKey } from "@/lib/brand/schema";
-import { ServiceAreaChecker } from "@/components/forms/area-checker";
 import { PlanCards } from "@/components/plans/plan-cards";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { Hero } from "./hero";
@@ -13,6 +12,7 @@ import {
   FinancingBlock,
   PostCards,
   RebatesBlock,
+  ServiceAreaBlock,
   ServiceCards,
   StatsCounter,
   WhyChooseUs,
@@ -47,26 +47,7 @@ const registry: Record<SectionKey, Render> = {
     );
   },
   financing: (b) => <FinancingBlock config={b.config} copy={b.content.copy.financing} />,
-  serviceArea: (b, areas) => {
-    const c = b.content.copy.serviceArea;
-    return (
-      <Section tone="light" labelledBy="area-title">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <div>
-            <SectionHeading id="area-title" eyebrow={c.eyebrow} title={c.title} intro={c.intro} />
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {b.content.cities.map((city) => (
-                <li key={city.slug} className="rounded-full border border-line bg-surface-alt px-3.5 py-1.5 text-sm font-semibold">
-                  {city.city}, {city.state}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <ServiceAreaChecker areas={areas} phone={b.config.company.phone} />
-        </div>
-      </Section>
-    );
-  },
+  serviceArea: (b, areas) => <ServiceAreaBlock brand={b} areas={areas} />,
   rebates: (b) => <RebatesBlock rebates={b.config.offerings.rebates} />,
   faq: (b) => <FaqAccordion faqs={b.content.faqs} copy={b.content.copy.faq} phone={b.config.company.phone} image={b.config.images.faq} />,
   posts: (b) => <PostCards posts={b.content.posts} copy={b.content.copy.posts} />,

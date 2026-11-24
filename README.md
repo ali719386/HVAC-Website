@@ -130,7 +130,9 @@ Supported equipment brands (`offerings.supportedBrands`) appear in the brand str
 | Company info, phone, hours, license, credentials | `brands/<slug>/config.ts` -> `company` |
 | Promo bar, financing, 24/7 flag, rebates, equipment brands | `config.offerings` |
 | Section headings and marketing copy | `brands/<slug>/content/copy.ts` (any key in `content/defaults.ts` can be overridden per section) |
-| Services (pages are generated from this) | `content/services.ts` |
+| Services (pages are generated from this) | `content/services.ts`. `category` (cooling / heating / maintenance) and `audience` (residential / commercial) drive the `/services` filters; `emergency: true` shows a 24/7 badge only when `offerings.emergency24x7` is also true; `startingAt` (USD) is optional and must come from the client's real price list. |
+| `/services` problem picker | `content/symptoms.ts`. `action: "service"` links to `/services/<service>`; `action: "book"` links to `/book?issue=<id>`, which prefills the service and message. |
+| `/services` process steps | `content/process.ts` (4 to 5 steps) |
 | Cities, ZIPs and city pages | `content/cities.ts`. A `/service-areas/<slug>` page is created **only** when a city has `page` content (intro + local notes), to avoid thin duplicate pages. |
 | Plans | `content/plans.ts`. Omit `priceUsd` to show "Call for pricing". |
 | Blog posts, projects, FAQs, testimonials, why-choose-us | matching files in `content/` |
@@ -164,6 +166,24 @@ Supported equipment brands (`offerings.supportedBrands`) appear in the brand str
 PromoBar, TopBar, Header, Footer and the sticky mobile call bar are site chrome. They are not homepage sections. The promo bar is controlled by `offerings.promoBar.enabled`.
 
 To add a new section type, add its key to `sectionKeys` in `lib/brand/schema.ts` and a renderer in `components/home/registry.tsx`.
+
+### Services page sections
+
+`config.servicesPage.sections` works the same way for `/services` (omit it to show every section in the default order). Copy lives in `copy.servicesPage`; the header reuses `copy.services`, the emergency band reuses `copy.emergency`, and the area checker reuses `copy.serviceArea`. A section with no content (no symptoms, no plans and financing disabled, no reviews and no Google rating) is skipped.
+
+| Key | Section |
+|---|---|
+| `filters` | Category tabs and Residential / Commercial toggle above the cards. Client-side CSS filtering; state is in the URL (`/services?type=cooling&for=commercial`) |
+| `cards` | Service cards (image, icon, summary, 3 features, optional 24/7 badge and "Starting at" price) |
+| `problemPicker` | Symptom links from `content/symptoms.ts` |
+| `emergency` | Navy 24/7 band with a large call button (only when `offerings.emergency24x7` is true) |
+| `process` | Steps from `content/process.ts` |
+| `plansFinancing` | Banners to `/plans` (when plans exist) and `/financing` (when `offerings.financing.enabled`) |
+| `serviceArea` | Inline ZIP checker |
+| `brands` | Supported equipment brands |
+| `reviews` | Google rating badge (only when `company.googleRating` is set) plus up to 3 testimonials. No review markup |
+| `faq` | First 5 FAQs (no FAQPage markup) |
+| `cta` | Navy band with the compact lead form |
 
 ## 8. Environment variables
 

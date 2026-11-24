@@ -42,8 +42,11 @@ export function PageHeader({
   crumbs,
   image,
   imageStyle = "panel",
+  compact = false,
   children,
 }: {
+  /** Tighter vertical padding (about 400px tall on desktop with CTAs and chips). */
+  compact?: boolean;
   /** Optional image slot shown on the right on large screens. */
   image?: ImageAsset;
   /**
@@ -74,12 +77,12 @@ export function PageHeader({
           className="absolute inset-y-0 right-0 hidden w-1/3 bg-primary opacity-60 [clip-path:polygon(25%_0,100%_0,100%_100%,0_100%)] lg:block"
         />
       )}
-      <div className="container-site relative py-14 lg:py-20">
+      <div className={`container-site relative ${compact ? "py-12 lg:py-12" : "py-14 lg:py-20"}`}>
         <Breadcrumbs items={trail} onDark />
-        {eyebrow ? <p className="mt-6 text-sm font-bold tracking-[0.14em] text-on-primary/80 uppercase">{eyebrow}</p> : null}
+        {eyebrow ? <p className={`${compact ? "mt-5" : "mt-6"} text-sm font-bold tracking-[0.14em] text-on-primary/80 uppercase`}>{eyebrow}</p> : null}
         <h1 className={`${eyebrow ? "mt-2" : "mt-6"} max-w-3xl lg:max-w-[58%] text-4xl leading-tight font-extrabold sm:text-5xl`}>{title}</h1>
-        {intro ? <p className="mt-4 max-w-2xl text-lg leading-relaxed text-on-primary/85">{intro}</p> : null}
-        {children ? <div className="mt-8">{children}</div> : null}
+        {intro ? <p className="mt-4 max-w-[40rem] text-lg leading-relaxed text-balance text-on-primary/85">{intro}</p> : null}
+        {children ? <div className={compact ? "mt-7" : "mt-8"}>{children}</div> : null}
       </div>
     </section>
   );

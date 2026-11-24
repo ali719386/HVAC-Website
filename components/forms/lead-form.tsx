@@ -40,12 +40,18 @@ export function LeadForm({
   companyName,
   phone,
   defaultService,
+  defaultMessage,
   title,
+  compact = false,
 }: {
   companyName: string;
   phone: Phone;
   defaultService?: ServiceType;
+  /** Prefills "Tell us what is going on" (e.g. from a /services problem picker link). */
+  defaultMessage?: string;
   title?: string;
+  /** Shorter form for inline CTAs: hides the optional email and preferred-time fields. */
+  compact?: boolean;
 }) {
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -191,9 +197,11 @@ export function LeadForm({
         <Field id={id("phone")} label="Phone" required error={errors.phone}>
           <input id={id("phone")} name="phone" type="tel" autoComplete="tel-national" inputMode="tel" placeholder="(555) 555-0100" maxLength={20} {...aria("phone", errors, id)} className={`${input} h-12`} />
         </Field>
-        <Field id={id("email")} label="Email" error={errors.email}>
-          <input id={id("email")} name="email" type="email" autoComplete="email" maxLength={LIMITS.email} {...aria("email", errors, id)} className={`${input} h-12`} />
-        </Field>
+        {compact ? null : (
+          <Field id={id("email")} label="Email" error={errors.email}>
+            <input id={id("email")} name="email" type="email" autoComplete="email" maxLength={LIMITS.email} {...aria("email", errors, id)} className={`${input} h-12`} />
+          </Field>
+        )}
         <Field id={id("address")} label="Address or ZIP code" required error={errors.address}>
           <input id={id("address")} name="address" autoComplete="street-address" maxLength={LIMITS.address} {...aria("address", errors, id)} className={`${input} h-12`} />
         </Field>
@@ -209,16 +217,18 @@ export function LeadForm({
             ))}
           </select>
         </Field>
-        <Field id={id("preferredTime")} label="Preferred time" error={errors.preferredTime}>
-          <select id={id("preferredTime")} name="preferredTime" defaultValue="" {...aria("preferredTime", errors, id)} className={`${input} h-12`}>
-            <option value="">No preference</option>
-            {preferredTimes.map((t) => (
-              <option key={t} value={t}>
-                {preferredTimeLabels[t]}
-              </option>
-            ))}
-          </select>
-        </Field>
+        {compact ? null : (
+          <Field id={id("preferredTime")} label="Preferred time" error={errors.preferredTime}>
+            <select id={id("preferredTime")} name="preferredTime" defaultValue="" {...aria("preferredTime", errors, id)} className={`${input} h-12`}>
+              <option value="">No preference</option>
+              {preferredTimes.map((t) => (
+                <option key={t} value={t}>
+                  {preferredTimeLabels[t]}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
       </div>
 
       <fieldset className="mt-5" aria-describedby={errors.urgency ? `${id("urgency")}-error` : undefined}>
@@ -238,7 +248,7 @@ export function LeadForm({
 
       <div className="mt-5">
         <Field id={id("message")} label="Tell us what is going on" error={errors.message}>
-          <textarea id={id("message")} name="message" rows={4} maxLength={LIMITS.message} {...aria("message", errors, id)} className={`${input} py-3`} />
+          <textarea id={id("message")} name="message" rows={compact ? 3 : 4} maxLength={LIMITS.message} defaultValue={defaultMessage} {...aria("message", errors, id)} className={`${input} py-3`} />
         </Field>
       </div>
 

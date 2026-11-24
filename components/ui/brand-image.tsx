@@ -89,18 +89,19 @@ export function BrandImage({
         <rect width="100%" height="100%" fill={`url(#g${uid})`} />
         <rect width="100%" height="100%" fill={`url(#p${uid})`} />
       </svg>
-      <div className="absolute inset-0 grid place-items-center p-4 text-center">
-        <div className="flex flex-col items-center gap-2 text-primary/50">
-          <svg viewBox="0 0 24 24" className="size-10" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <rect x="3" y="4" width="18" height="16" rx="2" />
-            <circle cx="9" cy="10" r="2" />
-            <path d="m21 16-5-5-9 9" />
-          </svg>
-          {process.env.NODE_ENV === "development" ? (
+      {/* Development only: show which file to add. Production keeps just the neutral gradient. */}
+      {process.env.NODE_ENV === "development" ? (
+        <div className="absolute inset-0 grid place-items-center p-4 text-center">
+          <div className="flex flex-col items-center gap-2 text-primary/50">
+            <svg viewBox="0 0 24 24" className="size-10" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="3" y="4" width="18" height="16" rx="2" />
+              <circle cx="9" cy="10" r="2" />
+              <path d="m21 16-5-5-9 9" />
+            </svg>
             <span className="max-w-[16rem] text-xs font-medium break-all text-primary/70">Add image: public{image.src}</span>
-          ) : null}
+          </div>
         </div>
-      </div>
+      ) : null}
     </>,
     "bg-surface-alt",
     image.alt,

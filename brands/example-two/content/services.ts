@@ -4,6 +4,8 @@ import type { ServiceInput } from "@/content/types";
 export const services: ServiceInput[] = [
   {
     slug: "heating",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["heating"], audience: ["residential"], emergency: true,
     title: "Furnace & Heat Pump Service",
     summary: "Repairs, replacements and safety checks for high-altitude heating systems.",
     icon: "flame",
@@ -21,6 +23,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "ac-repair",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling"], audience: ["residential"], emergency: true,
     title: "Cooling Repair",
     summary: "Fast diagnosis for central AC, heat pumps and evaporative coolers.",
     icon: "snowflake",
@@ -35,6 +39,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "ac-installation",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling"], audience: ["residential"], emergency: false,
     title: "Cooling Installation",
     summary: "Central air, heat pumps and ductless mini-splits sized for your home.",
     icon: "wind",
@@ -49,6 +55,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "maintenance",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["maintenance"], audience: ["residential", "commercial"], emergency: false,
     title: "Seasonal Maintenance",
     summary: "Fall furnace checks and spring cooling tune-ups on a schedule that suits you.",
     icon: "gauge",
@@ -63,6 +71,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "commercial",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling", "heating", "maintenance"], audience: ["commercial"], emergency: true,
     title: "Light Commercial",
     summary: "Service for small offices, studios and storefronts.",
     icon: "building",

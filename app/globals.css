@@ -109,6 +109,18 @@
   padding-top: 0;
 }
 
+/*
+ * /services filters (components/services/filters.tsx). The client sets data-cat / data-aud on the
+ * wrapper; cards carry space-separated data-category / data-audience lists. Without JS everything shows.
+ */
+.svc-filter[data-cat="cooling"] [data-category]:not([data-category~="cooling"]),
+.svc-filter[data-cat="heating"] [data-category]:not([data-category~="heating"]),
+.svc-filter[data-cat="maintenance"] [data-category]:not([data-category~="maintenance"]),
+.svc-filter[data-aud="residential"] [data-audience]:not([data-audience~="residential"]),
+.svc-filter[data-aud="commercial"] [data-audience]:not([data-audience~="commercial"]) {
+  display: none;
+}
+
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar {

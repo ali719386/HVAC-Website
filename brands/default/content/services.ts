@@ -4,6 +4,8 @@ import type { ServiceInput } from "@/content/types";
 export const services: ServiceInput[] = [
   {
     slug: "ac-repair",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling"], audience: ["residential"], emergency: true,
     title: "AC Repair",
     summary: "Diagnosis and repair for warm air, short cycling, leaks and strange noises.",
     icon: "snowflake",
@@ -27,6 +29,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "ac-installation",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling"], audience: ["residential"], emergency: false,
     title: "AC Installation",
     summary: "Properly sized central air and heat pump systems, installed to manufacturer specs.",
     icon: "fan",
@@ -50,6 +54,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "heating",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["heating"], audience: ["residential"], emergency: true,
     title: "Heating Services",
     summary: "Furnace and heat pump repair, replacement and safety checks for Ohio winters.",
     icon: "flame",
@@ -73,6 +79,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "maintenance",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["maintenance"], audience: ["residential", "commercial"], emergency: false,
     title: "Maintenance & Tune-Ups",
     summary: "Seasonal tune-ups that catch small problems before they become breakdowns.",
     icon: "wrench",
@@ -91,6 +99,8 @@ export const services: ServiceInput[] = [
   },
   {
     slug: "commercial",
+    // TODO: confirm filters, 24/7 availability and any startingAt price (USD) with the client.
+    category: ["cooling", "heating", "maintenance"], audience: ["commercial"], emergency: true,
     title: "Commercial HVAC",
     summary: "Rooftop units, split systems and planned maintenance for local businesses.",
     icon: "building",

@@ -23,18 +23,26 @@ export function getTrustItems(company: BrandConfig["company"]): TrustItem[] {
 export function TrustList({
   company,
   onDark = false,
+  variant = "inline",
+  only,
   className = "",
 }: {
   company: BrandConfig["company"];
   onDark?: boolean;
+  /** chips: pill-shaped items (e.g. in a page header). */
+  variant?: "inline" | "chips";
+  /** Limit to these item keys (cert items use "cert"). */
+  only?: ("license" | "insured" | "years" | "rating" | "cert")[];
   className?: string;
 }) {
-  const items = getTrustItems(company);
+  const items = getTrustItems(company).filter((i) => !only || only.some((k) => i.key === k || i.key.startsWith(`${k}-`)));
   if (items.length === 0) return null;
+  const chips = variant === "chips";
+  const chip = onDark ? "border-on-primary/20 bg-on-primary/8" : "border-line bg-surface";
   return (
-    <ul className={`flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold ${className}`} aria-label="Credentials">
+    <ul className={`flex flex-wrap text-sm font-semibold ${chips ? "gap-2.5" : "gap-x-6 gap-y-3"} ${className}`} aria-label="Credentials">
       {items.map(({ key, icon: I, text, href }) => (
-        <li key={key} className="flex items-center gap-2">
+        <li key={key} className={`flex items-center gap-2 ${chips ? `rounded-full border px-3.5 py-1.5 ${chip}` : ""}`}>
           <I className={`size-4.5 shrink-0 ${onDark ? "text-on-primary" : "text-accent"}`} aria-hidden="true" />
           {href ? (
             <a href={href} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">
