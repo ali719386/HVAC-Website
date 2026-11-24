@@ -81,4 +81,22 @@ export const copy: CopyOverrides = {
     techBox: { title: "Want a second opinion?", body: "Talk to our team or schedule a visit during business hours.", book: "Schedule a visit" },
     cta: { eyebrow: "Next step", title: "Questions about your system?", intro: "Send a short note and we will reply during business hours." },
   },
-};
+  // TODO: placeholder contact copy for the example brand.
+  contact: {
+    eyebrow: "Get in touch",
+    title: "Contact Summit Ridge Comfort Co.",
+    intro: "Send a request or call during business hours. We will get back to you to set up a visit.",
+  },
+  contactPage: {
+    privacyNote: "We never sell your information",
+    form: { title: "Schedule a visit", intro: "" },
+    hero: {
+      call: "Call us",
+      book: "Schedule online",
+      asideTitle: "Speak with our team",
+      asideBody: "Call during business hours to talk through your system.",
+      openNow: "Open now",
+      closedNow: "Closed now",
+    },
+    cta: { title: "Questions before you book?", body: "Call during business hours and we will walk you through it." },
+  },};

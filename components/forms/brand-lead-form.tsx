@@ -1,31 +1,37 @@
 import type { ComponentProps } from "react";
 import { getBrand } from "@/lib/brand";
 import { clientAreas } from "@/lib/geo/coverage";
+import { getTrustItems } from "@/components/layout/trust-list";
 import { LeadForm } from "./lead-form";
 
-type Props = Omit<ComponentProps<typeof LeadForm>, "companyName" | "phone" | "serviceOptions" | "areas">;
+type Injected = "companyName" | "phone" | "emergencyPhone" | "serviceOptions" | "areas" | "trustChips" | "privacy" | "nextSteps" | "variant";
+type Props = Omit<ComponentProps<typeof LeadForm>, Injected> & {
+  /** Short form (name, phone, service, ZIP, urgency) for CTA bands and sidebars. */
+  compact?: boolean;
+};
 
-/** LeadForm with the selected brand's company, services and coverage filled in (Server Component wrapper). */
-export function BrandLeadForm(props: Props) {
-  const { config, content } = getBrand();
-  return (
-    <LeadForm
-      companyName={config.company.name}
-      phone={config.company.phone}
-      serviceOptions={content.services.map((s) => s.slug)}
-      areas={clientAreas()}
-      {...props}
-    />
-  );
-}
-
-/** Same props for client wrappers (e.g. BookForm). */
+/** Everything the client LeadForm needs from the selected brand (also used by the client BookForm). */
 export function brandLeadFormProps() {
   const { config, content } = getBrand();
+  const { company, offerings } = config;
+  const cp = content.copy.contactPage;
   return {
-    companyName: config.company.name,
-    phone: config.company.phone,
+    companyName: company.name,
+    phone: company.phone,
+    // Emergency banner only when 24/7 service is offered and a dedicated line is configured.
+    emergencyPhone: offerings.emergency24x7 ? company.emergencyPhone : undefined,
     serviceOptions: content.services.map((s) => s.slug),
     areas: clientAreas(),
+    // Configured credentials only (no state context here, so only the default license).
+    trustChips: getTrustItems(company)
+      .filter((i) => i.key === "license" || i.key === "insured" || i.key.startsWith("cert-"))
+      .map((i) => i.text),
+    privacy: { text: cp.privacyNote, href: "/privacy" },
+    nextSteps: cp.steps.items,
   };
+}
+
+/** LeadForm with the selected brand filled in (Server Component wrapper). */
+export function BrandLeadForm({ compact = false, ...props }: Props) {
+  return <LeadForm {...brandLeadFormProps()} variant={compact ? "compact" : "steps"} {...props} />;
 }

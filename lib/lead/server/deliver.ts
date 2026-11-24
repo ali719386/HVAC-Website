@@ -1,4 +1,4 @@
-import { createHmac, randomUUID } from "node:crypto";
+import { createHmac, randomBytes, randomUUID } from "node:crypto";
 import { Resend } from "resend";
 import { formatUsPhone } from "@/lib/format";
 import {
@@ -12,6 +12,8 @@ import type { LeadInput } from "@/lib/lead/schema";
 
 export type LeadRecord = {
   id: string;
+  /** Short reference shown to the customer and in the email subject. */
+  reference: string;
   receivedAt: string;
   brand: string;
   company: string;
@@ -19,7 +21,8 @@ export type LeadRecord = {
   phone: string;
   phoneDisplay: string;
   email: string | null;
-  address: string;
+  zip: string;
+  street: string | null;
   /** From the coverage selects; null when not chosen, "Not listed" for the other option. */
   serviceState: string | null;
   serviceCity: string | null;
@@ -28,10 +31,19 @@ export type LeadRecord = {
   urgency: string;
   urgencyLabel: string;
   preferredTime: string | null;
+  preferredDate: string | null;
   message: string | null;
   consent: { sms: boolean; textVersion: string; text: string; timestamp: string };
   pageUrl: string;
+  attribution: { referrer: string | null; utmSource: string | null; utmMedium: string | null; utmCampaign: string | null; gclid: string | null };
 };
+
+/** Short, readable reference (no ambiguous characters), e.g. "R-7K3M9Q". */
+const ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+export function leadReference() {
+  const bytes = randomBytes(6);
+  return `R-${[...bytes].map((b) => ALPHABET[b % ALPHABET.length]).join("")}`;
+}
 
 /** "other" is the form's "Not listed" option. */
 const placeLabel = (v: string | undefined) => (v === "other" ? "Not listed" : v || null);
@@ -40,6 +52,7 @@ export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: 
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
+    reference: leadReference(),
     receivedAt: now,
     brand: brand.slug,
     company: brand.name,
@@ -47,7 +60,8 @@ export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: 
     phone: phoneE164,
     phoneDisplay: formatUsPhone(phoneE164),
     email: input.email || null,
-    address: input.address,
+    zip: input.zip,
+    street: input.street.trim() || null,
     serviceState: placeLabel(input.serviceState),
     serviceCity: placeLabel(input.serviceCity),
     serviceType: input.serviceType,
@@ -55,6 +69,7 @@ export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: 
     urgency: input.urgency,
     urgencyLabel: urgencyLabels[input.urgency],
     preferredTime: input.preferredTime ? preferredTimeLabels[input.preferredTime] : null,
+    preferredDate: input.preferredDate || null,
     message: input.message.trim() || null,
     consent: {
       sms: input.smsConsent,
@@ -63,6 +78,13 @@ export function buildRecord(input: LeadInput, phoneE164: string, brand: { slug: 
       timestamp: now,
     },
     pageUrl: input.pageUrl,
+    attribution: {
+      referrer: input.referrer?.trim() || null,
+      utmSource: input.utmSource?.trim() || null,
+      utmMedium: input.utmMedium?.trim() || null,
+      utmCampaign: input.utmCampaign?.trim() || null,
+      gclid: input.gclid?.trim() || null,
+    },
   };
 }
 
@@ -107,23 +129,29 @@ export function leadDelivery(r: LeadRecord): Delivery {
   return {
     id: r.id,
     company: r.company,
-    subject: oneLine(`New lead (${r.urgencyLabel}): ${r.serviceLabel} - ${r.name}`).slice(0, 200),
+    subject: oneLine(`New lead ${r.reference} (${r.urgencyLabel}): ${r.serviceLabel} - ${r.name}`).slice(0, 200),
     heading: `New website lead for ${r.company}`,
     rows: [
       ["Name", r.name],
       ["Phone", r.phoneDisplay],
       ["Email", r.email ?? "-"],
-      ["Address / ZIP", r.address],
+      ["Reference", r.reference],
+      ["ZIP", r.zip],
+      ["Street", r.street ?? "-"],
       ["Service state", r.serviceState ?? "-"],
       ["Service city", r.serviceCity ?? "-"],
       ["Service", r.serviceLabel],
       ["Urgency", r.urgencyLabel],
       ["Preferred time", r.preferredTime ?? "No preference"],
+      ["Preferred date", r.preferredDate ?? "-"],
       ["Message", r.message ?? "-"],
       ["SMS consent", r.consent.sms ? "YES" : "No"],
       ["Consent text version", r.consent.textVersion],
       ["Submitted at (UTC)", r.consent.timestamp],
       ["Page URL", r.pageUrl || "-"],
+      ["Referrer", r.attribution.referrer ?? "-"],
+      ["UTM source / medium / campaign", [r.attribution.utmSource, r.attribution.utmMedium, r.attribution.utmCampaign].map((v) => v ?? "-").join(" / ")],
+      ["gclid", r.attribution.gclid ?? "-"],
       ["Lead ID", r.id],
     ],
     replyTo: r.email,

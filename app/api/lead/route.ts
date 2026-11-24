@@ -110,7 +110,7 @@ export async function POST(req: Request) {
 
   const { config } = getBrand();
   const record = buildRecord(input, phone, { slug: config.slug, name: config.company.name });
-  return deliver(leadDelivery(record), "lead");
+  return deliver(leadDelivery(record), "lead", record.reference);
 }
 
 /** Blog checklist signup: same rate limit, honeypot, Turnstile and delivery rules as a lead. No SMS. */
@@ -139,7 +139,7 @@ async function handleChecklist(payload: unknown, ip: string) {
 }
 
 /** Success only if at least one configured channel succeeds; 503 when none is configured (DEV MODE logs instead). */
-async function deliver(delivery: Delivery, kind: "lead" | "checklist") {
+async function deliver(delivery: Delivery, kind: "lead" | "checklist", reference?: string) {
   const email = emailConfig();
   const webhook = webhookConfig();
   const channels: { name: string; run: () => Promise<void> }[] = [];
@@ -153,6 +153,7 @@ async function deliver(delivery: Delivery, kind: "lead" | "checklist") {
         {
           ok: true,
           mode: "dev",
+          reference,
           message: "No delivery channel is configured. The request was logged to the server console only. Set Resend or webhook env vars to deliver it.",
         },
         200,
@@ -169,6 +170,6 @@ async function deliver(delivery: Delivery, kind: "lead" | "checklist") {
     }
   });
 
-  if (results.some((r) => r.status === "fulfilled")) return json({ ok: true, mode: "delivered" }, 200);
+  if (results.some((r) => r.status === "fulfilled")) return json({ ok: true, mode: "delivered", reference }, 200);
   return json({ ok: false, error: GENERIC_FAIL }, 502);
 }

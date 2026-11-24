@@ -1,3 +1,4 @@
+import { hoursText } from "@/lib/hours";
 import Link from "next/link";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import type { Brand } from "@/lib/brand/schema";
@@ -29,6 +30,26 @@ export function Footer({ brand }: { brand: Brand }) {
           <Logo name={company.name} src={company.logo.dark} onDark />
           {/* Blurb from config (coverage counts filled in); never a hardcoded location. */}
           <p className="mt-4 max-w-sm leading-relaxed">{coverageLabel(brand.config.footer.blurb, coverageCounts())}</p>
+          {/* Compact CTA card so the first column is never empty (title from config.footer.cta). */}
+          <div className="mt-6 max-w-sm rounded-brand border border-on-primary/15 bg-on-primary/5 p-5">
+            <p className="font-heading text-lg font-bold text-on-primary">{brand.config.footer.cta.title}</p>
+            {brand.config.footer.cta.body ? <p className="mt-1 text-sm">{brand.config.footer.cta.body}</p> : null}
+            <div className="mt-4 flex flex-wrap gap-2">
+              <a
+                href={`tel:${company.phone.tel}`}
+                className="inline-flex h-11 items-center gap-2 rounded-btn bg-accent px-4 text-sm font-bold text-on-accent transition-colors hover:bg-accent-dark"
+              >
+                <Phone className="size-4" aria-hidden="true" />
+                {company.phone.display}
+              </a>
+              <Link
+                href="/book"
+                className="inline-flex h-11 items-center rounded-btn border border-on-primary/30 px-4 text-sm font-bold text-on-primary transition-colors hover:bg-on-primary/10"
+              >
+                {brand.content.copy.hero.primaryCta}
+              </Link>
+            </div>
+          </div>
           {/* License (default only, no state context here) and insured/bonded, only when configured. */}
           <TrustList company={company} onDark variant="chips" only={["license", "insured"]} className="mt-6 text-on-primary/90" />
           {company.socials.length > 0 ? (
@@ -113,9 +134,9 @@ export function Footer({ brand }: { brand: Brand }) {
               <Clock className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
               <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
                 {company.hours.map((h) => (
-                  <div key={h.days} className="contents">
-                    <dt className="font-semibold text-on-primary/90">{h.days}</dt>
-                    <dd>{h.hours}</dd>
+                  <div key={h.label} className="contents">
+                    <dt className="font-semibold text-on-primary/90">{h.label}</dt>
+                    <dd>{hoursText(h)}</dd>
                   </div>
                 ))}
               </dl>

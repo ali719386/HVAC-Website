@@ -273,6 +273,28 @@ html.js:not(.reveal-off)[data-motion="on"] .reveal-group[data-reveal="mask-up"]:
   }
 }
 
+/* Lead form success checkmark: a short pop-in. Off with reduced motion. */
+@keyframes lead-check-pop {
+  0% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.lead-check {
+  animation: lead-check-pop 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lead-check {
+    animation: none;
+  }
+}
 /* Long-form text (blog posts, legal pages). */
 @utility prose-site {
   color: var(--brand-text);

@@ -100,7 +100,7 @@ export function ServiceAreasSection({ brand, tone = "light" }: { brand: Brand; t
             <SectionHeading id="service-areas-title" eyebrow={sa.section.eyebrow} title={sa.section.title} intro={sa.section.intro} />
           </Reveal>
           <div className="mt-8">
-            <CoverageBrowser areas={areas} labels={sa} variant="chips" />
+            <CoverageBrowser areas={areas} labels={sa} variant="chips" phone={brand.config.company.phone} />
           </div>
           <LinkButton href="/service-areas" variant="primary" className="mt-8">
             {sa.section.cta}

@@ -1,23 +1,39 @@
 import { Clock, Mail, MapPin, Phone, Siren } from "lucide-react";
-import type { BrandConfig } from "@/lib/brand/schema";
+import type { BrandConfig, Copy } from "@/lib/brand/schema";
+import { hoursText } from "@/lib/hours";
+import { OpenNowBadge } from "@/components/contact/open-badge";
+import { SocialIcon } from "@/components/ui/social-icons";
 import { TrustList } from "./trust-list";
 
-/** Contact details panel used on Book and Contact pages and service sidebars. */
-export function ContactCard({ config, className = "" }: { config: BrandConfig; className?: string }) {
+const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
+
+/** Contact details: phone, emergency line, email, office, hours with a live Open now badge, socials, trust chips. */
+export function ContactCard({
+  config,
+  copy,
+  badge,
+  className = "",
+}: {
+  config: BrandConfig;
+  copy: Copy["contactPage"]["info"];
+  badge: { open: string; closed: string };
+  className?: string;
+}) {
   const { company, offerings } = config;
   const emergency = offerings.emergency24x7 ? (company.emergencyPhone ?? company.phone) : undefined;
   const row = "flex items-start gap-4";
-  const ico = "grid size-11 shrink-0 place-items-center rounded-brand-sm bg-surface-alt text-primary";
+  const ico = "grid size-11 shrink-0 place-items-center rounded-brand-sm bg-primary/8 text-primary";
   return (
-    <div className={`rounded-brand border border-line bg-surface p-6 shadow-brand-sm sm:p-8 ${className}`}>
-      <ul className="grid gap-6">
+    <div className={`rounded-brand border border-line bg-surface p-6 sm:p-8 ${className}`}>
+      <h2 className="font-heading text-xl font-bold">{copy.title}</h2>
+      <ul className="mt-6 grid gap-6">
         <li className={row}>
           <span className={ico}>
             <Phone className="size-5" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm text-muted">Call us</p>
-            <a href={`tel:${company.phone.tel}`} className="font-heading text-xl font-extrabold text-primary">
+            <p className="text-sm text-muted">{copy.phone}</p>
+            <a href={`tel:${company.phone.tel}`} className="font-heading text-xl font-extrabold text-primary hover:underline">
               {company.phone.display}
             </a>
           </div>
@@ -28,8 +44,8 @@ export function ContactCard({ config, className = "" }: { config: BrandConfig; c
               <Siren className="size-5" aria-hidden="true" />
             </span>
             <div>
-              <p className="text-sm text-muted">24/7 emergency line</p>
-              <a href={`tel:${emergency.tel}`} className="font-heading text-xl font-extrabold">
+              <p className="text-sm text-muted">{copy.emergency}</p>
+              <a href={`tel:${emergency.tel}`} className="font-heading text-xl font-extrabold hover:underline">
                 {emergency.display}
               </a>
             </div>
@@ -39,8 +55,8 @@ export function ContactCard({ config, className = "" }: { config: BrandConfig; c
           <span className={ico}>
             <Mail className="size-5" aria-hidden="true" />
           </span>
-          <div>
-            <p className="text-sm text-muted">Email</p>
+          <div className="min-w-0">
+            <p className="text-sm text-muted">{copy.email}</p>
             <a href={`mailto:${company.email}`} className="font-semibold break-all hover:text-primary">
               {company.email}
             </a>
@@ -51,7 +67,7 @@ export function ContactCard({ config, className = "" }: { config: BrandConfig; c
             <MapPin className="size-5" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-sm text-muted">Office</p>
+            <p className="text-sm text-muted">{copy.office}</p>
             <address className="font-semibold not-italic">
               {company.address.street}
               <br />
@@ -63,20 +79,43 @@ export function ContactCard({ config, className = "" }: { config: BrandConfig; c
           <span className={ico}>
             <Clock className="size-5" aria-hidden="true" />
           </span>
-          <div>
-            <p className="text-sm text-muted">Hours</p>
-            <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
+          <div className="min-w-0 flex-1">
+            <p className="flex flex-wrap items-center gap-2 text-sm text-muted">
+              {copy.hours}
+              <OpenNowBadge hours={company.hours} timeZone={company.timezone} labels={badge} />
+            </p>
+            <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
               {company.hours.map((h) => (
-                <div key={h.days} className="contents">
-                  <dt className="font-semibold">{h.days}</dt>
-                  <dd>{h.hours}</dd>
+                <div key={h.label} className="contents">
+                  <dt className="font-semibold">{h.label}</dt>
+                  <dd>{hoursText(h)}</dd>
                 </div>
               ))}
             </dl>
           </div>
         </li>
       </ul>
-      <TrustList company={company} className="mt-6 border-t border-line pt-6" />
+      {company.socials.length > 0 ? (
+        <div className="mt-6 border-t border-line pt-6">
+          <p className="text-sm text-muted">{copy.follow}</p>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {company.socials.map((s) => (
+              <li key={s.url}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="grid size-11 place-items-center rounded-full border border-line text-primary transition-colors hover:border-primary hover:bg-primary/8"
+                >
+                  <SocialIcon network={s.network} />
+                  <span className="sr-only">{socialLabels[s.network]} (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      <TrustList company={company} variant="chips" className="mt-6 border-t border-line pt-6" />
     </div>
   );
 }

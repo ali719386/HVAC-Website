@@ -1,3 +1,4 @@
+import { hoursText } from "@/lib/hours";
 import { Clock, MapPin, Phone, ShieldCheck } from "lucide-react";
 import type { Brand } from "@/lib/brand/schema";
 import { BrandImage } from "@/components/ui/brand-image";
@@ -19,7 +20,7 @@ export function Hero({ brand }: { brand: Brand }) {
 
   const quick = [
     { icon: Phone, label: "Call us", value: company.phone.display, href: `tel:${company.phone.tel}` },
-    firstHours && { icon: Clock, label: firstHours.days, value: firstHours.hours },
+    firstHours && { icon: Clock, label: firstHours.label, value: hoursText(firstHours) },
     counts.cities + counts.states > 0 && {
       icon: MapPin,
       label: content.copy.serviceAreas.section.eyebrow,

@@ -347,7 +347,8 @@ export function PostCards({ brand, copy, limit = 3 }: { brand: Brand; copy: Copy
 
 /* ------------------------------ CTA band ------------------------------ */
 
-export function CtaBand({ config, copy }: { config: BrandConfig; copy: Copy["ctaBand"] }) {
+/** Closing CTA. callOnly: just the call button (pages that already show a form). */
+export function CtaBand({ config, copy, callOnly = false }: { config: BrandConfig; copy: Pick<Copy["ctaBand"], "title" | "body"> & { cta?: string }; callOnly?: boolean }) {
   return (
     <section aria-labelledby="cta-title" className="bg-surface pb-[var(--brand-section-y)]">
       <div className="container-site">
@@ -359,10 +360,12 @@ export function CtaBand({ config, copy }: { config: BrandConfig; copy: Copy["cta
             <p className="mt-3 text-lg opacity-90">{copy.body}</p>
           </div>
           <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-            <LinkButton href="/book" variant="light" size="lg">
-              {copy.cta}
-            </LinkButton>
-            <CallButton phone={config.company.phone} variant="ghost" size="lg" />
+            {!callOnly && copy.cta ? (
+              <LinkButton href="/book" variant="light" size="lg">
+                {copy.cta}
+              </LinkButton>
+            ) : null}
+            <CallButton phone={config.company.phone} variant={callOnly ? "light" : "ghost"} size="lg" />
           </div>
         </Reveal>
       </div>

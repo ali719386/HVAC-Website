@@ -17,10 +17,12 @@ export const config: BrandConfigInput = {
     emergencyPhone: undefined,
     email: "hello@example.org", // TODO
     address: { street: "250 Sample Blvd", city: "Lakewood", state: "CO", zip: "80226" }, // TODO
+    // TODO: confirm real hours. days: 0 = Sun ... 6 = Sat; times are 24h in `timezone`.
     hours: [
-      { days: "Mon - Fri", hours: "8:00 AM - 5:00 PM" },
-      { days: "Sat - Sun", hours: "Closed" },
+      { days: [1, 2, 3, 4, 5], open: "08:00", close: "17:00", label: "Mon - Fri" },
+      { days: [0, 6], label: "Sat - Sun", note: "Closed" },
     ],
+    timezone: "America/Denver",
     socials: [],
     licenseNumber: undefined, // TODO: Colorado jurisdictions license HVAC contractors locally; add if applicable
     licenses: [], // TODO: add { stateAbbr, number } for each state where a license is held. Shown only on that state's pages.
@@ -128,6 +130,7 @@ export const config: BrandConfigInput = {
   // Footer text. {cities} and {states} are filled from coverage.
   footer: {
     blurb: "Furnaces, heat pumps and cooling for homes in {cities} communities across Colorado and Wyoming.", // TODO: confirm wording with the client
+    cta: { title: "Schedule a visit", body: "Call during business hours or book online." },
   },
   // /blog sections; season overrides the month-based Seasonal picks (optional).
   blogPage: {
@@ -135,6 +138,31 @@ export const config: BrandConfigInput = {
       { key: "featured", enabled: true },
       { key: "seasonal", enabled: true },
       { key: "grid", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
+  // Contact page data. TODO: placeholder for the example brand.
+  contact: {
+    responseTimeText: undefined,
+    mapLink: undefined,
+    safetyNotice:
+      "If you smell gas or a carbon monoxide alarm sounds, get everyone outside first. Then call 911 or your gas utility from a safe place before calling us.",
+    faqs: [
+      { question: "What happens after I send a request?", answer: "Our team reads it during business hours and contacts you to confirm the details and a visit time.", placeholder: true },
+      { question: "Do you work weekends?", answer: "Our listed hours are on this page. Ask us about scheduling when you send your request.", placeholder: true },
+      { question: "Will the technician explain the cost first?", answer: "Yes. You get the options and the cost before any work starts.", placeholder: true },
+      { question: "How do I know if you serve my town?", answer: "Use the area checker on this page or call us to ask.", placeholder: true },
+    ],
+  },
+  contactPage: {
+    sections: [
+      { key: "quick", enabled: true },
+      { key: "main", enabled: true },
+      { key: "safety", enabled: true },
+      { key: "steps", enabled: true },
+      { key: "map", enabled: true },
+      { key: "areas", enabled: true },
+      { key: "faq", enabled: true },
       { key: "cta", enabled: true },
     ],
   },

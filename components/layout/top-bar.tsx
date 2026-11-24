@@ -1,3 +1,4 @@
+import { hoursText } from "@/lib/hours";
 import { Clock, Mail, MapPin, Siren } from "lucide-react";
 import Link from "next/link";
 import type { BrandConfig } from "@/lib/brand/schema";
@@ -23,7 +24,7 @@ export function TopBar({ config, coverageText }: { config: BrandConfig; coverage
             <li className="flex items-center gap-2">
               <Clock className="size-4 opacity-80" aria-hidden="true" />
               <span>
-                {firstHours.days}: {firstHours.hours}
+                {firstHours.label}: {hoursText(firstHours)}
               </span>
             </li>
           ) : null}

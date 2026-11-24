@@ -157,4 +157,23 @@ export const copy: CopyOverrides = {
     grid: { eyebrow: "All articles", title: "Browse the blog", intro: "Search by topic or pick a category." },
     cta: { eyebrow: "Request service", title: "Have a question about your system?", intro: "Send a quick request and our team will follow up." },
   },
-};
+  // TODO: review contact page copy with the client.
+  contact: {
+    eyebrow: "Contact us",
+    title: "Contact Coolwren Heating & Air",
+    intro: "Call, email or send a request online. Tell us what is going on and we will follow up to confirm the details.",
+  },
+  contactPage: {
+    // TODO: must match the privacy policy (legal review).
+    privacyNote: "We never sell your information",
+    form: { title: "Request service", intro: "Three short steps. It only takes a minute or two." },
+    hero: {
+      call: "Call now",
+      book: "Book online",
+      asideTitle: "Talk to a real person",
+      asideBody: "Our office team can answer questions and set up a visit.",
+      openNow: "Open now",
+      closedNow: "Closed now",
+    },
+    cta: { title: "Rather talk to someone?", body: "Call our team and we will help you figure out the next step." },
+  },};

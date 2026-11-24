@@ -13,6 +13,15 @@ const usState = z.string().regex(/^[A-Z]{2}$/, "Use a 2-letter US state abbrevia
 const zip = z.string().regex(/^\d{5}$/, "Use a 5-digit US ZIP code");
 const nonEmpty = z.string().trim().min(1);
 const url = z.url();
+const hhmm = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Use 24-hour "HH:mm", e.g. "07:30"');
+const isTimeZone = (tz: string) => {
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+};
 /** Path relative to /public/brands/<slug>/ ; no traversal, no absolute URLs (never hotlink). */
 const assetPath = z
   .string()
@@ -129,6 +138,10 @@ export type ProjectsSectionKey = (typeof projectsSectionKeys)[number];
 /** /blog index sections. */
 export const blogSectionKeys = ["featured", "seasonal", "grid", "cta"] as const;
 export type BlogSectionKey = (typeof blogSectionKeys)[number];
+
+/** /contact sections. */
+export const contactSectionKeys = ["quick", "main", "safety", "steps", "map", "areas", "faq", "cta"] as const;
+export type ContactSectionKey = (typeof contactSectionKeys)[number];
 
 const placeholder = z.boolean().optional();
 
@@ -464,6 +477,8 @@ export const copySchema = z.object({
     statCities: nonEmpty,
     statStates: nonEmpty,
     checkTitle: nonEmpty,
+    /** States with no listed cities. */
+    stateOnly: nonEmpty,
     section: sectionCopy.extend({ cta: nonEmpty }),
     whereWeWork: sectionCopy,
     state: z.object({
@@ -539,6 +554,26 @@ export const copySchema = z.object({
     relatedLinks: z.object({ title: nonEmpty, service: nonEmpty, cities: nonEmpty }),
     areaTitle: nonEmpty,
     cta: sectionCopy,
+  }),
+  /** /contact page and shared lead form labels. The header uses copy.contact. */
+  contactPage: z.object({
+    hero: z.object({ call: nonEmpty, book: nonEmpty, asideTitle: nonEmpty, asideBody: nonEmpty, openNow: nonEmpty, closedNow: nonEmpty }),
+    quick: z.object({
+      call: z.object({ title: nonEmpty, body: nonEmpty }),
+      emergency: z.object({ title: nonEmpty, body: nonEmpty }),
+      email: z.object({ title: nonEmpty, body: nonEmpty }),
+      book: z.object({ title: nonEmpty, body: nonEmpty }),
+    }),
+    info: z.object({ title: nonEmpty, phone: nonEmpty, emergency: nonEmpty, email: nonEmpty, office: nonEmpty, hours: nonEmpty, follow: nonEmpty }),
+    form: z.object({ title: nonEmpty, intro: z.string().default("") }),
+    /** Must match the privacy policy. Links to /privacy. */
+    privacyNote: nonEmpty,
+    safety: z.object({ title: nonEmpty }),
+    steps: sectionCopy.extend({ items: z.array(z.object({ title: nonEmpty, body: nonEmpty })).min(1) }),
+    map: sectionCopy.extend({ load: nonEmpty, directions: nonEmpty, note: nonEmpty }),
+    areas: sectionCopy,
+    faq: sectionCopy,
+    cta: z.object({ title: nonEmpty, body: nonEmpty }),
   }),
   /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,
@@ -702,7 +737,23 @@ export const brandConfigSchema = z.object({
     emergencyPhone: phoneSchema.optional(),
     email: z.email(),
     address: z.object({ street: nonEmpty, city: nonEmpty, state: usState, zip }),
-    hours: z.array(z.object({ days: nonEmpty, hours: nonEmpty })).min(1),
+    /**
+     * Opening hours. days: 0 = Sunday ... 6 = Saturday. open/close "HH:mm" (24h) in `timezone`.
+     * Omit open/close for a closed day; note is shown either way (e.g. "Emergency calls only").
+     */
+    hours: z
+      .array(
+        z.object({
+          days: z.array(z.number().int().min(0).max(6)).min(1),
+          open: hhmm.optional(),
+          close: hhmm.optional(),
+          label: nonEmpty,
+          note: nonEmpty.optional(),
+        }),
+      )
+      .min(1),
+    /** IANA timezone for the hours, e.g. "America/New_York". Used for the "Open now" badge. */
+    timezone: z.string().refine(isTimeZone, { error: (i) => `"${String(i.input)}" is not a valid IANA timezone` }),
     socials: z.array(z.object({ network: z.enum(["facebook", "instagram", "youtube", "linkedin", "x"]), url })),
     /** Default license shown on pages without a state context. Leave undefined unless it applies everywhere it is shown. */
     licenseNumber: nonEmpty.optional(),
@@ -811,7 +862,30 @@ export const brandConfigSchema = z.object({
     })
     .default({ sections: blogSectionKeys.map((key) => ({ key, enabled: true })) }),
   /** Footer text. blurb tokens: {cities}, {states} (coverage counts). Never hardcode a location in shared code. */
-  footer: z.object({ blurb: nonEmpty }),
+  footer: z.object({
+    blurb: nonEmpty,
+    /** Compact CTA card in the footer's first column (call + book buttons). */
+    cta: z.object({ title: nonEmpty, body: z.string().default("") }),
+  }),
+  /** Contact page data. Never invent response times: responseTimeText stays empty until the client confirms it. */
+  contact: z.object({
+    responseTimeText: nonEmpty.optional(),
+    /** Directions link (e.g. a Google Maps place URL). Falls back to a maps search for the address. */
+    mapLink: url.optional(),
+    safetyNotice: nonEmpty,
+    faqs: z.array(faqSchema).default([]),
+  }),
+  /** /contact sections (the hero always shows first). */
+  contactPage: z
+    .object({
+      sections: z
+        .array(z.object({ key: z.enum(contactSectionKeys), enabled: z.boolean() }))
+        .min(1)
+        .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each contact page section key may appear only once"),
+    })
+    .default({ sections: contactSectionKeys.map((key) => ({ key, enabled: true })) }),
+  /** Analytics. track() pushes to window.dataLayer only when an id is set; GTM loads only when gtmId is set. */
+  analytics: z.object({ gtmId: z.string().regex(/^GTM-[A-Z0-9]+$/).optional() }).default({}),
   /** /projects index sections: order and visibility. Omitted: every section, in default order. */
   projectsPage: z
     .object({

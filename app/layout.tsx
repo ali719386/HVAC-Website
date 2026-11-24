@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import Script from "next/script";
 import "./globals.css";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
@@ -89,6 +90,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </main>
         <Footer brand={brand} />
         <JsonLd data={businessLd(brand)} />
+        {/* Analytics only when configured: no third-party script otherwise. */}
+        {config.analytics.gtmId ? (
+          <Script id="gtm" strategy="afterInteractive">
+            {`window.__analyticsEnabled=true;window.dataLayer=window.dataLayer||[];window.dataLayer.push({"gtm.start":Date.now(),event:"gtm.js"});var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtm.js?id=${config.analytics.gtmId}";document.head.appendChild(s);`}
+          </Script>
+        ) : null}
         <StickyMobileCallBar phone={config.company.phone} bookLabel={bookLabel} />
       </body>
     </html>

@@ -40,7 +40,7 @@ export default function ServiceAreasPage() {
       <Section tone="light" labelledBy="areas-list-title">
         <SectionHeading id="areas-list-title" eyebrow={sa.section.eyebrow} title={sa.section.title} intro={sa.section.intro} />
         <div className="mt-8">
-          <CoverageBrowser areas={areas} labels={sa} variant="full" />
+          <CoverageBrowser areas={areas} labels={sa} variant="full" phone={config.company.phone} />
         </div>
       </Section>
       <Section tone="alt" labelledBy="areas-check-title">

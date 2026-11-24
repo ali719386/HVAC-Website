@@ -20,22 +20,27 @@ export const leadSchema = z.object({
     z.literal(""),
     z.string().check(z.trim(), z.maxLength(LIMITS.email, "Email is too long."), z.email("Please enter a valid email address.")),
   ]),
-  address: z.string().check(
-    z.trim(),
-    z.minLength(5, "Please enter your street address or 5-digit ZIP code."),
-    z.maxLength(LIMITS.address, "Address is too long."),
-  ),
+  zip: z.string().check(z.trim(), z.regex(/^\d{5}$/, "Please enter a 5-digit ZIP code.")),
+  street: z.string().check(z.trim(), z.maxLength(LIMITS.address, "Street address is too long.")),
   /** Service location from the coverage selects. "Not listed" submits as "other". Optional. */
   serviceState: z.optional(z.string().check(z.trim(), z.maxLength(LIMITS.place, "Please choose a state from the list."))),
   serviceCity: z.optional(z.string().check(z.trim(), z.maxLength(LIMITS.place, "Please choose a city from the list."))),
   serviceType: z.enum(serviceTypes, "Please choose a service."),
   urgency: z.enum(urgencies, "Please choose how soon you need service."),
   preferredTime: z.union([z.literal(""), z.enum(preferredTimes)]),
+  /** Optional preferred date, YYYY-MM-DD from a native date input. */
+  preferredDate: z.union([z.literal(""), z.string().check(z.regex(/^\d{4}-\d{2}-\d{2}$/, "Please choose a valid date."))]),
   message: z.string().check(z.maxLength(LIMITS.message, `Please keep your message under ${LIMITS.message} characters.`)),
   smsConsent: z.boolean(),
   /** Honeypot: must be empty. Real users never see this field. */
   website: z.string().check(z.maxLength(200)),
   pageUrl: z.string().check(z.maxLength(LIMITS.pageUrl)),
+  /** Attribution (optional): document.referrer and URL params. */
+  referrer: z.optional(z.string().check(z.maxLength(LIMITS.tracking))),
+  utmSource: z.optional(z.string().check(z.maxLength(LIMITS.tracking))),
+  utmMedium: z.optional(z.string().check(z.maxLength(LIMITS.tracking))),
+  utmCampaign: z.optional(z.string().check(z.maxLength(LIMITS.tracking))),
+  gclid: z.optional(z.string().check(z.maxLength(LIMITS.tracking))),
   turnstileToken: z.optional(z.string().check(z.maxLength(4096))),
 });
 
@@ -69,6 +74,6 @@ export function fieldErrors(error: { issues: readonly { path: readonly PropertyK
 
 /** Response contract of POST /api/lead. */
 export type LeadResponse =
-  | { ok: true; mode: "delivered" }
-  | { ok: true; mode: "dev"; message: string }
+  | { ok: true; mode: "delivered"; reference?: string }
+  | { ok: true; mode: "dev"; message: string; reference?: string }
   | { ok: false; error: string; fieldErrors?: FieldErrors; checklistErrors?: ChecklistErrors };

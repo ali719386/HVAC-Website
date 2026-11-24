@@ -18,11 +18,13 @@ export const config: BrandConfigInput = {
     emergencyPhone: { display: "(555) 555-0199", tel: "+15555550199" }, // TODO: real emergency line
     email: "service@example.com", // TODO: real inbox
     address: { street: "100 Example Ave, Suite 200", city: "Columbus", state: "OH", zip: "43215" }, // TODO
+    // TODO: confirm real hours. days: 0 = Sun ... 6 = Sat; times are 24h in `timezone`.
     hours: [
-      { days: "Mon - Fri", hours: "7:00 AM - 6:00 PM" },
-      { days: "Sat", hours: "8:00 AM - 2:00 PM" },
-      { days: "Sun", hours: "Emergency calls only" },
-    ], // TODO: confirm hours
+      { days: [1, 2, 3, 4, 5], open: "07:00", close: "18:00", label: "Mon - Fri" },
+      { days: [6], open: "08:00", close: "14:00", label: "Sat" },
+      { days: [0], label: "Sun", note: "Emergency calls only" },
+    ],
+    timezone: "America/New_York", // TODO: headquarters timezone
     socials: [], // TODO: add real profile URLs, e.g. { network: "facebook", url: "https://..." }
     licenseNumber: undefined, // TODO: add state HVAC license number. Hidden while undefined.
     licenses: [], // TODO: add { stateAbbr, number } for each state where a license is held. Shown only on that state's pages.
@@ -145,6 +147,7 @@ export const config: BrandConfigInput = {
   // Footer text. {cities} and {states} are filled from coverage.
   footer: {
     blurb: "Heating, cooling and indoor air service for homes and businesses in {cities} cities across {states} states.", // TODO: confirm wording with the client
+    cta: { title: "Get a free estimate", body: "Call us or book online." }, // TODO: keep "free" only if estimates are free
   },
   // /blog sections; season overrides the month-based Seasonal picks (optional).
   blogPage: {
@@ -152,6 +155,34 @@ export const config: BrandConfigInput = {
       { key: "featured", enabled: true },
       { key: "seasonal", enabled: false }, // hidden at client request
       { key: "grid", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
+  // Contact page data. TODO: review every line with the client.
+  contact: {
+    responseTimeText: undefined, // TODO: only if the client confirms a real response time
+    mapLink: undefined, // TODO: Google Maps place URL for the office; falls back to an address search
+    // TODO: review the safety wording with the client.
+    safetyNotice:
+      "Smell gas or think there may be carbon monoxide? Leave the home right away, then call 911 or your gas utility from outside. Call us after you are safe.",
+    faqs: [
+      { question: "What should I include in my request?", answer: "Tell us the type of system, what it is doing and when the problem started. Photos of the equipment label help when you have them.", placeholder: true },
+      { question: "Do I need to be home for the visit?", answer: "Someone over 18 should be home to give access to the equipment and to talk through what the technician finds.", placeholder: true },
+      { question: "Will I get a price before work starts?", answer: "Yes. The technician explains the options and the cost before any work begins.", placeholder: true },
+      { question: "Can I reach someone after hours?", answer: "For an emergency, use the emergency line listed on this page. For anything else, send a request and our team will follow up during business hours.", placeholder: true },
+      { question: "Which areas do you serve?", answer: "See our service areas page, or use the checker on this page to look up your city.", placeholder: true },
+    ],
+  },
+  // /contact sections: reorder or set enabled: false to hide.
+  contactPage: {
+    sections: [
+      { key: "quick", enabled: true },
+      { key: "main", enabled: true },
+      { key: "safety", enabled: true },
+      { key: "steps", enabled: true },
+      { key: "map", enabled: true },
+      { key: "areas", enabled: true },
+      { key: "faq", enabled: true },
       { key: "cta", enabled: true },
     ],
   },

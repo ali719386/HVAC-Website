@@ -3,18 +3,18 @@
 import Link from "next/link";
 import { useId, useState, type KeyboardEvent } from "react";
 import { ArrowRight, MapPin, Search } from "lucide-react";
-import type { Climate, Copy } from "@/lib/brand/schema";
+import type { Climate, Copy, Phone } from "@/lib/brand/schema";
 import type { ClientArea } from "@/lib/geo/coverage";
 import { tabKeyTarget } from "@/components/motion/tabs";
 
 type Tab = "all" | Climate;
-type Labels = Pick<Copy["serviceAreas"], "climates" | "filterLabel" | "searchLabel" | "searchPlaceholder" | "empty" | "citiesCount">;
+type Labels = Pick<Copy["serviceAreas"], "climates" | "filterLabel" | "searchLabel" | "searchPlaceholder" | "empty" | "citiesCount" | "stateOnly">;
 
 /**
  * Climate tabs over the configured coverage.
  * chips: compact city chips (homepage). full: tabs incl. "All", search, and cards grouped by state.
  */
-export function CoverageBrowser({ areas, labels, variant }: { areas: ClientArea[]; labels: Labels; variant: "chips" | "full" }) {
+export function CoverageBrowser({ areas, labels, variant, phone }: { areas: ClientArea[]; labels: Labels; variant: "chips" | "full"; phone: Phone }) {
   const present = (["cooling", "heating", "mixed"] as const).filter((c) => areas.some((a) => a.climate === c));
   const tabs: Tab[] = variant === "full" ? ["all", ...present] : present;
   const [tab, setTab] = useState<Tab>(tabs[0] ?? "all");
@@ -96,7 +96,7 @@ export function CoverageBrowser({ areas, labels, variant }: { areas: ClientArea[
                 <li key={`${a.abbr}-${c.slug}`}>
                   <Link
                     href={c.href}
-                    className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 font-semibold transition-colors hover:border-primary hover:bg-primary/8 hover:text-primary"
+                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-surface px-4 py-2 font-semibold text-primary underline-offset-4 transition-colors hover:border-primary hover:bg-primary/8 hover:underline focus-visible:ring-2 focus-visible:ring-primary/40"
                   >
                     <MapPin className="size-4 text-accent" aria-hidden="true" />
                     {c.name}, {a.abbr}
@@ -139,7 +139,7 @@ export function CoverageBrowser({ areas, labels, variant }: { areas: ClientArea[
                       <li key={c.slug}>
                         <Link
                           href={c.href}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm font-semibold transition-colors hover:border-primary hover:text-primary"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 px-3 py-1.5 text-sm font-semibold text-primary underline-offset-4 transition-colors hover:border-primary hover:bg-primary/8 hover:underline focus-visible:ring-2 focus-visible:ring-primary/40"
                         >
                           <MapPin className="size-3.5 text-accent" aria-hidden="true" />
                           {c.name}
@@ -147,8 +147,17 @@ export function CoverageBrowser({ areas, labels, variant }: { areas: ClientArea[
                       </li>
                     ))}
                   </ul>
+                ) : (
+                  <p className="mt-4 text-sm leading-relaxed">
+                    {labels.stateOnly}{" "}
+                    <a href={`tel:${phone.tel}`} className="font-bold whitespace-nowrap text-primary underline underline-offset-4">
+                      {phone.display}
+                    </a>
+                  </p>
+                )}
+                {a.cities.length > 0 ? (
+                  <p className="mt-auto pt-4 text-sm text-muted">{labels.citiesCount.replace("{cities}", String(a.cities.length))}</p>
                 ) : null}
-                <p className="mt-auto pt-4 text-sm text-muted">{labels.citiesCount.replace("{cities}", String(a.cities.length))}</p>
               </li>
             ))}
           </ul>

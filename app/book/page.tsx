@@ -30,7 +30,12 @@ export default function BookPage() {
           <BookForm {...formProps} issues={issues} />
         </Suspense>
         <aside aria-label="Contact details">
-          <ContactCard config={config} className="lg:sticky lg:top-28" />
+          <ContactCard
+            config={config}
+            copy={content.copy.contactPage.info}
+            badge={{ open: content.copy.contactPage.hero.openNow, closed: content.copy.contactPage.hero.closedNow }}
+            className="lg:sticky lg:top-28 lg:self-start"
+          />
         </aside>
       </div>
     </>

@@ -96,6 +96,7 @@ export const defaultCopy: CopyInput = {
     statCities: "Cities",
     statStates: "States",
     checkTitle: "Check your city or ZIP code",
+    stateOnly: "Coverage available. Call to confirm your area.",
     section: { eyebrow: "Service areas", title: "Where we work", intro: "Choose a climate to see the cities we serve.", cta: "View all service areas" },
     whereWeWork: { eyebrow: "Service areas", title: "Where we work", intro: "" },
     state: {
@@ -178,6 +179,40 @@ export const defaultCopy: CopyInput = {
     relatedLinks: { title: "Related", service: "Service", cities: "Service areas" },
     areaTitle: "Check your area",
     cta: { eyebrow: "Request service", title: "Have a question about your system?", intro: "Send a short request and we will follow up." },
+  },
+  contactPage: {
+    hero: {
+      call: "Call now",
+      book: "Book online",
+      asideTitle: "Talk to a real person",
+      asideBody: "Call our office during business hours.",
+      openNow: "Open now",
+      closedNow: "Closed now",
+    },
+    quick: {
+      call: { title: "Call us", body: "Talk to our team." },
+      emergency: { title: "24/7 emergency", body: "No heat or no cooling? Call any time." },
+      email: { title: "Email", body: "Send us a note." },
+      book: { title: "Book online", body: "Request a visit in a few steps." },
+    },
+    info: { title: "Contact details", phone: "Phone", emergency: "Emergency line", email: "Email", office: "Office", hours: "Hours", follow: "Follow us" },
+    form: { title: "Send a request", intro: "" },
+    privacyNote: "Read our privacy policy",
+    safety: { title: "Safety first" },
+    steps: {
+      eyebrow: "What happens next",
+      title: "After you send a request",
+      intro: "",
+      items: [
+        { title: "We review your request", body: "Our team reads the details you sent." },
+        { title: "We contact you to confirm details", body: "We confirm the problem, the address and a visit time." },
+        { title: "A technician visits and gives a clear quote", body: "You see the options and the cost before any work starts." },
+      ],
+    },
+    map: { eyebrow: "Visit", title: "Find our office", intro: "", load: "Load map", directions: "Get directions", note: "The map is loaded from Google Maps only after you click." },
+    areas: { eyebrow: "Service areas", title: "Cities we serve", intro: "" },
+    faq: { eyebrow: "FAQ", title: "Contact questions", intro: "" },
+    cta: { title: "Prefer to talk it through?", body: "Call and speak with our team." },
   },
   projects: { eyebrow: "Recent work", title: "Projects", intro: "" },
   projectsPage: {

@@ -207,6 +207,21 @@ To add a new section type, add its key to `sectionKeys` in `lib/brand/schema.ts`
 
 Project detail pages show only the fields a project has. The sidebar quote form pre-selects the service mapped from the project category. JSON-LD on the detail page is BreadcrumbList only (plus the site-wide LocalBusiness from the layout).
 
+## 7d. Contact page, hours and lead form
+
+- **Hours** (`company.hours`) are structured as `{ days: [0-6], open: "HH:mm", close: "HH:mm", label, note? }` (0 = Sunday), with `company.timezone` (IANA). Leave out `open` and `close` for a closed day. The "Open now" badge is calculated in that timezone in the browser only.
+- **`config.contact`:**
+  - `safetyNotice` (always shown): review the wording with the client.
+  - `faqs`.
+  - `mapLink` (optional). Without it, directions fall back to a maps search for the address.
+  - `responseTimeText`: only set this when the client confirms a real response time.
+- **Sections:** `config.contactPage.sections` orders and toggles quick cards, main (contact card and form), safety, steps, map, areas, faq and cta. The map makes no request to Google until the visitor clicks "Load map".
+- **Lead form:**
+  - The steps variant (Service, Location, Contact) is used on `/contact` and `/book`. The compact variant (name, phone, service, ZIP, urgency) is used in CTA bands and sidebars.
+  - The ZIP is required. When it matches configured coverage, the city and state are filled in automatically; otherwise the visitor picks a state and city, or "Not listed".
+  - The payload adds street, preferred date and time, referrer, UTM and gclid. The server returns a short reference (for example `R-7K3M9Q`) that appears in the success state and the email subject.
+- **Analytics:** set `config.analytics.gtmId` to load Google Tag Manager. Without it, nothing is loaded and `track()` (form_start, step_complete, form_submit, click_to_call) does nothing. Never send personal data in events.
+- **Footer CTA card** text comes from `config.footer.cta`.
 ## 7c. Blog
 
 - **Posts** live in `content/posts.ts`. The body is a typed block array (`heading`, `paragraph`, `list`, `callout`, `image`, `quote`), with no MDX. Heading ids, the table of contents and reading time are generated from the blocks.
