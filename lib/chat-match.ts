@@ -2,7 +2,7 @@ import type { ChatEntry } from "./chatbot";
 
 /** Entry weights: place names beat generic words, emergencies beat services, small talk loses to any real topic. */
 const weightFor = (id: string) =>
-  id.startsWith("city-") || id.startsWith("state-") ? 3 : id === "emergency" || id === "brands" ? 2 : id.startsWith("talk-") ? 0.5 : id.startsWith("faq-") ? 1 : 1.5;
+  id.startsWith("city-") || id.startsWith("state-") ? 3 : id === "emergency" || id === "brands" || id === "brands-other" ? 2 : id.startsWith("talk-") ? 0.5 : id.startsWith("faq-") ? 1 : 1.5;
 
 const normalize = (s: string) =>
   ` ${s

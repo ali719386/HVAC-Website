@@ -111,7 +111,7 @@ export function Chatbot({
       : isHandoff
       ? { role: "bot", text: copy.handoffReply, handoff: true }
       : entry
-        ? { role: "bot", text: entry.answer, links: entry.links }
+        ? { role: "bot", text: entry.answer, links: entry.links, handoff: entry.handoff }
         : { role: "bot", text: copy.fallback, handoff: true };
     const withUser = [...messages, user];
     setMessages(withUser);

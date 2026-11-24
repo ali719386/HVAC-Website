@@ -18,6 +18,8 @@ export type ChatEntry = {
   links: ChatLink[];
   /** Minimum score to answer with this entry (FAQs need two matching words). */
   min?: number;
+  /** Show the call, WhatsApp and book buttons under the answer. */
+  handoff?: boolean;
 };
 /** quick: question shortcuts shown once under the welcome message. */
 export type ChatData = {
@@ -192,8 +194,23 @@ export function buildChatData(brand: Brand): ChatData {
         "models",
         ...makes.map((m) => m.toLowerCase()),
       ],
-      answer: `We service these equipment brands: ${makes.join(", ")}. Listing a brand does not mean we are a dealer for it. Ask us if your system is a different make.`,
-      links: [{ label: "Our services", href: "/services" }, call],
+      answer: `We service these equipment brands: ${makes.join(", ")}. Listing a brand does not mean we are a dealer for it. Have a different make? Our team can confirm, just use the buttons below.`,
+      links: [{ label: "Our services", href: "/services" }],
+      handoff: true,
+    });
+    // Other common makes not in the list: never claim we service them; hand off to the team.
+    const listed = new Set(makes.map((m) => m.toLowerCase()));
+    const otherMakes = [
+      "trane", "goodman", "rheem", "ruud", "york", "daikin", "amana", "mitsubishi", "fujitsu", "gree", "heil", "tempstar",
+      "payne", "coleman", "luxaire", "bosch", "frigidaire", "maytag", "armstrong", "ducane", "comfortmaker", "lg", "samsung",
+      "carrier", "lennox", "bryant", "american standard", "different make", "other brand", "another brand",
+    ].filter((m) => !listed.has(m));
+    entries.push({
+      id: "brands-other",
+      keywords: otherMakes,
+      answer: `That make is not on our listed brands (${makes.join(", ")}). Our team can tell you whether we can work on it. Reach us with the buttons below.`,
+      links: [],
+      handoff: true,
     });
   }
 
