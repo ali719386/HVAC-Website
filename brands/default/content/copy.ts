@@ -6,10 +6,9 @@ export const copy: CopyOverrides = {
   hero: {
     summer: {
       eyebrow: "Welcome",
-      title: "Air Conditioning Service, Repair & Installation",
-      // TODO: "years of experience" and "certified professionals" are claims; keep only if true for the client.
+      title: "Complete HVAC Solutions. Comfort Without Compromise.",
       subtitle:
-        "We specialize in providing top-notch heating, ventilation, and air conditioning solutions tailored to meet the unique needs of our clients. With years of experience serving the vibrant and diverse clients, our team of certified professionals is dedicated to ensuring your comfort.",
+        "Expert AC repair, installation, and maintenance backed by skilled professionals. We deliver reliable climate control and lasting comfort for every space.",
     },
     winter: {
       eyebrow: "Columbus heating & cooling",
