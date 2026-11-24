@@ -822,6 +822,8 @@ export const brandConfigSchema = z.object({
     expert: imageSchema,
     projects: imageSchema,
     promo: imageSchema,
+    /** Book a Service page header (right-side panel). Optional. */
+    book: imageSchema.optional(),
     /** Financing page header. Falls back to promo (which the plans page uses). */
     financing: imageSchema.optional(),
     /** Optional. When set, the FAQ block shows questions left + this photo right (no call box). */
