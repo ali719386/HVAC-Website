@@ -8,6 +8,8 @@ type Injected = "companyName" | "phone" | "emergencyPhone" | "serviceOptions" | 
 type Props = Omit<ComponentProps<typeof LeadForm>, Injected> & {
   /** Short form (name, phone, service, ZIP, urgency) for CTA bands and sidebars. */
   compact?: boolean;
+  /** One page with all key fields (no steps). */
+  simple?: boolean;
 };
 
 /** Everything the client LeadForm needs from the selected brand (also used by the client BookForm). */
@@ -32,6 +34,6 @@ export function brandLeadFormProps() {
 }
 
 /** LeadForm with the selected brand filled in (Server Component wrapper). */
-export function BrandLeadForm({ compact = false, ...props }: Props) {
-  return <LeadForm {...brandLeadFormProps()} variant={compact ? "compact" : "steps"} {...props} />;
+export function BrandLeadForm({ compact = false, simple = false, ...props }: Props) {
+  return <LeadForm {...brandLeadFormProps()} variant={compact ? "compact" : simple ? "simple" : "steps"} {...props} />;
 }

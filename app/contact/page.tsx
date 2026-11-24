@@ -49,7 +49,7 @@ export default function ContactPage() {
               <aside aria-label={cp.info.title} className="lg:sticky lg:top-28 lg:self-start">
                 <ContactCard config={config} copy={cp.info} badge={badge} />
               </aside>
-              <BrandLeadForm title={cp.form.title} />
+              <BrandLeadForm simple title={cp.form.title} />
             </div>
           </Section>
         );

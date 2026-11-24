@@ -109,8 +109,11 @@ export function LeadForm({
   serviceOptions?: readonly ServiceType[];
   /** Coverage for ZIP lookup and the state and city selects. */
   areas?: ClientArea[];
-  /** steps: 3-step form (default). compact: name, phone, service, ZIP and urgency (CTA bands, sidebars). */
-  variant?: "steps" | "compact";
+  /**
+   * steps: 3-step form (default). simple: one page with name, phone, email, ZIP, service, urgency and message.
+   * compact: name, phone, service, ZIP and urgency (CTA bands, sidebars).
+   */
+  variant?: "steps" | "simple" | "compact";
   defaultService?: ServiceType;
   defaultMessage?: string;
   /** Prefill from a city, state or project page. */
@@ -123,7 +126,9 @@ export function LeadForm({
   /** Shown in the success state. */
   nextSteps?: NextStep[];
 }) {
-  const compact = variant === "compact";
+  // Single-page layouts (simple and compact) share the same code path; simple adds email and message.
+  const compact = variant !== "steps";
+  const simple = variant === "simple";
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [showSummary, setShowSummary] = useState(false);
@@ -558,7 +563,11 @@ export function LeadForm({
                 className={control}
               />
             </Field>
-            <Field id={id("serviceType")} label="Service needed" required error={errors.serviceType} valid={valid.serviceType}>
+            {simple ? (
+              <Field id={id("email")} label="Email (optional)" error={errors.email} valid={valid.email}>
+                <input id={id("email")} name="email" type="email" inputMode="email" autoComplete="email" maxLength={LIMITS.email} {...aria("email", errors, id)} className={control} />
+              </Field>
+            ) : null}            <Field id={id("serviceType")} label="Service needed" required error={errors.serviceType} valid={valid.serviceType}>
               <select id={id("serviceType")} name="serviceType" value={service} onChange={(e) => setService(e.target.value)} {...aria("serviceType", errors, id)} className={control}>
                 <option value="" disabled>
                   Choose a service
@@ -720,7 +729,15 @@ export function LeadForm({
       ) : null}
 
       {/* Compact keeps message prefill (problem picker) without showing a textarea. */}
-      {compact ? <input type="hidden" name="message" value={defaultMessage ?? ""} /> : null}
+      {simple ? (
+        <div className="mt-5">
+          <Field id={id("message")} label="Tell us what is going on (optional)" error={errors.message} valid={valid.message}>
+            <textarea id={id("message")} name="message" rows={4} maxLength={LIMITS.message} defaultValue={defaultMessage} {...aria("message", errors, id)} className={`${control} h-auto py-3`} />
+          </Field>
+        </div>
+      ) : compact ? (
+        <input type="hidden" name="message" value={defaultMessage ?? ""} />
+      ) : null}
 
       {/* Honeypot: hidden from people and assistive tech; bots tend to fill it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
