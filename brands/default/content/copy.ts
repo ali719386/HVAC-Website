@@ -6,7 +6,7 @@ export const copy: CopyOverrides = {
   hero: {
     summer: {
       eyebrow: "Welcome",
-      title: "Complete HVAC Solutions. Comfort Without Compromise.",
+      title: "Complete HVAC Solutions Comfort Without Compromise",
       subtitle:
         "Expert AC repair, installation, and maintenance backed by skilled professionals. We deliver reliable climate control and lasting comfort for every space.",
     },

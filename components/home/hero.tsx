@@ -39,7 +39,7 @@ export function Hero({ brand }: { brand: Brand }) {
           </p>
           <h1
             id="hero-title"
-            className="animate-fade-up mt-7 text-[2.6rem] leading-[1.04] font-extrabold tracking-[-0.03em] sm:text-6xl lg:text-[4.5rem]"
+            className="animate-fade-up mt-7 text-[2.25rem] leading-[1.1] font-extrabold tracking-[-0.025em] sm:text-5xl lg:text-[3.25rem] xl:text-[3.5rem]"
             style={delay(1)}
           >
             {text.title}
