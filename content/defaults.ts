@@ -223,7 +223,7 @@ export const defaultCopy: CopyInput = {
     placeholder: "Type your question",
     send: "Send",
     close: "Close chat",
-    reset: "Start over",
+    reset: "New chat",
     suggestions: "Popular topics",
     handoff: "Talk to a person",
     disclaimer: "Automated answers from this website. For quotes and scheduling, our team will confirm details.",

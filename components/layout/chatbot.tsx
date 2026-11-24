@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { CalendarCheck, Phone as PhoneIcon, RotateCcw, Send, X } from "lucide-react";
+import { Fragment, useEffect, useId, useRef, useState, type FormEvent } from "react";
+import { CalendarCheck, Phone as PhoneIcon, Plus, Send, X } from "lucide-react";
 import type { Copy, Phone } from "@/lib/brand/schema";
 import type { ChatData, ChatLink } from "@/lib/chatbot";
 import { matchQuestion } from "@/lib/chat-match";
@@ -150,6 +150,29 @@ export function Chatbot({
     </div>
   );
 
+  const topics = (
+    <div className="pl-9">
+      <p className="mb-2 text-xs font-bold tracking-wide text-muted uppercase">{copy.suggestions}</p>
+      <div className="flex flex-wrap gap-2">
+        {data.suggestions.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            disabled={typing}
+            onClick={() => answer(s.label, s.id)}
+            className="min-h-9 rounded-full border border-primary/30 bg-surface px-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/8 disabled:opacity-50"
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+      <details className="mt-3 text-sm">
+        <summary className="cursor-pointer font-semibold text-primary">{copy.handoff}</summary>
+        {handoff}
+      </details>
+    </div>
+  );
+
   const avatarEl = (size: string) =>
     avatar ? (
       <Image src={avatar} alt="" width={64} height={64} className={`${size} shrink-0 rounded-full`} />
@@ -207,9 +230,13 @@ export function Chatbot({
               </p>
               <p className="truncate text-xs text-on-primary/80">{copy.subtitle}</p>
             </div>
-            <button type="button" onClick={reset} className="grid size-11 place-items-center rounded-full hover:bg-on-primary/10" title={copy.reset}>
-              <RotateCcw className="size-4" aria-hidden="true" />
-              <span className="sr-only">{copy.reset}</span>
+            <button
+              type="button"
+              onClick={reset}
+              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-on-primary/30 px-3 text-sm font-semibold transition-colors hover:bg-on-primary/10"
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              {copy.reset}
             </button>
             <button type="button" onClick={closeChat} className="grid size-11 place-items-center rounded-full hover:bg-on-primary/10">
               <X className="size-5" aria-hidden="true" />
@@ -219,7 +246,8 @@ export function Chatbot({
 
           <div ref={listRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto bg-surface-alt px-4 py-4">
             {messages.map((m, i) => (
-              <div key={i} className={m.role === "user" ? "flex justify-end" : "flex gap-2"}>
+              <Fragment key={i}>
+              <div className={m.role === "user" ? "flex justify-end" : "flex gap-2"}>
                 {m.role === "bot" ? avatarEl("size-7") : null}
                 <div
                   className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[0.95rem] leading-relaxed ${
@@ -246,6 +274,9 @@ export function Chatbot({
                   {m.handoff ? handoff : null}
                 </div>
               </div>
+              {/* Topics appear once, under the welcome message (not repeated after every reply). */}
+              {i === 0 ? topics : null}
+              </Fragment>
             ))}
             {typing ? (
               <div className="flex gap-2" aria-label="Typing">
@@ -258,27 +289,6 @@ export function Chatbot({
               </div>
             ) : null}
 
-            {/* Topic chips (always available, like quick replies). */}
-            <div>
-              <p className="mb-2 text-xs font-bold tracking-wide text-muted uppercase">{copy.suggestions}</p>
-              <div className="flex flex-wrap gap-2">
-                {data.suggestions.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    disabled={typing}
-                    onClick={() => answer(s.label, s.id)}
-                    className="min-h-9 rounded-full border border-primary/30 bg-surface px-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/8 disabled:opacity-50"
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-              <details className="mt-3 text-sm">
-                <summary className="cursor-pointer font-semibold text-primary">{copy.handoff}</summary>
-                {handoff}
-              </details>
-            </div>
           </div>
 
           <form onSubmit={onSubmit} className="border-t border-line bg-surface p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
