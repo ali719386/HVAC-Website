@@ -59,7 +59,7 @@ export function BlogExplorer({
 
   const count = results.length === 1 ? labels.resultsOne : labels.resultsMany.replace("{count}", String(results.length));
   const chip = (active: boolean) =>
-    `inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors ${
+    `inline-flex h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold whitespace-nowrap transition-colors ${
       active ? "border-primary bg-primary text-on-primary" : "border-line bg-surface text-ink hover:border-primary hover:text-primary"
     }`;
 
@@ -69,7 +69,7 @@ export function BlogExplorer({
     <div>
       <div className="rounded-brand border border-line bg-surface p-4 sm:p-5">
         <nav aria-label={labels.categoriesLabel}>
-          <ul className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
+          <ul className="flex flex-wrap gap-2">
             <li>
               <Link href={allHref} aria-current={!activeCategory ? "page" : undefined} className={chip(!activeCategory)}>
                 {labels.all}
