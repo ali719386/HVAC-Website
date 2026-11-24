@@ -161,6 +161,28 @@ export function TechBox({ brand }: { brand: Brand }) {
   );
 }
 
+/** Grid filler card: photo grows to the row height set by the neighbouring post cards. */
+function GridPromo({ brand }: { brand: Brand }) {
+  const p = brand.content.copy.blog.gridPromo;
+  const { images, company } = brand.config;
+  return (
+    <div className="flex w-full flex-col overflow-hidden rounded-brand border border-line bg-surface">
+      <BrandImage image={images.blogPromo ?? images.expert} rounded={false} aspect="" className="min-h-44 flex-1" sizes="(min-width: 1280px) 600px, (min-width: 640px) 50vw, 100vw" />
+      <div className="p-6">
+        <p className="text-xs font-bold tracking-wide text-accent-dark uppercase">{p.eyebrow}</p>
+        <p className="mt-2 font-heading text-xl leading-snug font-bold">{p.title}</p>
+        <p className="mt-2 text-muted">{p.body}</p>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <CallButton phone={company.phone} variant="accent" />
+          <LinkButton href="/book" variant="outline">
+            {p.book}
+          </LinkButton>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ------------------------------ Grid with toolbar and sidebar ------------------------------ */
 
 /** Toolbar + post grid (client filtering) + sticky sidebar. Used by /blog and category pages. */
@@ -192,6 +214,7 @@ export function BlogGrid({ brand, posts, activeCategory, heading }: { brand: Bra
           allCount={brand.content.posts.length}
           activeCategory={activeCategory}
           labels={b}
+          promo={<GridPromo brand={brand} />}
         />
         <aside className="grid content-start gap-6 lg:sticky lg:top-28 lg:self-start">
           <PopularPosts brand={brand} />

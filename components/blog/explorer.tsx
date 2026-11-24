@@ -30,7 +30,10 @@ export function BlogExplorer({
   allCount,
   activeCategory,
   labels,
+  promo,
 }: {
+  /** Optional card shown after the last post when the final row has an empty cell. */
+  promo?: ReactNode;
   items: PostMeta[];
   cards: Record<string, ReactNode>;
   chips: CategoryChip[];
@@ -125,6 +128,13 @@ export function BlogExplorer({
             {visible.map((i) => (
               <li key={i.slug}>{cards[i.slug]}</li>
             ))}
+            {/* Fills the gap in an incomplete last row only: hidden on one column, on a full 2-col row
+                (odd position) and on a full 3-col row (3n+1); spans two cells when one card is alone at xl. */}
+            {promo ? (
+              <li className="hidden sm:flex sm:max-xl:[&:nth-child(odd)]:hidden xl:[&:nth-child(3n+1)]:hidden xl:[&:nth-child(3n+2)]:col-span-2">
+                {promo}
+              </li>
+            ) : null}
           </RevealGroup>
         ) : (
           <div className="rounded-brand border border-dashed border-line bg-surface p-10 text-center">

@@ -156,6 +156,12 @@ export const defaultCopy: CopyInput = {
     popular: "Popular articles",
     categories: "Categories",
     techBox: { title: "Need a technician?", body: "Talk to our team or book a visit online.", book: "Book a service" },
+    gridPromo: {
+      eyebrow: "Need help now?",
+      title: "Talk to a technician",
+      body: "Not sure what your system needs? Call our team or book a visit online.",
+      book: "Book a service",
+    },
     checklist: {
       title: "Get the seasonal checklist",
       body: "A short checklist to help you get your system ready for the season.",

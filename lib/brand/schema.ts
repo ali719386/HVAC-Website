@@ -533,6 +533,8 @@ export const copySchema = z.object({
     popular: nonEmpty,
     categories: nonEmpty,
     techBox: z.object({ title: nonEmpty, body: nonEmpty, book: nonEmpty }),
+    /** Card that fills the empty cell after the last post in the grid (tablet and desktop only). */
+    gridPromo: z.object({ eyebrow: nonEmpty, title: nonEmpty, body: nonEmpty, book: nonEmpty }),
     checklist: z.object({
       title: nonEmpty,
       body: nonEmpty,
@@ -876,6 +878,8 @@ export const brandConfigSchema = z.object({
     aboutMission: imageSchema.optional(),
     /** About page final CTA background photo (wide, e.g. home exterior). */
     aboutCta: imageSchema.optional(),
+    /** Blog grid promo card photo (fills the empty cell after the last post). Falls back to `expert`. */
+    blogPromo: imageSchema.optional(),
   }),
   homepage: z.object({
     heroVariant: z.enum(["summer", "winter"]),
