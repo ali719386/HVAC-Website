@@ -9,6 +9,7 @@ import type { ChatData, ChatLink } from "@/lib/chatbot";
 import { matchQuestion, searchDocs } from "@/lib/chat-match";
 import { track } from "@/lib/analytics";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
+import type { ChatApiResponse } from "@/app/api/chat/route";
 import { whatsappHref, type WhatsAppConfig } from "./whatsapp";
 
 type Msg = { role: "bot" | "user"; text: string; links?: ChatLink[]; handoff?: boolean };
@@ -21,8 +22,8 @@ const STORAGE_KEY = "site-assistant";
 const HANDOFF = "__handoff";
 
 /**
- * Website assistant: answers only from this site's content (see lib/chatbot.ts), entirely in the
- * browser. Desktop launcher is a pill with the assistant and WhatsApp; phones open it from the sticky bar.
+ * Website assistant: answers only from this site's content (see lib/chatbot.ts). With GEMINI_API_KEY
+ * set, typed questions are answered by AI grounded on that content (/api/chat); otherwise in the browser. Desktop launcher is a pill with the assistant and WhatsApp; phones open it from the sticky bar.
  */
 export function Chatbot({
   quick: quickItems,
@@ -33,6 +34,7 @@ export function Chatbot({
   phone,
   whatsapp,
   bookLabel,
+  ai,
 }: {
   /** Quick questions (small, rendered with the page). The full knowledge loads on first open. */
   quick: ChatData["quick"];
@@ -45,6 +47,8 @@ export function Chatbot({
   phone: Phone;
   whatsapp?: WhatsAppConfig;
   bookLabel: string;
+  /** AI answers available (/api/chat). Falls back to the scripted answers on any failure. */
+  ai: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -120,7 +124,9 @@ export function Chatbot({
     setMessages(withUser);
     setTyping(true);
     const kb = await loadKb();
-    const bot = reply(kb, question, entryId);
+    // Free-typed questions go to the AI first (except ZIP lookups, which use the exact list).
+    const aiBot = ai && !entryId && !/\b\d{5}\b/.test(question) ? await askAi(messages, question) : null;
+    const bot = aiBot ?? reply(kb, question, entryId);
     // Short pause so the reply reads as a reply (not an animation; fine with reduced motion).
     window.clearTimeout(replyTimer.current);
     replyTimer.current = window.setTimeout(() => {
@@ -129,6 +135,24 @@ export function Chatbot({
       setMessages(next);
       persist(next);
     }, 350);
+  }
+
+  /** AI answer grounded on the site, or null (not configured, rate limited, offline or error). */
+  async function askAi(history: Msg[], question: string): Promise<Msg | null> {
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, history: history.slice(-8).map((m) => ({ role: m.role, text: m.text.slice(0, 1500) })) }),
+        signal: AbortSignal.timeout(25_000),
+      });
+      const data = (await res.json()) as ChatApiResponse;
+      if (!data.ok) return null;
+      track("chat_question", { matched: true, topic: "ai" });
+      return { role: "bot", text: data.text, links: data.links, handoff: data.handoff };
+    } catch {
+      return null;
+    }
   }
 
   /** Topic match first, then ZIP lookup, then a search over every site passage, then the fallback. */

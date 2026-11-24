@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getBrand } from "@/lib/brand";
 import { privacyDoc } from "@/lib/legal";
+import { aiEnabled } from "@/lib/chat-ai";
 import { pageMetadata } from "@/lib/seo/meta";
 import { LegalPage } from "@/components/legal/legal-page";
 
@@ -11,5 +12,5 @@ export function generateMetadata(): Metadata {
 
 export default function Page() {
   const { config } = getBrand();
-  return <LegalPage doc={privacyDoc(config)} path="/privacy" legal={config.legal} />;
+  return <LegalPage doc={privacyDoc(config, aiEnabled())} path="/privacy" legal={config.legal} />;
 }

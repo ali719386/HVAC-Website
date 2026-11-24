@@ -19,8 +19,21 @@ function contactLines(c: BrandConfig["company"]): string[] {
   ];
 }
 
-export function privacyDoc({ company }: BrandConfig): LegalDoc {
+/** `aiChat`: the website assistant sends typed questions to an AI provider (GEMINI_API_KEY set). */
+export function privacyDoc({ company, chatbot }: BrandConfig, aiChat = false): LegalDoc {
   const n = company.name;
+  const chatSection: LegalSection[] = chatbot.enabled
+    ? [
+        {
+          heading: "Website assistant",
+          paragraphs: [
+            aiChat
+              ? "Questions you type into the website assistant, with the recent messages of that chat, are sent to an AI service provider (Google Gemini) to generate an answer from the content of this website. Please do not enter personal, payment or health information in the chat. Your conversation is kept only in your browser tab and is cleared when you refresh the chat or close the tab."
+              : "The website assistant answers from the content of this website inside your browser. Your conversation is kept only in your browser tab and is cleared when you refresh the chat or close the tab.",
+          ],
+        },
+      ]
+    : [];
   return {
     title: "Privacy Policy",
     description: `How ${n} collects, uses and shares information submitted through this website.`,
@@ -52,6 +65,7 @@ export function privacyDoc({ company }: BrandConfig): LegalDoc {
           "To meet legal, tax and accounting obligations",
         ],
       },
+      ...chatSection,
       {
         heading: "How we share information",
         paragraphs: [

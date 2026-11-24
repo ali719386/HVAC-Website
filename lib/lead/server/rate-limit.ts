@@ -1,5 +1,5 @@
 /*
- * Rate limiting for the lead endpoint.
+ * Rate limiting for the lead and chat endpoints.
  *
  * 1) Upstash Redis (optional): used when UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are set.
  *    Shared across all serverless instances, so it is the reliable option in production.
@@ -11,11 +11,15 @@ const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 5;
 const MAX_TRACKED = 5000;
 
+/** Per-endpoint limits: key prefix and max requests per window (window shared). */
+export type RateOptions = { prefix: string; max: number };
+const LEAD_LIMIT: RateOptions = { prefix: "lead", max: MAX_REQUESTS };
+
 const memory = new Map<string, number[]>();
 
-function memoryLimit(key: string, now: number): RateResult {
+function memoryLimit(key: string, max: number, now: number): RateResult {
   const recent = (memory.get(key) ?? []).filter((t) => now - t < WINDOW_MS);
-  if (recent.length >= MAX_REQUESTS) {
+  if (recent.length >= max) {
     const oldest = recent[0] ?? now;
     return { allowed: false, retryAfterSec: Math.ceil((oldest + WINDOW_MS - now) / 1000) };
   }
@@ -33,7 +37,7 @@ function memoryLimit(key: string, now: number): RateResult {
 
 type RateResult = { allowed: boolean; retryAfterSec: number };
 
-async function upstashLimit(key: string, url: string, token: string): Promise<RateResult> {
+async function upstashLimit(key: string, max: number, url: string, token: string): Promise<RateResult> {
   const windowSec = WINDOW_MS / 1000;
   const res = await fetch(`${url.replace(/\/+$/, "")}/pipeline`, {
     method: "POST",
@@ -52,23 +56,23 @@ async function upstashLimit(key: string, url: string, token: string): Promise<Ra
   const count = Number(results[0]);
   const ttl = Number(results[2]);
   if (!Number.isFinite(count)) throw new Error("Unexpected Upstash response");
-  return count > MAX_REQUESTS
+  return count > max
     ? { allowed: false, retryAfterSec: ttl > 0 ? ttl : windowSec }
     : { allowed: true, retryAfterSec: 0 };
 }
 
-export async function checkRateLimit(ip: string): Promise<RateResult> {
-  const key = `lead:rl:${ip}`;
+export async function checkRateLimit(ip: string, opts: RateOptions = LEAD_LIMIT): Promise<RateResult> {
+  const key = `${opts.prefix}:rl:${ip}`;
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
   if (url && token) {
     try {
-      return await upstashLimit(key, url, token);
+      return await upstashLimit(key, opts.max, url, token);
     } catch (err) {
-      console.error("[lead] Upstash rate limit failed, using in-memory fallback:", err instanceof Error ? err.message : err);
+      console.error(`[${opts.prefix}] Upstash rate limit failed, using in-memory fallback:`, err instanceof Error ? err.message : err);
     }
   }
-  return memoryLimit(key, Date.now());
+  return memoryLimit(key, opts.max, Date.now());
 }
 
 export function clientIp(headers: Headers): string {

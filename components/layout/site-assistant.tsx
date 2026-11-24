@@ -1,5 +1,6 @@
 import { getBrand } from "@/lib/brand";
 import { buildChatData } from "@/lib/chatbot";
+import { aiEnabled } from "@/lib/chat-ai";
 import { assetExists } from "@/components/ui/brand-image";
 import { Chatbot } from "./chatbot";
 import { WhatsAppFloat } from "./whatsapp";
@@ -27,6 +28,8 @@ export function SiteAssistant() {
       phone={company.phone}
       whatsapp={company.whatsapp}
       bookLabel={content.copy.hero.primaryCta}
+      // Read at build time for static pages: set GEMINI_API_KEY before building.
+      ai={aiEnabled()}
     />
   );
 }
