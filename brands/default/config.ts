@@ -107,8 +107,9 @@ export const config: BrandConfigInput = {
     // TODO: replace with a real project photo.
     projects: { src: "about-ac-installation.jpg", alt: "Technician setting up a new central air conditioner beside a home" },
     faq: { src: "faq-thermostat.jpg", alt: "Homeowner pointing out the thermostat to a technician in her hallway" },
-    // Plans and financing page header. TODO: replace with a dedicated photo if available.
+    // Plans page header (financing uses its own slot below). TODO: replace with a dedicated photo if available.
     promo: { src: "about-maintenance.jpg", alt: "Technician connecting gauge hoses to an outdoor AC unit during a seasonal tune-up" },
+    financing: { src: "about-mission-consult.jpg", alt: "Technician reviewing options with a homeowner on a tablet in her living room" },
     aboutHero: { src: "about-hero.jpg", alt: "Technician servicing a rooftop air conditioning unit at dusk" },
     aboutStory: { src: "about-story-furnace.jpg", alt: "Technician testing the controls of an indoor furnace with a multimeter" },
     aboutStoryInset: { src: "about-story-condenser.jpg", alt: "Technician kneeling beside an outdoor AC condenser with the service panel open" },

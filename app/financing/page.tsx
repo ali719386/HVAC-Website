@@ -25,7 +25,7 @@ export default function FinancingPage() {
   const c = content.copy.financing;
   return (
     <>
-      <PageHeader image={config.images.promo} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Financing", href: "/financing" }]} />
+      <PageHeader image={config.images.financing ?? config.images.promo} eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Financing", href: "/financing" }]} />
       <div className="container-site section-y">
         <Reveal variant="fade-up" className="mx-auto max-w-3xl">
           {f.description ? <p className="text-xl leading-relaxed">{f.description}</p> : null}
