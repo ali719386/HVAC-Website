@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { CalendarCheck, Phone as PhoneIcon, Plus, Send, X } from "lucide-react";
+import { CalendarCheck, Phone as PhoneIcon, RotateCw, Send, X } from "lucide-react";
 import type { Copy, Phone } from "@/lib/brand/schema";
 import type { ChatData, ChatLink } from "@/lib/chatbot";
 import { matchQuestion } from "@/lib/chat-match";
@@ -44,6 +44,8 @@ export function Chatbot({
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [spin, setSpin] = useState(0);
+  const replyTimer = useRef<number | undefined>(undefined);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -102,7 +104,8 @@ export function Chatbot({
     setTyping(true);
     track("chat_question", { matched: Boolean(entry), topic: entry?.id ?? "none" });
     // Short pause so the reply reads as a reply (not an animation; fine with reduced motion).
-    window.setTimeout(() => {
+    window.clearTimeout(replyTimer.current);
+    replyTimer.current = window.setTimeout(() => {
       setTyping(false);
       const next = [...withUser, bot];
       setMessages(next);
@@ -118,7 +121,12 @@ export function Chatbot({
     answer(q);
   }
 
+  /** Refresh: clears this conversation (also from storage) and starts again with the welcome and topics. */
   function reset() {
+    setSpin((n) => n + 1);
+    window.clearTimeout(replyTimer.current);
+    setTyping(false);
+    setInput("");
     const fresh = [welcome];
     setMessages(fresh);
     persist(fresh);
@@ -233,9 +241,11 @@ export function Chatbot({
             <button
               type="button"
               onClick={reset}
+              title={copy.reset}
               className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-on-primary/30 px-3 text-sm font-semibold transition-colors hover:bg-on-primary/10"
             >
-              <Plus className="size-4" aria-hidden="true" />
+              {/* key changes on every refresh, so the icon spins once (no spin with reduced motion). */}
+              <RotateCw key={spin} className={`size-4 ${spin > 0 ? "animate-[spin_0.5s_ease-out_1]" : ""} motion-reduce:animate-none`} aria-hidden="true" />
               {copy.reset}
             </button>
             <button type="button" onClick={closeChat} className="grid size-11 place-items-center rounded-full hover:bg-on-primary/10">
