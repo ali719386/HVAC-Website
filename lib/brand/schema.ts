@@ -822,6 +822,8 @@ export const brandConfigSchema = z.object({
     expert: imageSchema,
     projects: imageSchema,
     promo: imageSchema,
+    /** /service-areas page header (right-side panel). Optional. */
+    serviceAreas: imageSchema.optional(),
     /** Book a Service page header (right-side panel). Optional. */
     book: imageSchema.optional(),
     /** Financing page header. Falls back to promo (which the plans page uses). */

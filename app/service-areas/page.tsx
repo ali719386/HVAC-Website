@@ -27,6 +27,7 @@ export default function ServiceAreasPage() {
   return (
     <>
       <PageHero
+        image={config.images.serviceAreas}
         eyebrow={c.eyebrow}
         title={c.title}
         intro={c.intro || undefined}
