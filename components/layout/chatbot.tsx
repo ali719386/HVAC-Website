@@ -121,7 +121,7 @@ export function Chatbot({
     answer(q);
   }
 
-  /** Refresh: clears this conversation (also from storage) and starts again with the welcome and topics. */
+  /** Refresh: clears this conversation (also from storage) and starts again with the welcome message. */
   function reset() {
     setSpin((n) => n + 1);
     window.clearTimeout(replyTimer.current);
@@ -155,29 +155,6 @@ export function Chatbot({
         <CalendarCheck className="size-3.5" aria-hidden="true" />
         {bookLabel}
       </Link>
-    </div>
-  );
-
-  const topics = (
-    <div className="pl-9">
-      <p className="mb-2 text-xs font-bold tracking-wide text-muted uppercase">{copy.suggestions}</p>
-      <div className="flex flex-wrap gap-2">
-        {data.suggestions.map((s) => (
-          <button
-            key={s.id}
-            type="button"
-            disabled={typing}
-            onClick={() => answer(s.label, s.id)}
-            className="min-h-9 rounded-full border border-primary/30 bg-surface px-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/8 disabled:opacity-50"
-          >
-            {s.label}
-          </button>
-        ))}
-      </div>
-      <details className="mt-3 text-sm">
-        <summary className="cursor-pointer font-semibold text-primary">{copy.handoff}</summary>
-        {handoff}
-      </details>
     </div>
   );
 
@@ -284,8 +261,6 @@ export function Chatbot({
                   {m.handoff ? handoff : null}
                 </div>
               </div>
-              {/* Topics appear once, under the welcome message (not repeated after every reply). */}
-              {i === 0 ? topics : null}
               </Fragment>
             ))}
             {typing ? (

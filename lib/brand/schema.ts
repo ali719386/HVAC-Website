@@ -588,8 +588,6 @@ export const copySchema = z.object({
     send: nonEmpty,
     close: nonEmpty,
     reset: nonEmpty,
-    suggestions: nonEmpty,
-    handoff: nonEmpty,
     disclaimer: nonEmpty,
     /** Small talk replies. {name} is the assistant's name, {company} the company name. */
     smallTalk: z.object({

@@ -19,7 +19,7 @@ export type ChatEntry = {
   /** Minimum score to answer with this entry (FAQs need two matching words). */
   min?: number;
 };
-export type ChatData = { entries: ChatEntry[]; suggestions: { id: string; label: string }[] };
+export type ChatData = { entries: ChatEntry[] };
 
 const STOP = new Set(
   "a an the and or of to in on for with is are was do does did can could should would will my your our you we i me it this that what when where how why which who have has get my there their them be am at by from as if any about need".split(" "),
@@ -211,14 +211,5 @@ export function buildChatData(brand: Brand): ChatData {
   const faqs = [...content.faqs, ...content.projectFaqs, ...config.contact.faqs];
   faqs.forEach((f, i) => entries.push({ id: `faq-${i}`, keywords: [...new Set(words(f.question))], answer: f.answer, links: [], min: 2 }));
 
-  const suggestions = [
-    { id: "services", label: "Services" },
-    { id: "areas", label: "Service areas" },
-    { id: "book", label: "Book a visit" },
-    { id: "hours", label: "Hours" },
-    ...(offerings.emergency24x7 ? [{ id: "emergency", label: "Emergency" }] : []),
-    ...(offerings.financing.enabled ? [{ id: "financing", label: "Financing" }] : []),
-    { id: "contact", label: "Contact" },
-  ];
-  return { entries, suggestions };
+  return { entries };
 }
