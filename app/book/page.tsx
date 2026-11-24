@@ -19,7 +19,11 @@ export function generateMetadata(): Metadata {
 export default function BookPage() {
   const { config, content } = getBrand();
   const c = content.copy.book;
-  const formProps = { companyName: config.company.name, phone: config.company.phone };
+  const formProps = {
+    companyName: config.company.name,
+    phone: config.company.phone,
+    serviceOptions: content.services.map((s) => s.slug),
+  };
   const issues = Object.fromEntries(content.symptoms.map((s) => [s.id, { service: s.service, message: s.message }]));
   return (
     <>

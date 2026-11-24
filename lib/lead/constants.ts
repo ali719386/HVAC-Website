@@ -1,6 +1,6 @@
 /** Lead form options and limits. Shared by client and server; keep free of heavy imports. */
 
-export const serviceTypes = ["ac-repair", "ac-installation", "heating", "maintenance", "commercial"] as const;
+export const serviceTypes = ["ac-repair", "ac-installation", "heating", "maintenance", "commercial", "duct-cleaning"] as const;
 export type ServiceType = (typeof serviceTypes)[number];
 
 export const serviceTypeLabels: Record<ServiceType, string> = {
@@ -9,6 +9,7 @@ export const serviceTypeLabels: Record<ServiceType, string> = {
   heating: "Heating",
   maintenance: "Maintenance",
   commercial: "Commercial HVAC",
+  "duct-cleaning": "Duct cleaning & repair",
 };
 
 export const urgencies = ["emergency", "this-week", "flexible"] as const;

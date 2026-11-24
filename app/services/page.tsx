@@ -114,7 +114,9 @@ export default function ServicesPage() {
           />
         );
       case "cta":
-        return <LeadCtaBand config={config} copy={sp.cta} before={toneAt(i - 1)} />;
+        return (
+          <LeadCtaBand config={config} copy={sp.cta} serviceOptions={content.services.map((s) => s.slug)} before={toneAt(i - 1)} />
+        );
     }
   };
 

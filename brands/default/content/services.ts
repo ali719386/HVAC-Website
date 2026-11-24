@@ -117,4 +117,25 @@ export const services: ServiceInput[] = [
     seoDescription: "Commercial HVAC repair and planned maintenance for Central Ohio businesses.",
     placeholder: true,
   },
+  {
+    slug: "duct-cleaning",
+    // TODO: confirm the client offers duct cleaning and duct repair, plus filters, 24/7 availability and any startingAt price.
+    category: ["maintenance"], audience: ["residential", "commercial"], emergency: false,
+    title: "Duct Cleaning & Repair",
+    summary: "Ductwork cleaning, sealing and repair so conditioned air reaches every room.",
+    icon: "wind",
+    // TODO: add service-duct-cleaning.jpg (technician working on ductwork, 1200 x 750 or larger, no logos).
+    image: { src: "service-duct-cleaning.jpg", alt: "Technician inspecting and sealing a section of home ductwork" },
+    intro:
+      "Leaky, crushed or dirty ducts can leave some rooms too hot or too cold even when the equipment is working. We inspect the ductwork and explain what we find before recommending any work.",
+    body: [
+      "A duct inspection looks for disconnected or damaged runs, gaps at joints and registers, and dust or debris buildup. Problems in attics, crawlspaces and basements are common because those ducts are out of sight.",
+      "Depending on what we find, the fix may be cleaning, sealing joints, replacing damaged sections or adjusting airflow to rooms that are not getting enough. You get the options in writing first.",
+    ],
+    features: ["Ductwork inspection with written findings", "Duct cleaning", "Sealing leaks at joints and registers", "Repair or replacement of damaged sections"],
+    signs: ["Some rooms hotter or colder than others", "Weak airflow from vents", "Dust building up quickly near registers", "Visible damage to ducts in the attic or basement"],
+    seoTitle: "Duct Cleaning and Repair in Columbus, OH",
+    seoDescription: "Ductwork inspection, cleaning, sealing and repair for homes and businesses in Columbus and Central Ohio.",
+    placeholder: true,
+  },
 ];

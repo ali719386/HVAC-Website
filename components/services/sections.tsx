@@ -263,7 +263,17 @@ export function PlanFinancingStrip({ brand, copy }: { brand: Brand; copy: Pick<S
 
 /* ------------------------------ CTA band with compact lead form ------------------------------ */
 
-export function LeadCtaBand({ config, copy, before }: { config: BrandConfig; copy: Sp["cta"]; before?: Tone }) {
+export function LeadCtaBand({
+  config,
+  copy,
+  serviceOptions,
+  before,
+}: {
+  config: BrandConfig;
+  copy: Sp["cta"];
+  serviceOptions: Service["slug"][];
+  before?: Tone;
+}) {
   const { company } = config;
   return (
     <Section tone="primary" labelledBy="lead-cta-title" className="relative overflow-hidden">
@@ -281,7 +291,7 @@ export function LeadCtaBand({ config, copy, before }: { config: BrandConfig; cop
           <TrustList company={company} onDark variant="chips" className="mt-8" />
         </Reveal>
         <Reveal variant="fade-up" delay={120} className="text-ink">
-          <LeadForm companyName={company.name} phone={company.phone} compact />
+          <LeadForm companyName={company.name} phone={company.phone} serviceOptions={serviceOptions} compact />
         </Reveal>
       </div>
     </Section>

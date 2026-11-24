@@ -43,7 +43,10 @@ export function LeadForm({
   defaultMessage,
   title,
   compact = false,
+  serviceOptions = serviceTypes,
 }: {
+  /** Service choices in the dropdown (pass the brand's own service slugs). Defaults to every type. */
+  serviceOptions?: readonly ServiceType[];
   companyName: string;
   phone: Phone;
   defaultService?: ServiceType;
@@ -210,7 +213,7 @@ export function LeadForm({
             <option value="" disabled>
               Choose a service
             </option>
-            {serviceTypes.map((s) => (
+            {serviceOptions.map((s) => (
               <option key={s} value={s}>
                 {serviceTypeLabels[s]}
               </option>

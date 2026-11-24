@@ -25,7 +25,12 @@ export default function ContactPage() {
         <aside aria-label="Contact details">
           <ContactCard config={config} />
         </aside>
-        <LeadForm companyName={config.company.name} phone={config.company.phone} title="Send us a message" />
+        <LeadForm
+          companyName={config.company.name}
+          phone={config.company.phone}
+          serviceOptions={content.services.map((s) => s.slug)}
+          title="Send us a message"
+        />
       </div>
     </>
   );
