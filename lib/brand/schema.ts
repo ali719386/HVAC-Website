@@ -591,6 +591,14 @@ export const copySchema = z.object({
     suggestions: nonEmpty,
     handoff: nonEmpty,
     disclaimer: nonEmpty,
+    /** Small talk replies. {name} is the assistant's name, {company} the company name. */
+    smallTalk: z.object({
+      greeting: nonEmpty,
+      howAreYou: nonEmpty,
+      thanks: nonEmpty,
+      goodbye: nonEmpty,
+      name: nonEmpty,
+    }),
   }),
   /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,

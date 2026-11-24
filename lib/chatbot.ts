@@ -50,12 +50,41 @@ export function buildChatData(brand: Brand): ChatData {
   const book = { label: content.copy.hero.primaryCta, href: "/book" };
   const call = { label: `Call ${company.phone.display}`, href: `tel:${company.phone.tel}` };
 
-  entries.push({
-    id: "greeting",
-    keywords: ["hi", "hello", "hey", "good morning", "good afternoon", "good evening", "help"],
-    answer: `Hello. Ask me about our services, the areas we serve, hours, booking or anything else on this website.`,
-    links: [],
-  });
+  // Small talk (low weight in the matcher, so a real topic in the same message always wins).
+  const talk = content.copy.chatbot.smallTalk;
+  const fill = (s: string) => s.replaceAll("{company}", company.name).replaceAll("{name}", config.chatbot.name);
+  entries.push(
+    {
+      id: "talk-greeting",
+      keywords: ["hi", "hello", "hey", "hiya", "howdy", "greetings", "good morning", "good afternoon", "good evening", "salam", "salaam", "assalam", "assalamualaikum", "assalam o alaikum", "aoa", "help"],
+      answer: fill(talk.greeting),
+      links: [],
+    },
+    {
+      id: "talk-how",
+      keywords: ["how are you", "how are u", "how r u", "how is it going", "hows it going", "how do you do", "how is your day", "kaise ho", "kaisay ho", "kya haal", "kia haal", "kya hal"],
+      answer: fill(talk.howAreYou),
+      links: [],
+    },
+    {
+      id: "talk-thanks",
+      keywords: ["thanks", "thank", "thank you", "thx", "appreciate", "appreciated", "shukriya", "shukria", "jazak allah", "great thanks"],
+      answer: fill(talk.thanks),
+      links: [],
+    },
+    {
+      id: "talk-bye",
+      keywords: ["bye", "goodbye", "good bye", "bye bye", "see you", "see ya", "have a nice day", "have a good day", "have a great day", "take care", "good night", "allah hafiz", "khuda hafiz", "that is all", "thats all"],
+      answer: fill(talk.goodbye),
+      links: [],
+    },
+    {
+      id: "talk-name",
+      keywords: ["your name", "who are you", "what are you", "are you a bot", "are you a robot", "are you human", "are you real"],
+      answer: fill(talk.name),
+      links: [],
+    },
+  );
 
   // Services
   entries.push({
@@ -167,7 +196,7 @@ export function buildChatData(brand: Brand): ChatData {
   // Site sections
   entries.push({
     id: "about",
-    keywords: ["about", "who are you", "company", "your team", "history"],
+    keywords: ["about", "company", "your team", "history", "this website", "website"],
     answer: `${company.name}: ${company.tagline}.`,
     links: [{ label: "About us", href: "/about" }],
   });

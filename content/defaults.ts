@@ -227,6 +227,13 @@ export const defaultCopy: CopyInput = {
     suggestions: "Popular topics",
     handoff: "Talk to a person",
     disclaimer: "Automated answers from this website. For quotes and scheduling, our team will confirm details.",
+    smallTalk: {
+      greeting: "Hello. Ask me about our services, the areas we serve, hours, booking or anything else on this website.",
+      howAreYou: "I am doing well, thank you for asking. How can I help with your heating or cooling today?",
+      thanks: "You are welcome. Is there anything else I can help you with?",
+      goodbye: "Thank you for visiting {company}. Have a great day, and reach out any time you need help.",
+      name: "I am {name}, the website assistant for {company}. I can answer questions about our services, areas, hours and booking.",
+    },
   },
   projects: { eyebrow: "Recent work", title: "Projects", intro: "" },
   projectsPage: {
