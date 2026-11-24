@@ -43,6 +43,7 @@ export default async function ServicePage({ params }: Props) {
     <>
       <JsonLd data={serviceLd(service)} />
       <PageHeader
+        image={service.heroImage ?? service.image}
         eyebrow="Services"
         title={service.title}
         intro={service.intro}

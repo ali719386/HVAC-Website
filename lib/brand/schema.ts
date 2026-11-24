@@ -155,6 +155,8 @@ export const serviceSchema = z.object({
   summary: nonEmpty,
   icon: iconKeySchema,
   image: imageSchema,
+  /** Service page header photo (right panel). Falls back to image; use a different photo to avoid repeating it on the page. */
+  heroImage: imageSchema.optional(),
   intro: nonEmpty,
   body: z.array(nonEmpty).min(1),
   features: z.array(nonEmpty).min(1),

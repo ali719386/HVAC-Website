@@ -81,7 +81,7 @@ function resolveAssets(brand: Brand): Brand {
           },
         },
       },
-      services: content.services.map((s) => ({ ...s, image: img(s.image) })),
+      services: content.services.map((s) => ({ ...s, image: img(s.image), heroImage: s.heroImage ? img(s.heroImage) : undefined })),
       posts: content.posts.map((p) => ({ ...p, cover: img(p.cover) })),
       authors: content.authors.map((a) => ({ ...a, avatar: a.avatar ? img(a.avatar) : undefined })),
       projects: content.projects.map((p) => ({
