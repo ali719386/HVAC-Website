@@ -72,7 +72,7 @@ export function TestimonialSlider({
 }
 
 /** One review: quote, optional real star rating, name and location. "Sample" label on placeholders. */
-function TestimonialFigure({ t }: { t: Testimonial }) {
+export function TestimonialFigure({ t }: { t: Testimonial }) {
   return (
     <figure className="flex flex-1 flex-col p-7 sm:p-8">
       <div className="flex items-center justify-between gap-3">

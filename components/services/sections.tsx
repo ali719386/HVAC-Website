@@ -24,14 +24,14 @@ const toneBg: Record<Tone, string> = {
  * Angled divider: the header's diagonal cut, drawn in the NEIGHBOR's background color over the edge
  * of a navy band so the band appears to start or end on a slant. Decorative only.
  */
-function Angle({ edge, tone }: { edge: "top" | "bottom"; tone?: Tone }) {
+export function Angle({ edge, tone }: { edge: "top" | "bottom"; tone?: Tone }) {
   if (!tone || tone === "primary") return null;
   const shape = edge === "top" ? "[clip-path:polygon(0_0,100%_0,0_100%)] top-0" : "[clip-path:polygon(100%_0,100%_100%,0_100%)] bottom-0";
   return <div aria-hidden="true" className={`pointer-events-none absolute inset-x-0 h-8 sm:h-12 lg:h-16 ${toneBg[tone]} ${shape}`} />;
 }
 
 /** The header's right-side diagonal panel, reused as a quiet motif in navy bands. */
-function DiagonalPanel() {
+export function DiagonalPanel() {
   return (
     <div
       aria-hidden="true"

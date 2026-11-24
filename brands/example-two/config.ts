@@ -27,6 +27,8 @@ export const config: BrandConfigInput = {
     certifications: [], // TODO
     googleRating: undefined, // TODO
     yearsInBusiness: undefined, // TODO
+    projectsCompleted: undefined, // TODO: real total for the /projects hero. Hidden while undefined.
+    homesServed: undefined, // TODO: real total. Hidden while undefined.
     stats: [
       { value: 900, suffix: "+", label: "Furnaces serviced", placeholder: true }, // TODO
       { value: 8, suffix: "", label: "Front Range cities", placeholder: true }, // TODO
@@ -102,6 +104,20 @@ export const config: BrandConfigInput = {
       { key: "serviceArea", enabled: true },
       { key: "brands", enabled: true },
       { key: "reviews", enabled: true },
+      { key: "faq", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
+  // /projects index sections (the hero always shows first): reorder or set enabled: false to hide.
+  projectsPage: {
+    sections: [
+      { key: "trust", enabled: true },
+      { key: "featured", enabled: true },
+      { key: "grid", enabled: true },
+      { key: "stats", enabled: true },
+      { key: "process", enabled: true },
+      { key: "testimonials", enabled: true },
+      { key: "cities", enabled: true },
       { key: "faq", enabled: true },
       { key: "cta", enabled: true },
     ],

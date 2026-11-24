@@ -93,6 +93,33 @@ export const copy: CopyOverrides = {
       call: "Call Now",
     },
   },
+  // TODO: review /projects copy with the client.
+  projects: {
+    eyebrow: "Our projects",
+    title: "Recent HVAC Projects in Central Ohio",
+    intro: "A look at installations, repairs and maintenance work for homes and businesses around Columbus.",
+  },
+  projectsPage: {
+    // TODO: keep "free estimate" only if the client really offers free estimates.
+    hero: {
+      primaryCta: "Get a free estimate",
+      callCta: "Call now",
+      projectsCompleted: "Projects completed",
+      homesServed: "Homes served",
+      yearsInBusiness: "Years in business",
+    },
+    featured: { eyebrow: "Featured project", title: "Inside a recent installation", intro: "What the homeowner needed and how we handled it.", badge: "Featured" },
+    grid: { eyebrow: "Our work", title: "Browse our projects", intro: "Filter by service, city or system type." },
+    process: { eyebrow: "Our process", title: "How we deliver every project", intro: "The same clear steps on every job, big or small." },
+    testimonials: { eyebrow: "Reviews", title: "What project customers said", intro: "" },
+    cities: { eyebrow: "Service area", title: "Cities we serve", intro: "Local pages with notes for each community." },
+    faq: { eyebrow: "FAQ", title: "Questions about projects", intro: "Timelines, permits, warranties and payment." },
+    cta: {
+      eyebrow: "Start a project",
+      title: "Planning a similar project?",
+      intro: "Tell us about your home or building and our Columbus team will follow up to talk through options.",
+    },
+  },
   // TODO: review /services page copy with the client.
   servicesPage: {
     // TODO: keep "free estimate" only if the client really offers free estimates.

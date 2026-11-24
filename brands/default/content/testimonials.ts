@@ -7,6 +7,7 @@ import type { TestimonialInput } from "@/content/types";
  */
 export const testimonials: TestimonialInput[] = [
   {
+    id: "columbus-ac-repair",
     quote: "Sample review text. Replace with a real customer's words about an AC repair visit.",
     name: "Customer name",
     location: "Columbus, OH",
@@ -15,6 +16,7 @@ export const testimonials: TestimonialInput[] = [
     placeholder: true,
   },
   {
+    id: "dublin-heating",
     quote: "Sample review text. Replace with a real customer's words about a furnace replacement.",
     name: "Customer name",
     location: "Dublin, OH",
@@ -23,6 +25,7 @@ export const testimonials: TestimonialInput[] = [
     placeholder: true,
   },
   {
+    id: "westerville-maintenance",
     quote: "Sample review text. Replace with a real customer's words about a maintenance plan.",
     name: "Customer name",
     location: "Westerville, OH",
@@ -31,6 +34,7 @@ export const testimonials: TestimonialInput[] = [
     placeholder: true,
   },
   {
+    id: "hilliard-commercial",
     quote: "Sample review text. Replace with a real customer's words about a commercial service call.",
     name: "Customer name",
     location: "Hilliard, OH",

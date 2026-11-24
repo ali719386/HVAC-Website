@@ -29,7 +29,7 @@ function mergeCopy(input: BrandInput): Record<string, unknown> {
 function resolveAssets(brand: Brand): Brand {
   // Every brand image lives in ONE folder: public/brands/<slug>/images/
   const base = `/brands/${brand.config.slug}/images/`;
-  const img = (i: ImageAsset): ImageAsset => ({ ...i, src: base + i.src });
+  const img = <T extends ImageAsset>(i: T): T => ({ ...i, src: base + i.src });
   const path = (p: string | undefined) => (p ? base + p : undefined);
   const { config, content } = brand;
   const im = config.images;
@@ -79,7 +79,13 @@ function resolveAssets(brand: Brand): Brand {
       },
       services: content.services.map((s) => ({ ...s, image: img(s.image) })),
       posts: content.posts.map((p) => ({ ...p, image: img(p.image) })),
-      projects: content.projects.map((p) => ({ ...p, image: img(p.image) })),
+      projects: content.projects.map((p) => ({
+        ...p,
+        cover: img(p.cover),
+        gallery: p.gallery.map(img),
+        before: p.before ? img(p.before) : undefined,
+        after: p.after ? img(p.after) : undefined,
+      })),
       testimonials: content.testimonials.map((t) => ({ ...t, background: path(t.background) })),
     },
   };

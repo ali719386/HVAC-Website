@@ -16,7 +16,6 @@ import {
   ServiceGrid,
   type Tone,
 } from "@/components/services/sections";
-import { CallButton, LinkButton } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Section } from "@/components/ui/section";
 
@@ -129,24 +128,9 @@ export default function ServicesPage() {
         title={c.title}
         intro={c.intro || undefined}
         crumbs={[{ name: "Services", href: "/services" }]}
+        ctas={{ primary: { label: sp.hero.primaryCta, href: "/book" }, call: { label: sp.hero.callCta, phone: company.phone } }}
       >
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <LinkButton href="/book" variant="accent" size="lg">
-            {sp.hero.primaryCta}
-          </LinkButton>
-          <CallButton
-            phone={company.phone}
-            variant="ghost"
-            size="lg"
-            label={
-              <span>
-                {sp.hero.callCta}
-                <span className="sr-only"> {company.phone.display}</span>
-              </span>
-            }
-          />
-        </div>
-        <TrustList company={company} onDark variant="chips" only={["license", "insured", "rating", "years"]} className="mt-6" />
+        <TrustList company={company} onDark variant="chips" only={["license", "insured", "rating", "years"]} />
       </PageHeader>
       {order.map((key, i) => (
         <Fragment key={key}>{render(key, i)}</Fragment>

@@ -169,7 +169,7 @@ export function LeadForm({
       onSubmit={onSubmit}
       noValidate
       aria-describedby={`${uid}-note`}
-      className="rounded-brand border border-line bg-surface p-6 shadow-brand-md sm:p-8"
+      className="@container rounded-brand border border-line bg-surface p-6 shadow-brand-md sm:p-8"
     >
       {title ? <h2 className="mb-1 text-2xl font-extrabold">{title}</h2> : null}
       <p id={`${uid}-note`} className="mb-6 text-sm text-muted">
@@ -193,7 +193,7 @@ export function LeadForm({
         ) : null}
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-5 @lg:grid-cols-2">
         <Field id={id("name")} label="Full name" required error={errors.name}>
           <input id={id("name")} name="name" autoComplete="name" maxLength={LIMITS.name} {...aria("name", errors, id)} className={`${input} h-12`} />
         </Field>
@@ -238,7 +238,7 @@ export function LeadForm({
         <legend className="mb-2 text-sm font-semibold">
           How soon do you need service? <span aria-hidden="true" className="text-accent-dark">*</span>
         </legend>
-        <div className="grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-2 @md:grid-cols-3">
           {urgencies.map((u) => (
             <label key={u} className="flex h-12 cursor-pointer items-center gap-3 rounded-btn border border-line px-4 font-medium has-checked:border-primary has-checked:bg-surface-alt has-focus-visible:ring-2 has-focus-visible:ring-primary/40">
               <input type="radio" name="urgency" value={u} className="size-4 accent-[var(--brand-primary)]" />

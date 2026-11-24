@@ -5,6 +5,7 @@ import { copy } from "./content/copy";
 import { faqs } from "./content/faqs";
 import { plans } from "./content/plans";
 import { processSteps } from "./content/process";
+import { projectFaqs } from "./content/project-faqs";
 import { posts } from "./content/posts";
 import { projects } from "./content/projects";
 import { services } from "./content/services";
@@ -14,7 +15,7 @@ import { whyChooseUs } from "./content/why";
 
 const brand: BrandInput = {
   config,
-  content: { services, whyChooseUs, testimonials, faqs, posts, projects, plans, cities, symptoms, process: processSteps, copy },
+  content: { services, whyChooseUs, testimonials, faqs, posts, projects, plans, cities, symptoms, process: processSteps, projectFaqs, copy },
 };
 
 export default brand;

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Breadcrumbs, type Crumb } from "./breadcrumbs";
-import type { ImageAsset } from "@/lib/brand/schema";
+import type { ImageAsset, Phone } from "@/lib/brand/schema";
+import { CallButton, LinkButton } from "./button";
 import { JsonLd, breadcrumbLd } from "@/lib/seo/jsonld";
 import { BrandImage } from "./brand-image";
 
@@ -43,8 +44,14 @@ export function PageHeader({
   image,
   imageStyle = "panel",
   compact = false,
+  stats,
+  ctas,
   children,
 }: {
+  /** Optional stats row (render only real values). */
+  stats?: { value: string; label: string }[];
+  /** Optional primary link button and click-to-call button. */
+  ctas?: { primary?: { label: string; href: string }; call?: { label: string; phone: Phone } };
   /** Tighter vertical padding (about 400px tall on desktop with CTAs and chips). */
   compact?: boolean;
   /** Optional image slot shown on the right on large screens. */
@@ -77,13 +84,49 @@ export function PageHeader({
           className="absolute inset-y-0 right-0 hidden w-1/3 bg-primary opacity-60 [clip-path:polygon(25%_0,100%_0,100%_100%,0_100%)] lg:block"
         />
       )}
-      <div className={`container-site relative ${compact ? "py-12 lg:py-12" : "py-14 lg:py-20"}`}>
+      {/* Desktop height about 380 to 440px: a minimum height, with content vertically centered. */}
+      <div className={`container-site relative flex flex-col justify-center lg:min-h-[23.75rem] ${compact ? "py-12" : "py-14 lg:py-16"}`}>
         <Breadcrumbs items={trail} onDark />
         {eyebrow ? <p className={`${compact ? "mt-5" : "mt-6"} text-sm font-bold tracking-[0.14em] text-on-primary/80 uppercase`}>{eyebrow}</p> : null}
         <h1 className={`${eyebrow ? "mt-2" : "mt-6"} max-w-3xl lg:max-w-[58%] text-4xl leading-tight font-extrabold sm:text-5xl`}>{title}</h1>
         {intro ? <p className="mt-4 max-w-[40rem] text-lg leading-relaxed text-balance text-on-primary/85">{intro}</p> : null}
-        {children ? <div className={compact ? "mt-7" : "mt-8"}>{children}</div> : null}
+        {ctas?.primary || ctas?.call ? (
+          <div className={`${compact ? "mt-7" : "mt-8"} flex flex-col gap-3 sm:flex-row`}>
+            {ctas.primary ? (
+              <LinkButton href={ctas.primary.href} variant="accent" size="lg">
+                {ctas.primary.label}
+              </LinkButton>
+            ) : null}
+            {ctas.call ? (
+              <CallButton
+                phone={ctas.call.phone}
+                variant="ghost"
+                size="lg"
+                label={
+                  <span>
+                    {ctas.call.label}
+                    <span className="sr-only"> {ctas.call.phone.display}</span>
+                  </span>
+                }
+              />
+            ) : null}
+          </div>
+        ) : null}
+        {stats && stats.length > 0 ? (
+          <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
+            {stats.map((s) => (
+              <div key={s.label} className="flex flex-col">
+                <dt className="order-last text-sm text-on-primary/75">{s.label}</dt>
+                <dd className="font-heading text-3xl font-extrabold">{s.value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : null}
+        {children ? <div className={compact ? "mt-6" : "mt-8"}>{children}</div> : null}
       </div>
     </section>
   );
 }
+
+/** Shared inner-page hero (alias used by newer pages). */
+export const PageHero = PageHeader;

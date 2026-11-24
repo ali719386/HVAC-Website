@@ -37,6 +37,28 @@ export const copy: CopyOverrides = {
     },
   },
   ctaBand: { title: "Ready for a more comfortable home?", body: "Book online or call during business hours.", cta: "Schedule a visit" },
+  // TODO: placeholder /projects copy for the example brand.
+  projects: {
+    eyebrow: "Project gallery",
+    title: "Front Range Heating & Cooling Projects",
+    intro: "Heat pumps, furnaces and ductless systems we have set up across the Denver metro.",
+  },
+  projectsPage: {
+    hero: {
+      primaryCta: "Schedule a visit",
+      callCta: "Call us",
+      projectsCompleted: "Projects completed",
+      homesServed: "Homes served",
+      yearsInBusiness: "Years in business",
+    },
+    featured: { eyebrow: "Spotlight", title: "Project spotlight", intro: "", badge: "Spotlight" },
+    grid: { eyebrow: "All projects", title: "Find a project like yours", intro: "Filter by category, city or system." },
+    process: { eyebrow: "Our process", title: "How every project runs", intro: "" },
+    testimonials: { eyebrow: "Reviews", title: "In our customers' words", intro: "" },
+    cities: { eyebrow: "Where we work", title: "Front Range communities", intro: "" },
+    faq: { eyebrow: "FAQ", title: "Before you start a project", intro: "" },
+    cta: { eyebrow: "Next step", title: "Thinking about a project?", intro: "Tell us about your home and we will reply during business hours." },
+  },
   // TODO: review /services page copy with the client.
   servicesPage: {
     hero: { primaryCta: "Schedule a visit", callCta: "Call us" },

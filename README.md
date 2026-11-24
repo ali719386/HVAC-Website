@@ -132,7 +132,10 @@ Supported equipment brands (`offerings.supportedBrands`) appear in the brand str
 | Section headings and marketing copy | `brands/<slug>/content/copy.ts` (any key in `content/defaults.ts` can be overridden per section) |
 | Services (pages are generated from this) | `content/services.ts`. `category` (cooling / heating / maintenance) and `audience` (residential / commercial) drive the `/services` filters; `emergency: true` shows a 24/7 badge only when `offerings.emergency24x7` is also true; `startingAt` (USD) is optional and must come from the client's real price list. |
 | `/services` problem picker | `content/symptoms.ts`. `action: "service"` links to `/services/<service>`; `action: "book"` links to `/book?issue=<id>`, which prefills the service and message. |
-| `/services` process steps | `content/process.ts` (4 to 5 steps) |
+| `/services` process steps | `content/process.ts` (4 to 5 steps). Also used on `/projects`. |
+| Projects (`/projects` and `/projects/<slug>`) | `content/projects.ts`: slug, title, city, state, category (`ac-installation`, `heating`, `repair`, `maintenance`, `commercial`), systemType, buildingType, buildingSize, completedYear, duration, summary, overview, challenge, solution, equipment, timeline, results, featured, cover, gallery, before, after, videoUrl, testimonialId. Only real jobs with customer permission. `results` must be real, measured numbers (the block is hidden when empty). Gallery, before/after and video sections show only when their files or URL exist. `videoUrl` is an https embed URL, loaded only after the visitor clicks play. |
+| Projects FAQ | `content/project-faqs.ts` (timeline, permits, warranty, financing). No FAQPage markup. |
+| Project hero stats | `company.projectsCompleted`, `company.homesServed`, `company.yearsInBusiness`. Each is hidden while undefined. |
 | Cities, ZIPs and city pages | `content/cities.ts`. A `/service-areas/<slug>` page is created **only** when a city has `page` content (intro + local notes), to avoid thin duplicate pages. |
 | Plans | `content/plans.ts`. Omit `priceUsd` to show "Call for pricing". |
 | Blog posts, projects, FAQs, testimonials, why-choose-us | matching files in `content/` |
@@ -184,6 +187,24 @@ To add a new section type, add its key to `sectionKeys` in `lib/brand/schema.ts`
 | `reviews` | Google rating badge (only when `company.googleRating` is set) plus up to 3 testimonials. No review markup |
 | `faq` | First 5 FAQs (no FAQPage markup) |
 | `cta` | Navy band with the compact lead form |
+
+### Projects page sections
+
+`config.projectsPage.sections` orders and toggles the `/projects` index (the hero always shows first). Copy lives in `copy.projects` (header) and `copy.projectsPage` (all labels, including the detail page). Filters are stored in the URL, e.g. `/projects?cat=heating&city=Dublin%2C%20OH&system=Gas%20furnace&q=furnace&sort=oldest`.
+
+| Key | Section |
+|---|---|
+| `trust` | License, insured/bonded, certifications, Google rating (only what is configured) |
+| `featured` | First project with `featured: true` |
+| `grid` | Sticky toolbar (category tabs with counts, city, system type, search, sort, result count, clear) and the project cards, 6 at a time with Load more |
+| `stats` | Navy band with count-up numbers from `company.stats` |
+| `process` | Steps from `content/process.ts` |
+| `testimonials` | Slider of testimonials linked from a project's `testimonialId` |
+| `cities` | Links to cities that have a `/service-areas` page |
+| `faq` | `content/project-faqs.ts` |
+| `cta` | Navy band with the compact lead form |
+
+Project detail pages show only the fields a project has. The sidebar quote form pre-selects the service mapped from the project category. JSON-LD on the detail page is BreadcrumbList only (plus the site-wide LocalBusiness from the layout).
 
 ## 8. Environment variables
 

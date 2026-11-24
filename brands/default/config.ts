@@ -29,6 +29,8 @@ export const config: BrandConfigInput = {
     certifications: [], // TODO: e.g. "NATE-certified technicians" only if true
     googleRating: undefined, // TODO: { score, count, url } from the real Google Business Profile
     yearsInBusiness: undefined, // TODO: real number. Hidden while undefined.
+    projectsCompleted: undefined, // TODO: real total for the /projects hero. Hidden while undefined.
+    homesServed: undefined, // TODO: real total. Hidden while undefined.
     stats: [
       { value: 2500, suffix: "+", label: "Service calls completed", placeholder: true }, // TODO
       { value: 15, suffix: "", label: "Technicians on staff", placeholder: true }, // TODO
@@ -97,7 +99,8 @@ export const config: BrandConfigInput = {
     about: { src: "about-estimate.jpg", alt: "Technician in shoe covers reviewing a written estimate with a homeowner beside the furnace" },
     services: { src: "services-hero.jpg", alt: "Technician kneeling beside an outdoor AC unit, working on the refrigerant line valves" },
     expert: { src: "expert-caller.jpg", alt: "Technician on the phone taking notes at the service van, with refrigerant gauges hanging inside" },
-    projects: { src: "projects.jpg", alt: "Newly installed high-efficiency furnace" },
+    // TODO: replace with a real project photo.
+    projects: { src: "about-ac-installation.jpg", alt: "Technician setting up a new central air conditioner beside a home" },
     faq: { src: "faq-thermostat.jpg", alt: "Homeowner pointing out the thermostat to a technician in her hallway" },
     promo: { src: "promo.jpg", alt: "Thermostat set to a comfortable temperature" },
     aboutHero: { src: "about-hero.jpg", alt: "Technician servicing a rooftop air conditioning unit at dusk" },
@@ -118,6 +121,20 @@ export const config: BrandConfigInput = {
       { key: "serviceArea", enabled: true },
       { key: "brands", enabled: true },
       { key: "reviews", enabled: true },
+      { key: "faq", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
+  // /projects index sections (the hero always shows first): reorder or set enabled: false to hide.
+  projectsPage: {
+    sections: [
+      { key: "trust", enabled: true },
+      { key: "featured", enabled: true },
+      { key: "grid", enabled: true },
+      { key: "stats", enabled: true },
+      { key: "process", enabled: true },
+      { key: "testimonials", enabled: true },
+      { key: "cities", enabled: true },
       { key: "faq", enabled: true },
       { key: "cta", enabled: true },
     ],

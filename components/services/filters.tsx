@@ -1,6 +1,8 @@
 "use client";
 
-import { useId, useSyncExternalStore, type KeyboardEvent, type ReactNode } from "react";
+import { useId, type KeyboardEvent, type ReactNode } from "react";
+import { useQueryState } from "@/components/motion/query-state";
+import { tabKeyTarget } from "@/components/motion/tabs";
 import {
   serviceAudiences,
   serviceCategories,
@@ -18,17 +20,6 @@ const auds: Aud[] = ["all", ...serviceAudiences];
 const isCat = (v: string | null): v is Cat => cats.some((c) => c === v);
 const isAud = (v: string | null): v is Aud => auds.some((a) => a === v);
 
-/** Fired after replaceState (which emits no event of its own) so the store re-reads the URL. */
-const URL_EVENT = "svc-filter-change";
-function subscribe(onChange: () => void) {
-  window.addEventListener("popstate", onChange);
-  window.addEventListener(URL_EVENT, onChange);
-  return () => {
-    window.removeEventListener("popstate", onChange);
-    window.removeEventListener(URL_EVENT, onChange);
-  };
-}
-
 /**
  * Category tabs + property-type toggle for the server-rendered service grid passed as children.
  * Filtering is pure CSS on data attributes (see .svc-filter in globals.css), so cards stay server
@@ -43,9 +34,7 @@ export function ServiceFilters({
   items: Item[];
   children: ReactNode;
 }) {
-  // The URL is the source of truth; the server snapshot is "" so the static HTML shows everything.
-  const search = useSyncExternalStore(subscribe, () => window.location.search, () => "");
-  const params = new URLSearchParams(search);
+  const { params, update } = useQueryState();
   const t = params.get("type");
   const f = params.get("for");
   const cat: Cat = isCat(t) ? t : "all";
@@ -54,15 +43,8 @@ export function ServiceFilters({
   const panelId = `${uid}-panel`;
   const tabId = (c: Cat) => `${uid}-tab-${c}`;
 
-  function select(nextCat: Cat, nextAud: Aud) {
-    const url = new URL(window.location.href);
-    if (nextCat === "all") url.searchParams.delete("type");
-    else url.searchParams.set("type", nextCat);
-    if (nextAud === "all") url.searchParams.delete("for");
-    else url.searchParams.set("for", nextAud);
-    window.history.replaceState(window.history.state, "", url);
-    window.dispatchEvent(new Event(URL_EVENT));
-  }
+  const select = (nextCat: Cat, nextAud: Aud) =>
+    update({ type: nextCat === "all" ? undefined : nextCat, for: nextAud === "all" ? undefined : nextAud });
 
   function selectCat(c: Cat, focus = false) {
     select(c, aud);
@@ -73,14 +55,7 @@ export function ServiceFilters({
 
   // WAI-ARIA tabs: arrows move and select, Home/End jump to the ends.
   function onTabKey(e: KeyboardEvent<HTMLButtonElement>) {
-    const i = cats.indexOf(cat);
-    const next =
-      e.key === "ArrowRight" ? (i + 1) % cats.length
-      : e.key === "ArrowLeft" ? (i - 1 + cats.length) % cats.length
-      : e.key === "Home" ? 0
-      : e.key === "End" ? cats.length - 1
-      : -1;
-    const target = cats[next];
+    const target = cats[tabKeyTarget(e.key, cats.indexOf(cat), cats.length)];
     if (!target) return;
     e.preventDefault();
     selectCat(target, true);

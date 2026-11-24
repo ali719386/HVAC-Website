@@ -106,6 +106,24 @@ export const servicesSectionKeys = [
 ] as const;
 export type ServicesSectionKey = (typeof servicesSectionKeys)[number];
 
+/** /projects category tabs. */
+export const projectCategories = ["ac-installation", "heating", "repair", "maintenance", "commercial"] as const;
+export type ProjectCategory = (typeof projectCategories)[number];
+
+/** /projects index sections (the hero always renders first). */
+export const projectsSectionKeys = [
+  "trust",
+  "featured",
+  "grid",
+  "stats",
+  "process",
+  "testimonials",
+  "cities",
+  "faq",
+  "cta",
+] as const;
+export type ProjectsSectionKey = (typeof projectsSectionKeys)[number];
+
 const placeholder = z.boolean().optional();
 
 /* ------------------------------------------------------------------ */
@@ -151,6 +169,8 @@ export const processStepSchema = z.object({ title: nonEmpty, body: nonEmpty, ico
 export const whyItemSchema = z.object({ title: nonEmpty, body: nonEmpty, icon: iconKeySchema, placeholder });
 
 export const testimonialSchema = z.object({
+  /** Optional id so a project can link to this review (project.testimonialId). */
+  id: slug.optional(),
   quote: nonEmpty,
   name: nonEmpty,
   location: nonEmpty,
@@ -177,17 +197,43 @@ export const postSchema = z.object({
   placeholder,
 });
 
+/** Project image: alt text plus an optional visible caption (gallery, before/after). */
+export const projectImageSchema = imageSchema.extend({ caption: z.string().default("") });
+
+/**
+ * A completed job (/projects and /projects/<slug>). Only publish real jobs with customer permission.
+ * results: real, measured outcomes only (hidden when empty). Never invent savings or performance claims.
+ */
 export const projectSchema = z.object({
   slug,
   title: nonEmpty,
-  location: nonEmpty,
-  service: serviceTypeSchema,
+  city: nonEmpty,
+  state: usState,
+  category: z.enum(projectCategories),
+  /** Free text shown as a chip and used by the system filter, e.g. "Heat pump", "Gas furnace". */
+  systemType: nonEmpty,
+  buildingType: z.enum(serviceAudiences),
+  /** Free text, e.g. "2,400 sq ft". */
+  buildingSize: nonEmpty.optional(),
+  completedYear: z.number().int().min(1950).max(2100),
+  /** Free text, e.g. "2 days". */
+  duration: nonEmpty.optional(),
   summary: nonEmpty,
-  image: imageSchema,
-  /** Detail page content (/projects/<slug>). */
+  overview: nonEmpty,
   challenge: z.string().default(""),
-  body: z.array(nonEmpty).default([]),
-  scope: z.array(nonEmpty).default([]),
+  solution: z.string().default(""),
+  equipment: z.array(z.object({ name: nonEmpty, type: nonEmpty, specs: z.string().default("") })).default([]),
+  timeline: z.array(z.object({ title: nonEmpty, description: nonEmpty })).default([]),
+  results: z.array(z.object({ label: nonEmpty, value: nonEmpty })).default([]),
+  featured: z.boolean().default(false),
+  cover: projectImageSchema,
+  gallery: z.array(projectImageSchema).default([]),
+  before: projectImageSchema.optional(),
+  after: projectImageSchema.optional(),
+  /** https embed URL (e.g. YouTube or Vimeo embed). Loaded only after the visitor clicks play. */
+  videoUrl: url.optional(),
+  /** id of a testimonial in content/testimonials.ts. */
+  testimonialId: slug.optional(),
   placeholder,
 });
 
@@ -304,7 +350,91 @@ export const copySchema = z.object({
     faq: sectionCopy,
     cta: sectionCopy,
   }),
+  /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,
+  /** /projects index and detail page labels. {count} is replaced with a number. */
+  projectsPage: z.object({
+    hero: z.object({
+      primaryCta: nonEmpty,
+      callCta: nonEmpty,
+      projectsCompleted: nonEmpty,
+      homesServed: nonEmpty,
+      yearsInBusiness: nonEmpty,
+    }),
+    categories: z.object({
+      all: nonEmpty,
+      "ac-installation": nonEmpty,
+      heating: nonEmpty,
+      repair: nonEmpty,
+      maintenance: nonEmpty,
+      commercial: nonEmpty,
+    }),
+    featured: sectionCopy.extend({ badge: nonEmpty }),
+    toolbar: z.object({
+      categoryLabel: nonEmpty,
+      cityLabel: nonEmpty,
+      allCities: nonEmpty,
+      systemLabel: nonEmpty,
+      allSystems: nonEmpty,
+      searchLabel: nonEmpty,
+      searchPlaceholder: nonEmpty,
+      sortLabel: nonEmpty,
+      sortNewest: nonEmpty,
+      sortOldest: nonEmpty,
+      sortFeatured: nonEmpty,
+      resultsOne: nonEmpty,
+      resultsMany: nonEmpty,
+      clear: nonEmpty,
+      emptyTitle: nonEmpty,
+      emptyBody: nonEmpty,
+      emptyCta: nonEmpty,
+      loadMore: nonEmpty,
+    }),
+    grid: sectionCopy,
+    card: z.object({ view: nonEmpty, commercialBadge: nonEmpty, completed: nonEmpty }),
+    stats: sectionCopy,
+    process: sectionCopy,
+    testimonials: sectionCopy,
+    cities: sectionCopy,
+    faq: sectionCopy,
+    cta: sectionCopy,
+    detail: z.object({
+      location: nonEmpty,
+      service: nonEmpty,
+      system: nonEmpty,
+      duration: nonEmpty,
+      completed: nonEmpty,
+      size: nonEmpty,
+      overview: nonEmpty,
+      challenge: nonEmpty,
+      solution: nonEmpty,
+      equipment: nonEmpty,
+      timeline: nonEmpty,
+      gallery: nonEmpty,
+      galleryOpen: nonEmpty,
+      galleryClose: nonEmpty,
+      galleryPrev: nonEmpty,
+      galleryNext: nonEmpty,
+      beforeAfter: nonEmpty,
+      before: nonEmpty,
+      after: nonEmpty,
+      beforeAfterControl: nonEmpty,
+      video: nonEmpty,
+      playVideo: nonEmpty,
+      results: nonEmpty,
+      testimonial: nonEmpty,
+      share: nonEmpty,
+      copyLink: nonEmpty,
+      copied: nonEmpty,
+      emailLink: nonEmpty,
+      prev: nonEmpty,
+      next: nonEmpty,
+      related: nonEmpty,
+      quoteTitle: nonEmpty,
+      quoteIntro: nonEmpty,
+      areaTitle: nonEmpty,
+    }),
+  }),
   contact: sectionCopy,
   book: sectionCopy,
 });
@@ -393,6 +523,9 @@ export const brandConfigSchema = z.object({
       .optional(),
     yearsInBusiness: z.number().int().positive().optional(),
     foundedYear: z.number().int().min(1900).optional(),
+    /** /projects hero stats. Real totals only; each is hidden while undefined. */
+    projectsCompleted: z.number().int().positive().optional(),
+    homesServed: z.number().int().positive().optional(),
     stats: z.array(statSchema),
   }),
   offerings: z.object({
@@ -472,6 +605,15 @@ export const brandConfigSchema = z.object({
         .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each services page section key may appear only once"),
     })
     .default({ sections: servicesSectionKeys.map((key) => ({ key, enabled: true })) }),
+  /** /projects index sections: order and visibility. Omitted: every section, in default order. */
+  projectsPage: z
+    .object({
+      sections: z
+        .array(z.object({ key: z.enum(projectsSectionKeys), enabled: z.boolean() }))
+        .min(1)
+        .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each projects page section key may appear only once"),
+    })
+    .default({ sections: projectsSectionKeys.map((key) => ({ key, enabled: true })) }),
   placeholder,
 });
 
@@ -488,6 +630,8 @@ export const brandContentSchema = z.object({
   symptoms: z.array(symptomSchema).default([]),
   /** /services process steps (content/process.ts), 4 to 5 recommended. Empty hides the section. */
   process: z.array(processStepSchema).default([]),
+  /** /projects FAQ (timeline, permits, warranty, financing). Empty hides the section. No FAQPage markup. */
+  projectFaqs: z.array(faqSchema).default([]),
   copy: copySchema,
 });
 
@@ -510,6 +654,7 @@ export type Plan = z.infer<typeof planSchema>;
 export type City = z.infer<typeof citySchema>;
 export type Stat = z.infer<typeof statSchema>;
 export type Symptom = z.infer<typeof symptomSchema>;
+export type ProjectImage = z.infer<typeof projectImageSchema>;
 export type ProcessStep = z.infer<typeof processStepSchema>;
 
 /** Input shapes brands author against (defaults applied by the schema). */
