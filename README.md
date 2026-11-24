@@ -99,6 +99,8 @@ How it fits together:
 |---|---|---|---|
 | `logo.svg` or `logo.png` | Header logo (light background) | SVG, or transparent PNG ~900 x 233 | wide (~3.9:1) |
 | `logo-dark.svg` or `logo-dark.png` | Footer logo (dark background) | SVG, or transparent PNG ~900 x 233 | wide (~3.9:1) |
+| `icon.png` | Browser tab icon (favicon), emblem only | transparent PNG, 512 x 512 | 1:1 |
+| `apple-icon.png` | iOS home-screen icon | PNG on solid background, 180 x 180 | 1:1 |
 | `og.jpg` | Social share image (OpenGraph/Twitter) | 1200 x 630 | 1.91:1 |
 | `hero.jpg` | Homepage hero (preloaded) | 1400 x 1450 | ~1:1 (4:3 on mobile) |
 | `about.jpg` | Why Choose Us block, About page | 1200 x 1020 | ~4:3.4 |

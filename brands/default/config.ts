@@ -11,7 +11,8 @@ export const config: BrandConfigInput = {
     name: "Coolwren Heating & Air",
     legalName: "Coolwren Heating & Air LLC", // TODO: confirm legal entity name
     tagline: "Heating and cooling for Central Ohio homes",
-    logo: { light: "logo.png", dark: "logo-dark.png" }, // official logo supplied by the client; dark = navy parts lightened for the footer
+    // Official logo supplied by the client. dark = navy parts lightened for the footer; icon = emblem only (favicon).
+    logo: { light: "logo.png", dark: "logo-dark.png", icon: "icon.png", appleIcon: "apple-icon.png" },
     phone: { display: "(555) 555-0123", tel: "+15555550123" }, // TODO: real phone
     emergencyPhone: { display: "(555) 555-0199", tel: "+15555550199" }, // TODO: real emergency line
     email: "service@example.com", // TODO: real inbox

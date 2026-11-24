@@ -36,7 +36,15 @@ function resolveAssets(brand: Brand): Brand {
   return {
     config: {
       ...config,
-      company: { ...config.company, logo: { light: path(config.company.logo.light), dark: path(config.company.logo.dark) } },
+      company: {
+        ...config.company,
+        logo: {
+          light: path(config.company.logo.light),
+          dark: path(config.company.logo.dark),
+          icon: path(config.company.logo.icon),
+          appleIcon: path(config.company.logo.appleIcon),
+        },
+      },
       seo: { ...config.seo, ogImage: path(config.seo.ogImage) },
       offerings: {
         ...config.offerings,

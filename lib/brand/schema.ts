@@ -262,7 +262,13 @@ export const brandConfigSchema = z.object({
     name: nonEmpty,
     legalName: nonEmpty,
     tagline: nonEmpty,
-    logo: z.object({ light: assetPath.optional(), dark: assetPath.optional() }),
+    /** icon: square favicon (PNG ~512 x 512); appleIcon: 180 x 180 on a solid background. */
+    logo: z.object({
+      light: assetPath.optional(),
+      dark: assetPath.optional(),
+      icon: assetPath.optional(),
+      appleIcon: assetPath.optional(),
+    }),
     phone: phoneSchema,
     emergencyPhone: phoneSchema.optional(),
     email: z.email(),

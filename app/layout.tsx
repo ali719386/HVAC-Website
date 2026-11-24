@@ -19,7 +19,11 @@ const REVEAL_BOOT =
 export function generateMetadata(): Metadata {
   const { config } = getBrand();
   const { seo, company } = config;
+  const { icon, appleIcon } = company.logo;
   return {
+    icons: assetExists(icon)
+      ? { icon: { url: icon, type: "image/png" }, apple: assetExists(appleIcon) ? appleIcon : undefined }
+      : undefined,
     metadataBase: new URL(getSiteUrl()),
     title: { default: seo.defaultTitle, template: seo.titleTemplate },
     description: seo.description,
