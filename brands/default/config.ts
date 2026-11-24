@@ -150,7 +150,7 @@ export const config: BrandConfigInput = {
   blogPage: {
     sections: [
       { key: "featured", enabled: true },
-      { key: "seasonal", enabled: true },
+      { key: "seasonal", enabled: false }, // hidden at client request
       { key: "grid", enabled: true },
       { key: "cta", enabled: true },
     ],
