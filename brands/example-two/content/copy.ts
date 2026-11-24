@@ -69,4 +69,16 @@ export const copy: CopyOverrides = {
     faq: { eyebrow: "FAQ", title: "Questions about service", intro: "" },
     cta: { eyebrow: "Request a visit", title: "Tell us about your home", intro: "Send a request and we will confirm a time during business hours." },
   },
+  // TODO: placeholder blog copy for the example brand.
+  posts: {
+    eyebrow: "Comfort notes",
+    title: "Front Range Comfort Guides",
+    intro: "Heat pumps, furnaces and dry-air advice for homes with long, cold winters.",
+  },
+  blog: {
+    featured: { eyebrow: "Spotlight", title: "Worth reading first", intro: "", badge: "Spotlight" },
+    grid: { eyebrow: "Library", title: "All comfort guides", intro: "Find a guide by topic or category." },
+    techBox: { title: "Want a second opinion?", body: "Talk to our team or schedule a visit during business hours.", book: "Schedule a visit" },
+    cta: { eyebrow: "Next step", title: "Questions about your system?", intro: "Send a short note and we will reply during business hours." },
+  },
 };

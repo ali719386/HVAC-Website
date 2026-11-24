@@ -67,6 +67,20 @@ for (const slug of slugs) {
   const unlicensed = states.filter((s) => !licensed.has(s.abbr)).map((s) => s.abbr);
   const zipless = cities.filter((c) => c.noZips).map((c) => c.label);
 
+  // Blog posts: split content/posts.ts on each top-level post slug.
+  const postsFile = path.join(brandsDir, slug, "content", "posts.ts");
+  const postsText = existsSync(postsFile) ? readFileSync(postsFile, "utf8") : "";
+  const postChunks = postsText.split(/\n {4}slug: "/).slice(1);
+  const posts = postChunks.map((chunk) => {
+    const cover = chunk.match(/cover:\s*\{\s*src:\s*"([^"]+)"/)?.[1];
+    return {
+      slug: chunk.slice(0, chunk.indexOf('"')),
+      placeholder: /placeholder:\s*true/.test(chunk),
+      cover,
+      coverMissing: cover ? !existsSync(path.join(root, "public", "brands", slug, "images", ...cover.split("/"))) : true,
+    };
+  });
+
   const count = placeholders.length + todos.length + missing.length;
   total += count;
 
@@ -84,6 +98,14 @@ for (const slug of slugs) {
   placeholderCities.forEach((c) => console.log(`    - ${c}`));
   console.log(`  States without a configured license (company.licenses): ${unlicensed.length}${unlicensed.length ? ` - ${unlicensed.join(", ")}` : ""}`);
   console.log(`  Cities without ZIP data (checker uses the city picker): ${zipless.length}`);
+
+  const placeholderPosts = posts.filter((p) => p.placeholder);
+  const coverless = posts.filter((p) => p.coverMissing);
+  console.log(`\nBlog: ${posts.length} posts`);
+  console.log(`  Placeholder posts (noindex, not in sitemap or RSS): ${placeholderPosts.length}`);
+  placeholderPosts.forEach((p) => console.log(`    - ${p.slug}`));
+  console.log(`  Posts with a missing cover image: ${coverless.length}`);
+  coverless.forEach((p) => console.log(`    - ${p.slug} (${p.cover ?? "no cover"})`));
 }
 
 // Shared fallback content can also carry placeholders.

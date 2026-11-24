@@ -126,6 +126,10 @@ export const projectsSectionKeys = [
 ] as const;
 export type ProjectsSectionKey = (typeof projectsSectionKeys)[number];
 
+/** /blog index sections. */
+export const blogSectionKeys = ["featured", "seasonal", "grid", "cta"] as const;
+export type BlogSectionKey = (typeof blogSectionKeys)[number];
+
 const placeholder = z.boolean().optional();
 
 /* ------------------------------------------------------------------ */
@@ -186,16 +190,54 @@ export const testimonialSchema = z.object({
 
 export const faqSchema = z.object({ question: nonEmpty, answer: nonEmpty, placeholder });
 
+/* ------------------------------ Blog ------------------------------ */
+
+export const seasons = ["spring", "summer", "fall", "winter"] as const;
+export type Season = (typeof seasons)[number];
+
+export const blogCategorySchema = z.object({ slug, name: nonEmpty, description: z.string().default(""), placeholder });
+
+/** Blog author. Never invent credentials: role and bio describe the team, not certifications. */
+export const authorSchema = z.object({
+  id: slug,
+  name: nonEmpty,
+  role: nonEmpty,
+  bio: nonEmpty,
+  avatar: imageSchema.optional(),
+  placeholder,
+});
+
+/** Typed post body blocks (no MDX). Heading ids, the table of contents and reading time are derived. */
+export const postBlockSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("heading"), text: nonEmpty, level: z.union([z.literal(2), z.literal(3)]).default(2) }),
+  z.object({ type: z.literal("paragraph"), text: nonEmpty }),
+  z.object({ type: z.literal("list"), items: z.array(nonEmpty).min(1), ordered: z.boolean().default(false) }),
+  z.object({ type: z.literal("callout"), title: nonEmpty.optional(), text: nonEmpty, tone: z.enum(["info", "warning"]).default("info") }),
+  z.object({ type: z.literal("image"), image: imageSchema, caption: z.string().default("") }),
+  z.object({ type: z.literal("quote"), text: nonEmpty, cite: nonEmpty.optional() }),
+]);
+
 export const postSchema = z.object({
   slug,
   title: nonEmpty,
   excerpt: nonEmpty,
+  /** Slug of an entry in content/blog-categories.ts. */
+  category: slug,
+  tags: z.array(nonEmpty).default([]),
   date: z.iso.date(),
-  author: nonEmpty,
-  category: nonEmpty,
-  readMinutes: z.number().int().positive(),
-  image: imageSchema,
-  body: z.array(z.object({ heading: nonEmpty.optional(), paragraphs: z.array(nonEmpty).min(1) })).min(1),
+  /** "Last reviewed" date. Defaults to `date` when omitted. */
+  updated: z.iso.date().optional(),
+  /** id of an entry in content/authors.ts. */
+  authorId: slug,
+  cover: imageSchema,
+  featured: z.boolean().default(false),
+  popular: z.boolean().default(false),
+  /** Shown in Seasonal picks during this season. */
+  season: z.enum(seasons).optional(),
+  /** Related service page (/services/<slug>). */
+  serviceSlug: serviceTypeSchema.optional(),
+  takeaways: z.array(nonEmpty).default([]),
+  body: z.array(postBlockSchema).min(1),
   placeholder,
 });
 
@@ -446,6 +488,57 @@ export const copySchema = z.object({
       formTitle: nonEmpty,
     }),
     placeholderNotice: nonEmpty,
+  }),
+  /** Blog UI labels. The /blog header uses copy.posts. Tokens: {count}, {category}. */
+  blog: z.object({
+    searchLabel: nonEmpty,
+    searchPlaceholder: nonEmpty,
+    searchSubmit: nonEmpty,
+    categoriesLabel: nonEmpty,
+    all: nonEmpty,
+    resultsOne: nonEmpty,
+    resultsMany: nonEmpty,
+    clear: nonEmpty,
+    emptyTitle: nonEmpty,
+    emptyBody: nonEmpty,
+    emptyCta: nonEmpty,
+    loadMore: nonEmpty,
+    readArticle: nonEmpty,
+    minRead: nonEmpty,
+    by: nonEmpty,
+    published: nonEmpty,
+    lastReviewed: nonEmpty,
+    featured: sectionCopy.extend({ badge: nonEmpty }),
+    seasonal: sectionCopy.extend({ spring: nonEmpty, summer: nonEmpty, fall: nonEmpty, winter: nonEmpty }),
+    grid: sectionCopy,
+    categoryPage: z.object({ eyebrow: nonEmpty, title: nonEmpty }),
+    popular: nonEmpty,
+    categories: nonEmpty,
+    techBox: z.object({ title: nonEmpty, body: nonEmpty, book: nonEmpty }),
+    checklist: z.object({
+      title: nonEmpty,
+      body: nonEmpty,
+      emailLabel: nonEmpty,
+      consent: nonEmpty,
+      submit: nonEmpty,
+      success: nonEmpty,
+    }),
+    takeaways: nonEmpty,
+    toc: nonEmpty,
+    midCta: z.object({ title: nonEmpty, body: nonEmpty }),
+    endCta: z.object({ title: nonEmpty, body: nonEmpty }),
+    author: nonEmpty,
+    tags: nonEmpty,
+    share: nonEmpty,
+    copyLink: nonEmpty,
+    copied: nonEmpty,
+    emailLink: nonEmpty,
+    prev: nonEmpty,
+    next: nonEmpty,
+    related: nonEmpty,
+    relatedLinks: z.object({ title: nonEmpty, service: nonEmpty, cities: nonEmpty }),
+    areaTitle: nonEmpty,
+    cta: sectionCopy,
   }),
   /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,
@@ -707,6 +800,18 @@ export const brandConfigSchema = z.object({
         .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each services page section key may appear only once"),
     })
     .default({ sections: servicesSectionKeys.map((key) => ({ key, enabled: true })) }),
+  /** /blog index sections and an optional season override for Seasonal picks (otherwise from the current month). */
+  blogPage: z
+    .object({
+      sections: z
+        .array(z.object({ key: z.enum(blogSectionKeys), enabled: z.boolean() }))
+        .min(1)
+        .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each blog page section key may appear only once"),
+      season: z.enum(seasons).optional(),
+    })
+    .default({ sections: blogSectionKeys.map((key) => ({ key, enabled: true })) }),
+  /** Footer text. blurb tokens: {cities}, {states} (coverage counts). Never hardcode a location in shared code. */
+  footer: z.object({ blurb: nonEmpty }),
   /** /projects index sections: order and visibility. Omitted: every section, in default order. */
   projectsPage: z
     .object({
@@ -725,6 +830,10 @@ export const brandContentSchema = z.object({
   testimonials: z.array(testimonialSchema),
   faqs: z.array(faqSchema),
   posts: z.array(postSchema),
+  /** content/blog-categories.ts. Every post.category must match one slug. */
+  blogCategories: z.array(blogCategorySchema).default([]),
+  /** content/authors.ts. Every post.authorId must match one id. */
+  authors: z.array(authorSchema).default([]),
   projects: z.array(projectSchema),
   plans: z.array(planSchema),
   /** Generic climate profiles; the loader fills these from content/climate.ts unless a brand overrides them. */
@@ -736,6 +845,17 @@ export const brandContentSchema = z.object({
   /** /projects FAQ (timeline, permits, warranty, financing). Empty hides the section. No FAQPage markup. */
   projectFaqs: z.array(faqSchema).default([]),
   copy: copySchema,
+}).superRefine((content, ctx) => {
+  const cats = new Set(content.blogCategories.map((c) => c.slug));
+  const authors = new Set(content.authors.map((a) => a.id));
+  content.posts.forEach((p, i) => {
+    if (!cats.has(p.category)) {
+      ctx.addIssue({ code: "custom", path: ["posts", i, "category"], message: `Post "${p.slug}" uses category "${p.category}", which is not in content/blog-categories.ts` });
+    }
+    if (!authors.has(p.authorId)) {
+      ctx.addIssue({ code: "custom", path: ["posts", i, "authorId"], message: `Post "${p.slug}" uses author "${p.authorId}", which is not in content/authors.ts` });
+    }
+  });
 });
 
 export const brandSchema = z.object({ config: brandConfigSchema, content: brandContentSchema });
@@ -752,6 +872,9 @@ export type WhyItem = z.infer<typeof whyItemSchema>;
 export type Testimonial = z.infer<typeof testimonialSchema>;
 export type Faq = z.infer<typeof faqSchema>;
 export type Post = z.infer<typeof postSchema>;
+export type PostBlock = z.infer<typeof postBlockSchema>;
+export type Author = z.infer<typeof authorSchema>;
+export type BlogCategory = z.infer<typeof blogCategorySchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Plan = z.infer<typeof planSchema>;
 export type CoverageState = z.infer<typeof coverageStateSchema>;

@@ -11,7 +11,7 @@ export const config: BrandConfigInput = {
   company: {
     name: "Coolwren Heating & Air",
     legalName: "Coolwren Heating & Air LLC", // TODO: confirm legal entity name
-    tagline: "Heating and cooling for Central Ohio homes",
+    tagline: "Heating and cooling service you can count on", // TODO: confirm with the client
     // Official logo supplied by the client. dark = navy parts lightened for the footer; icon = emblem only (favicon).
     logo: { light: "logo.png", dark: "logo-dark.png", icon: "icon.png", appleIcon: "apple-icon.png" },
     phone: { display: "(555) 555-0123", tel: "+15555550123" }, // TODO: real phone
@@ -139,6 +139,19 @@ export const config: BrandConfigInput = {
       { key: "testimonials", enabled: true },
       { key: "cities", enabled: true },
       { key: "faq", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
+  // Footer text. {cities} and {states} are filled from coverage.
+  footer: {
+    blurb: "Heating, cooling and indoor air service for homes and businesses in {cities} cities across {states} states.", // TODO: confirm wording with the client
+  },
+  // /blog sections; season overrides the month-based Seasonal picks (optional).
+  blogPage: {
+    sections: [
+      { key: "featured", enabled: true },
+      { key: "seasonal", enabled: true },
+      { key: "grid", enabled: true },
       { key: "cta", enabled: true },
     ],
   },

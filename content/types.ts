@@ -2,6 +2,8 @@ import type { z } from "zod";
 import type {
   BrandConfigInput,
   CopyInput,
+  authorSchema,
+  blogCategorySchema,
   brandContentSchema,
   climateProfilesSchema,
   coverageCitySchema,
@@ -45,6 +47,8 @@ export type WhyItemInput = z.input<typeof whyItemSchema>;
 export type TestimonialInput = z.input<typeof testimonialSchema>;
 export type FaqInput = z.input<typeof faqSchema>;
 export type PostInput = z.input<typeof postSchema>;
+export type AuthorInput = z.input<typeof authorSchema>;
+export type BlogCategoryInput = z.input<typeof blogCategorySchema>;
 export type ProjectInput = z.input<typeof projectSchema>;
 export type PlanInput = z.input<typeof planSchema>;
 export type CoverageStateInput = z.input<typeof coverageStateSchema>;

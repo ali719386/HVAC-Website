@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check, Phone, Siren } from "lucide-react";
-import type { Brand, BrandConfig, Copy, ImageAsset, Post, Service, Stat, WhyItem } from "@/lib/brand/schema";
-import { formatDate } from "@/lib/format";
+import type { Brand, BrandConfig, Copy, ImageAsset, Service, Stat, WhyItem } from "@/lib/brand/schema";
 import { CountUp } from "@/components/motion/count-up";
 import { Reveal, RevealGroup } from "@/components/motion/reveal";
 import { assetExists, BrandImage } from "@/components/ui/brand-image";
@@ -11,6 +10,7 @@ import { Icon } from "@/components/ui/icon";
 import { Section, SectionHeading } from "@/components/ui/section";
 import { TrustList } from "@/components/layout/trust-list";
 import { ServiceAreaChecker } from "@/components/forms/area-checker";
+import { cardFor } from "@/components/blog/sections";
 import { AvailableIn } from "@/components/geo/sections";
 import { clientAreas } from "@/lib/geo/coverage";
 
@@ -324,43 +324,23 @@ export function FaqAccordion({
 
 /* ------------------------------ Posts ------------------------------ */
 
-export function PostCards({ posts, copy, limit = 3 }: { posts: Post[]; copy?: Copy["posts"]; limit?: number }) {
-  const latest = [...posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
+/** Latest posts on the homepage, using the shared blog card. */
+export function PostCards({ brand, copy, limit = 3 }: { brand: Brand; copy: Copy["posts"]; limit?: number }) {
+  const latest = [...brand.content.posts].sort((a, b) => b.date.localeCompare(a.date)).slice(0, limit);
   if (latest.length === 0) return null;
-  const grid = (
-    <RevealGroup as="ul" variant="fade-up" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {latest.map((p) => (
-        <li key={p.slug} className="group relative flex flex-col overflow-hidden rounded-brand border border-line bg-surface shadow-brand-sm transition-shadow hover:shadow-brand-md">
-          <BrandImage image={p.image} rounded={false} aspect="aspect-[16/10]" sizes="(min-width: 1024px) 400px, (min-width: 768px) 50vw, 100vw" />
-          <div className="flex flex-1 flex-col p-6">
-            <p className="flex items-center gap-3 text-sm text-muted">
-              <span className="rounded-full bg-surface-alt px-3 py-1 font-semibold text-primary">{p.category}</span>
-              <time dateTime={p.date}>{formatDate(p.date)}</time>
-            </p>
-            <h3 className="mt-4 text-xl leading-snug font-bold">
-              <Link href={`/blog/${p.slug}`} className="after:absolute after:inset-0 after:content-[''] group-hover:text-primary">
-                {p.title}
-              </Link>
-            </h3>
-            <p className="mt-2 flex-1 leading-relaxed text-muted">{p.excerpt}</p>
-            <span aria-hidden="true" className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-              Read article <ArrowRight className="size-4" />
-            </span>
-          </div>
-        </li>
-      ))}
-    </RevealGroup>
-  );
-  if (!copy) return grid;
   return (
     <Section tone="light" labelledBy="posts-title">
       <div className="mb-12 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <SectionHeading id="posts-title" eyebrow={copy.eyebrow} title={copy.title} intro={copy.intro} />
         <LinkButton href="/blog" variant="outline" className="self-start md:self-auto">
-          View all articles
+          {brand.content.copy.blog.grid.title}
         </LinkButton>
       </div>
-      {grid}
+      <RevealGroup as="ul" variant="fade-up" className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {latest.map((p) => (
+          <li key={p.slug}>{cardFor(brand, p)}</li>
+        ))}
+      </RevealGroup>
     </Section>
   );
 }

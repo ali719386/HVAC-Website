@@ -71,6 +71,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: REVEAL_BOOT }} />
         {/* Brand design tokens. Values are validated by Zod (hex, enums, ints) before injection. */}
         <style id="brand-tokens" dangerouslySetInnerHTML={{ __html: tokensToCss(config.tokens) }} />
+        {/* In <head> directly: page metadata sets its own `alternates` (canonical), which would drop this. */}
+        <link rel="alternate" type="application/rss+xml" title={`${config.company.name} blog`} href="/feed.xml" />
       </head>
       <body className="min-h-dvh">
         <a

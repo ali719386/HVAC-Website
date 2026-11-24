@@ -125,6 +125,19 @@ export const config: BrandConfigInput = {
       { key: "cta", enabled: true },
     ],
   },
+  // Footer text. {cities} and {states} are filled from coverage.
+  footer: {
+    blurb: "Furnaces, heat pumps and cooling for homes in {cities} communities across Colorado and Wyoming.", // TODO: confirm wording with the client
+  },
+  // /blog sections; season overrides the month-based Seasonal picks (optional).
+  blogPage: {
+    sections: [
+      { key: "featured", enabled: true },
+      { key: "seasonal", enabled: true },
+      { key: "grid", enabled: true },
+      { key: "cta", enabled: true },
+    ],
+  },
   homepage: {
     heroVariant: "winter",
     sections: [

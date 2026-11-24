@@ -207,6 +207,17 @@ To add a new section type, add its key to `sectionKeys` in `lib/brand/schema.ts`
 
 Project detail pages show only the fields a project has. The sidebar quote form pre-selects the service mapped from the project category. JSON-LD on the detail page is BreadcrumbList only (plus the site-wide LocalBusiness from the layout).
 
+## 7c. Blog
+
+- **Posts** live in `content/posts.ts`. The body is a typed block array (`heading`, `paragraph`, `list`, `callout`, `image`, `quote`), with no MDX. Heading ids, the table of contents and reading time are generated from the blocks.
+  - Other fields: `takeaways`, `tags`, `featured`, `popular`, `season`, `serviceSlug`, `updated` ("Last reviewed") and `cover`.
+  - `category` must match `content/blog-categories.ts` and `authorId` must match `content/authors.ts`, or the build fails with a clear message.
+- **Authors** describe the team. Do not add credentials unless they are verified.
+- **Sections:** `config.blogPage.sections` orders and toggles `featured`, `seasonal`, `grid` and `cta`. `config.blogPage.season` overrides the month-based Seasonal picks.
+- **Category pages:** `/blog/category/<slug>` exists for every category that has posts.
+- **Placeholder posts** render noindex and stay out of `sitemap.xml` and `/feed.xml`. In development they show a "Placeholder content" notice. Set `placeholder: false` after the client reviews a post.
+- **Checklist signup** posts to `/api/lead` with `source: "checklist"`. It uses the same rate limit, honeypot, Turnstile and delivery rules as leads (email only, no SMS). The consent text comes from `copy.blog.checklist.consent` on the server.
+- **Footer** text comes from `config.footer.blurb`, where `{cities}` and `{states}` are filled from coverage.
 ## 7b. Add or remove coverage
 
 Coverage drives `/service-areas`, `/service-areas/<state>` and `/service-areas/<state>/<city>`, the top bar label, the homepage Service Areas section, the footer cities, the area checker and the lead form state and city selects.

@@ -146,4 +146,15 @@ export const copy: CopyOverrides = {
     body: "Call our Columbus team or book online. We will confirm your arrival window.",
     cta: "Book online",
   },
+  // TODO: review blog copy with the client.
+  posts: {
+    eyebrow: "HVAC tips",
+    title: "Heating and Cooling Advice",
+    intro: "Practical guides on repairs, maintenance and choosing equipment, written for homeowners.",
+  },
+  blog: {
+    featured: { eyebrow: "Featured guide", title: "Start with this one", intro: "Our most useful guide for homeowners planning ahead.", badge: "Featured" },
+    grid: { eyebrow: "All articles", title: "Browse the blog", intro: "Search by topic or pick a category." },
+    cta: { eyebrow: "Request service", title: "Have a question about your system?", intro: "Send a quick request and our team will follow up." },
+  },
 };

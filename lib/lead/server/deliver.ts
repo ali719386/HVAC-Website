@@ -88,70 +88,140 @@ const ESCAPES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;"
 export const escapeHtml = (value: string) => value.replace(/[&<>"']/g, (c) => ESCAPES[c] ?? c);
 const oneLine = (value: string) => value.replace(/[\r\n]+/g, " ").trim();
 
-function rows(r: LeadRecord): [string, string][] {
-  return [
-    ["Name", r.name],
-    ["Phone", r.phoneDisplay],
-    ["Email", r.email ?? "-"],
-    ["Address / ZIP", r.address],
-    ["Service state", r.serviceState ?? "-"],
-    ["Service city", r.serviceCity ?? "-"],
-    ["Service", r.serviceLabel],
-    ["Urgency", r.urgencyLabel],
-    ["Preferred time", r.preferredTime ?? "No preference"],
-    ["Message", r.message ?? "-"],
-    ["SMS consent", r.consent.sms ? "YES" : "No"],
-    ["Consent text version", r.consent.textVersion],
-    ["Submitted at (UTC)", r.consent.timestamp],
-    ["Page URL", r.pageUrl || "-"],
-    ["Lead ID", r.id],
-  ];
+/** What every channel sends: an email (subject + table rows) and a signed webhook event. */
+export type Delivery = {
+  id: string;
+  company: string;
+  subject: string;
+  heading: string;
+  rows: [string, string][];
+  replyTo: string | null;
+  /** Shown under the table when SMS consent was given. */
+  note?: string;
+  event: "lead.created" | "checklist.requested";
+  /** Webhook payload body under `lead`. */
+  data: unknown;
+};
+
+export function leadDelivery(r: LeadRecord): Delivery {
+  return {
+    id: r.id,
+    company: r.company,
+    subject: oneLine(`New lead (${r.urgencyLabel}): ${r.serviceLabel} - ${r.name}`).slice(0, 200),
+    heading: `New website lead for ${r.company}`,
+    rows: [
+      ["Name", r.name],
+      ["Phone", r.phoneDisplay],
+      ["Email", r.email ?? "-"],
+      ["Address / ZIP", r.address],
+      ["Service state", r.serviceState ?? "-"],
+      ["Service city", r.serviceCity ?? "-"],
+      ["Service", r.serviceLabel],
+      ["Urgency", r.urgencyLabel],
+      ["Preferred time", r.preferredTime ?? "No preference"],
+      ["Message", r.message ?? "-"],
+      ["SMS consent", r.consent.sms ? "YES" : "No"],
+      ["Consent text version", r.consent.textVersion],
+      ["Submitted at (UTC)", r.consent.timestamp],
+      ["Page URL", r.pageUrl || "-"],
+      ["Lead ID", r.id],
+    ],
+    replyTo: r.email,
+    note: r.consent.sms ? `Consent text shown (${r.consent.textVersion}): ${r.consent.text}` : undefined,
+    event: "lead.created",
+    data: r,
+  };
 }
 
-export function renderEmail(r: LeadRecord) {
-  const subject = oneLine(`New lead (${r.urgencyLabel}): ${r.serviceLabel} - ${r.name}`).slice(0, 200);
-  const tableRows = rows(r)
+/** Blog checklist request: email only, never SMS. */
+export type ChecklistRecord = {
+  id: string;
+  receivedAt: string;
+  brand: string;
+  company: string;
+  source: "checklist";
+  email: string;
+  consent: { email: boolean; text: string; timestamp: string };
+  pageUrl: string;
+};
+
+export function buildChecklistRecord(
+  input: { email: string; consentText: string; pageUrl: string },
+  brand: { slug: string; name: string },
+): ChecklistRecord {
+  const now = new Date().toISOString();
+  return {
+    id: randomUUID(),
+    receivedAt: now,
+    brand: brand.slug,
+    company: brand.name,
+    source: "checklist",
+    email: input.email,
+    consent: { email: true, text: input.consentText, timestamp: now },
+    pageUrl: input.pageUrl,
+  };
+}
+
+export function checklistDelivery(r: ChecklistRecord): Delivery {
+  return {
+    id: r.id,
+    company: r.company,
+    subject: oneLine(`Checklist request - ${r.email}`).slice(0, 200),
+    heading: `New checklist request for ${r.company}`,
+    rows: [
+      ["Source", "Blog checklist signup"],
+      ["Email", r.email],
+      ["Email consent", r.consent.email ? "YES" : "No"],
+      ["Consent text shown", r.consent.text],
+      ["Submitted at (UTC)", r.consent.timestamp],
+      ["Page URL", r.pageUrl || "-"],
+      ["Request ID", r.id],
+    ],
+    replyTo: r.email,
+    event: "checklist.requested",
+    data: r,
+  };
+}
+
+export function renderEmail(d: Delivery) {
+  const tableRows = d.rows
     .map(
       ([k, v]) =>
         `<tr><th align="left" style="padding:8px 12px;border-bottom:1px solid #e5e7eb;vertical-align:top;white-space:nowrap">${escapeHtml(k)}</th>` +
         `<td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`,
     )
     .join("");
-  const consentNote = r.consent.sms
-    ? `<p style="font-size:13px;color:#4b5563">Consent text shown (${escapeHtml(r.consent.textVersion)}): ${escapeHtml(r.consent.text)}</p>`
-    : "";
+  const note = d.note ? `<p style="font-size:13px;color:#4b5563">${escapeHtml(d.note)}</p>` : "";
   const html =
     `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111827">` +
-    `<h2 style="margin:0 0 12px">New website lead for ${escapeHtml(r.company)}</h2>` +
+    `<h2 style="margin:0 0 12px">${escapeHtml(d.heading)}</h2>` +
     `<table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:640px">${tableRows}</table>` +
-    `${consentNote}</div>`;
-  const text = rows(r)
-    .map(([k, v]) => `${k}: ${v}`)
-    .join("\n");
-  return { subject, html, text };
+    `${note}</div>`;
+  const text = d.rows.map(([k, v]) => `${k}: ${v}`).join("\n");
+  return { subject: d.subject, html, text };
 }
 
-export async function sendEmail(r: LeadRecord, cfg: NonNullable<ReturnType<typeof emailConfig>>): Promise<void> {
+export async function sendEmail(d: Delivery, cfg: NonNullable<ReturnType<typeof emailConfig>>): Promise<void> {
   const resend = new Resend(cfg.apiKey);
-  const { subject, html, text } = renderEmail(r);
+  const { subject, html, text } = renderEmail(d);
   const { error } = await resend.emails.send({
     from: cfg.from,
     to: cfg.to,
     subject,
     html,
     text,
-    replyTo: r.email ?? undefined,
-    headers: { "X-Entity-Ref-ID": r.id },
+    replyTo: d.replyTo ?? undefined,
+    headers: { "X-Entity-Ref-ID": d.id },
   });
   if (error) throw new Error(`Resend: ${error.name}: ${error.message}`);
 }
 
 /**
- * POSTs the lead as JSON. Signature: HMAC-SHA256 (hex) of `${timestamp}.${rawBody}` using
+ * POSTs the event as JSON. Signature: HMAC-SHA256 (hex) of `${timestamp}.${rawBody}` using
  * LEAD_WEBHOOK_SECRET, sent as `X-Lead-Signature: sha256=<hex>` with `X-Lead-Timestamp`.
  */
-export async function sendWebhook(r: LeadRecord, cfg: NonNullable<ReturnType<typeof webhookConfig>>): Promise<void> {
-  const body = JSON.stringify({ event: "lead.created", lead: r });
+export async function sendWebhook(d: Delivery, cfg: NonNullable<ReturnType<typeof webhookConfig>>): Promise<void> {
+  const body = JSON.stringify({ event: d.event, lead: d.data });
   const timestamp = Math.floor(Date.now() / 1000).toString();
   const signature = createHmac("sha256", cfg.secret).update(`${timestamp}.${body}`).digest("hex");
   const res = await fetch(cfg.url, {
@@ -160,7 +230,7 @@ export async function sendWebhook(r: LeadRecord, cfg: NonNullable<ReturnType<typ
       "Content-Type": "application/json",
       "X-Lead-Timestamp": timestamp,
       "X-Lead-Signature": `sha256=${signature}`,
-      "X-Lead-Id": r.id,
+      "X-Lead-Id": d.id,
     },
     body,
     signal: AbortSignal.timeout(8000),

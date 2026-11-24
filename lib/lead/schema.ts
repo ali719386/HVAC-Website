@@ -40,6 +40,18 @@ export const leadSchema = z.object({
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
+
+/** Blog checklist signup (POST /api/lead with source "checklist"). Email only, never SMS. */
+export const checklistSchema = z.object({
+  source: z.literal("checklist"),
+  email: z.string().check(z.trim(), z.maxLength(LIMITS.email, "Email is too long."), z.email("Please enter a valid email address.")),
+  consent: z.literal(true, "Please confirm you agree to receive the checklist."),
+  website: z.string().check(z.maxLength(200)),
+  pageUrl: z.string().check(z.maxLength(LIMITS.pageUrl)),
+  turnstileToken: z.optional(z.string().check(z.maxLength(4096))),
+});
+export type ChecklistInput = z.infer<typeof checklistSchema>;
+export type ChecklistErrors = Partial<Record<"email" | "consent", string>>;
 export type LeadField = keyof LeadInput;
 export type FieldErrors = Partial<Record<LeadField, string>>;
 
@@ -59,4 +71,4 @@ export function fieldErrors(error: { issues: readonly { path: readonly PropertyK
 export type LeadResponse =
   | { ok: true; mode: "delivered" }
   | { ok: true; mode: "dev"; message: string }
-  | { ok: false; error: string; fieldErrors?: FieldErrors };
+  | { ok: false; error: string; fieldErrors?: FieldErrors; checklistErrors?: ChecklistErrors };

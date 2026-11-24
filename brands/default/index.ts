@@ -1,5 +1,7 @@
 import type { BrandInput } from "@/content/types";
 import { config } from "./config";
+import { authors } from "./content/authors";
+import { blogCategories } from "./content/blog-categories";
 import { copy } from "./content/copy";
 import { faqs } from "./content/faqs";
 import { plans } from "./content/plans";
@@ -14,7 +16,7 @@ import { whyChooseUs } from "./content/why";
 
 const brand: BrandInput = {
   config,
-  content: { services, whyChooseUs, testimonials, faqs, posts, projects, plans, symptoms, process: processSteps, projectFaqs, copy },
+  content: { services, whyChooseUs, testimonials, faqs, posts, projects, plans, symptoms, process: processSteps, projectFaqs, authors, blogCategories, copy },
 };
 
 export default brand;

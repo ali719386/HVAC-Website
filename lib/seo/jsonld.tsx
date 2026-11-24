@@ -1,4 +1,4 @@
-import type { Brand, Service } from "@/lib/brand/schema";
+import type { Author, Brand, Post, Service } from "@/lib/brand/schema";
 import { getCoverage, type AreaCity, type AreaState } from "@/lib/geo/coverage";
 import { absoluteUrl } from "@/lib/brand";
 import { assetExists } from "@/components/ui/brand-image";
@@ -115,4 +115,27 @@ export function stateLd(state: AreaState, name: string): Ld {
     provider: { "@id": businessId() },
     areaServed: statePlace(state),
   };
+}
+/** BlogPosting from post content and brand config only. No review, rating or FAQ markup. */
+export function blogPostingLd(post: Post, author: Author | undefined, { config }: Brand): Ld {
+  const url = absoluteUrl(`/blog/${post.slug}`);
+  const ld: Ld = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.updated ?? post.date,
+    mainEntityOfPage: url,
+    url,
+    author: author ? { "@type": "Organization", name: author.name } : { "@id": businessId() },
+    publisher: {
+      "@type": "Organization",
+      name: config.company.name,
+      ...(assetExists(config.company.logo.light) ? { logo: { "@type": "ImageObject", url: absoluteUrl(config.company.logo.light) } } : {}),
+    },
+  };
+  if (assetExists(post.cover.src)) ld.image = absoluteUrl(post.cover.src);
+  if (post.tags.length) ld.keywords = post.tags.join(", ");
+  return ld;
 }

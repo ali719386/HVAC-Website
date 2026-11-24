@@ -4,7 +4,8 @@ import type { Brand } from "@/lib/brand/schema";
 import { getFooterLinks, legalLinks } from "@/lib/nav";
 import { Logo } from "@/components/ui/logo";
 import { TrustList } from "./trust-list";
-import { getCoverage, licenseFor, primaryCities } from "@/lib/geo/coverage";
+import { coverageCounts, coverageLabel, getCoverage, licenseFor, primaryCities } from "@/lib/geo/coverage";
+import { SocialIcon } from "@/components/ui/social-icons";
 import { Reveal } from "@/components/motion/reveal";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
@@ -26,15 +27,24 @@ export function Footer({ brand }: { brand: Brand }) {
       <Reveal variant="fade-in" className="container-site grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
         <div className="lg:col-span-4">
           <Logo name={company.name} src={company.logo.dark} onDark />
-          <p className="mt-4 max-w-sm leading-relaxed">{company.tagline}</p>
-          <TrustList company={company} onDark className="mt-6 text-on-primary/90" />
+          {/* Blurb from config (coverage counts filled in); never a hardcoded location. */}
+          <p className="mt-4 max-w-sm leading-relaxed">{coverageLabel(brand.config.footer.blurb, coverageCounts())}</p>
+          {/* License (default only, no state context here) and insured/bonded, only when configured. */}
+          <TrustList company={company} onDark variant="chips" only={["license", "insured"]} className="mt-6 text-on-primary/90" />
           {company.socials.length > 0 ? (
-            <ul className="mt-6 flex flex-wrap gap-4 text-sm">
+            <ul className="mt-6 flex flex-wrap gap-3">
               {company.socials.map((s) => (
                 <li key={s.url}>
-                  <a href={s.url} target="_blank" rel="noopener noreferrer" className={link}>
-                    {socialLabels[s.network]}
-                    <span className="sr-only"> (opens in a new tab)</span>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="grid size-10 place-items-center rounded-full border border-on-primary/20 text-on-primary/85 transition-colors hover:border-on-primary hover:bg-on-primary/10 hover:text-on-primary"
+                  >
+                    <SocialIcon network={s.network} />
+                    <span className="sr-only">
+                      {socialLabels[s.network]} (opens in a new tab)
+                    </span>
                   </a>
                 </li>
               ))}
@@ -147,6 +157,12 @@ export function Footer({ brand }: { brand: Brand }) {
                 </Link>
               </li>
             ))}
+            <li>
+              {/* Route handler file, so a plain link (not next/link). */}
+              <a href="/sitemap.xml" className={link}>
+                Sitemap
+              </a>
+            </li>
           </ul>
         </div>
       </div>
