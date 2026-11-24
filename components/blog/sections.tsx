@@ -192,10 +192,13 @@ export function BlogGrid({ brand, posts, activeCategory, heading }: { brand: Bra
   const chips = categoryCounts(brand.content.posts, brand.content.blogCategories)
     .filter((c) => c.count > 0)
     .map((c) => ({ slug: c.slug, name: c.name, count: c.count, href: categoryHref(c.slug) }));
-  const meta = sorted.map((p) => ({ slug: p.slug, haystack: [p.title, p.excerpt, ...p.tags].join(" ").toLowerCase() }));
+  const meta = sorted.map((p) => ({
+    slug: p.slug,
+    haystack: [p.title, p.excerpt, ...p.tags, postRefs(brand, p).category?.name ?? ""].join(" ").toLowerCase(),
+  }));
   const cards = Object.fromEntries(sorted.map((p) => [p.slug, cardFor(brand, p)]));
   return (
-    <Section tone="light" labelledBy="blog-grid-title">
+    <Section id="articles" tone="light" labelledBy="blog-grid-title" className="scroll-mt-16">
       {heading === false ? (
         <h2 id="blog-grid-title" className="sr-only">
           {b.grid.title}

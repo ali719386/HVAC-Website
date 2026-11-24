@@ -48,8 +48,8 @@ export default function BlogPage() {
   return (
     <>
       <PageHero eyebrow={c.eyebrow} title={c.title} intro={c.intro || undefined} crumbs={[{ name: "Blog", href: "/blog" }]} compact>
-        {/* Plain GET form: works without JavaScript; the grid reads ?q= and filters. */}
-        <form action="/blog" method="get" role="search" className="flex max-w-xl gap-2">
+        {/* Plain GET form: reloads /blog?q=… and jumps to the grid, which reads ?q= and filters (client-side). */}
+        <form action="/blog#articles" method="get" role="search" className="flex max-w-xl gap-2">
           <label htmlFor="blog-hero-q" className="sr-only">
             {b.searchLabel}
           </label>
