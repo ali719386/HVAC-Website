@@ -104,6 +104,7 @@ How it fits together:
 | `og.jpg` | Social share image (OpenGraph/Twitter) | 1200 x 630 | 1.91:1 |
 | `hero.jpg` | Homepage hero (preloaded) | 1400 x 1450 | ~1:1 (4:3 on mobile) |
 | `about.jpg` | Why Choose Us block, About page "Our mission" (technician with homeowner) | 1200 x 1020 | ~4:3.4 |
+| `images.aboutHero` (optional) | About page header background. Subject on the right; the left side is covered by navy | 1600 x 900 or larger | 16:9 |
 | `images.aboutStory` (optional) | About page "Our story" photo, e.g. technician at an indoor unit. Falls back to `about` | 1100 x 1375 | 4:5 (4:3 on mobile) |
 | `images.aboutStoryInset` (optional) | Smaller photo overlapping the story photo (tablet and desktop) | 600 x 450 | 4:3 |
 | `images.aboutMission` (optional) | About page "Our mission" photo (technician with homeowner). Falls back to `about` | 1200 x 900 or larger | 4:3 |

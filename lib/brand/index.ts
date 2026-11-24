@@ -57,6 +57,7 @@ function resolveAssets(brand: Brand): Brand {
         expert: img(im.expert),
         projects: img(im.projects),
         promo: img(im.promo),
+        aboutHero: im.aboutHero ? img(im.aboutHero) : undefined,
         aboutStory: im.aboutStory ? img(im.aboutStory) : undefined,
         aboutStoryInset: im.aboutStoryInset ? img(im.aboutStoryInset) : undefined,
         aboutMission: im.aboutMission ? img(im.aboutMission) : undefined,

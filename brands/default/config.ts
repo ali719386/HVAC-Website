@@ -100,6 +100,7 @@ export const config: BrandConfigInput = {
     projects: { src: "projects.jpg", alt: "Newly installed high-efficiency furnace" },
     faq: { src: "faq-thermostat.jpg", alt: "Homeowner pointing out the thermostat to a technician in her hallway" },
     promo: { src: "promo.jpg", alt: "Thermostat set to a comfortable temperature" },
+    aboutHero: { src: "about-hero.jpg", alt: "Technician servicing a rooftop air conditioning unit at dusk" },
     aboutStory: { src: "about-story-furnace.jpg", alt: "Technician testing the controls of an indoor furnace with a multimeter" },
     aboutStoryInset: { src: "about-story-condenser.jpg", alt: "Technician kneeling beside an outdoor AC condenser with the service panel open" },
     aboutMission: { src: "about-mission-consult.jpg", alt: "Technician showing a homeowner service details on a tablet in her living room" },

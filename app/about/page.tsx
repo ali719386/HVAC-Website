@@ -34,7 +34,13 @@ export default function AboutPage() {
 
   return (
     <>
-      <PageHeader title={about.title} intro={about.intro} crumbs={[{ name: "About", href: "/about" }]} />
+      <PageHeader
+        title={about.title}
+        intro={about.intro}
+        crumbs={[{ name: "About", href: "/about" }]}
+        image={images.aboutHero}
+        imageStyle="blend"
+      />
       <AboutStory copy={about.story} image={images.aboutStory ?? images.about} inset={images.aboutStoryInset} company={config.company} />
       <AboutWhy copy={about.why} items={about.why.items.length > 0 ? about.why.items : content.whyChooseUs} />
       <AboutMission copy={about.mission} image={images.aboutMission ?? images.about} />

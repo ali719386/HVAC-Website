@@ -372,6 +372,8 @@ export const brandConfigSchema = z.object({
     promo: imageSchema,
     /** Optional. When set, the FAQ block shows questions left + this photo right (no call box). */
     faq: imageSchema.optional(),
+    /** About page header background (wide, subject on the right; the left side is covered by navy). */
+    aboutHero: imageSchema.optional(),
     /** About page "Our story" photo (portrait crop, e.g. technician at an indoor unit). Falls back to `about`. */
     aboutStory: imageSchema.optional(),
     /** Optional smaller photo overlapping the story photo on tablet and desktop. */
