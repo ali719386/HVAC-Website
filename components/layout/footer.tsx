@@ -11,9 +11,9 @@ const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "Y
 
 export function Footer({ brand }: { brand: Brand }) {
   const { company, offerings } = brand.config;
-  // Up to 8 primary cities (falls back to the first 8 configured cities).
-  const primary = primaryCities(8);
-  const footerCities = primary.length > 0 ? primary : getCoverage().cities.slice(0, 8);
+  // Up to 10 primary cities (falls back to the first 10 configured cities).
+  const primary = primaryCities(10);
+  const footerCities = primary.length > 0 ? primary : getCoverage().cities.slice(0, 10);
   const sa = brand.content.copy.serviceAreas;
   const license = licenseFor(company);
   const companyLinks = getFooterLinks(brand);

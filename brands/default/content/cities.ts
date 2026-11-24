@@ -59,11 +59,11 @@ export const coverage: CoverageInput = {
     { name: "Chicago", stateAbbr: "IL", slug: "chicago", primary: true, zips: [], placeholder: true },
     { name: "Minneapolis", stateAbbr: "MN", slug: "minneapolis", zips: [], placeholder: true },
     { name: "Pittsburgh", stateAbbr: "PA", slug: "pittsburgh", zips: [], placeholder: true },
-    { name: "New York City", stateAbbr: "NY", slug: "new-york-city", zips: [], placeholder: true },
+    { name: "New York City", stateAbbr: "NY", slug: "new-york-city", primary: true, zips: [], placeholder: true },
     { name: "Boston", stateAbbr: "MA", slug: "boston", zips: [], placeholder: true },
     { name: "Denver", stateAbbr: "CO", slug: "denver", primary: true, zips: [], placeholder: true },
     // Mixed
-    { name: "Los Angeles", stateAbbr: "CA", slug: "los-angeles", zips: [], placeholder: true },
+    { name: "Los Angeles", stateAbbr: "CA", slug: "los-angeles", primary: true, zips: [], placeholder: true },
     { name: "Sacramento", stateAbbr: "CA", slug: "sacramento", zips: [], placeholder: true },
     { name: "San Diego", stateAbbr: "CA", slug: "san-diego", zips: [], placeholder: true },
     { name: "Seattle", stateAbbr: "WA", slug: "seattle", primary: true, zips: [], placeholder: true },
