@@ -15,9 +15,12 @@ export function SiteAssistant() {
   if (!chatbot.enabled) return company.whatsapp ? <WhatsAppFloat config={company.whatsapp} /> : null;
   const fill = (s: string) => s.replaceAll("{company}", company.name);
   const c = content.copy.chatbot;
+  const data = buildChatData(brand);
   return (
     <Chatbot
-      quick={buildChatData(brand).quick}
+      quick={data.quick}
+      // Small talk ships with the page so greetings work even before /assistant.json loads.
+      basic={data.entries.filter((x) => x.id.startsWith("talk-"))}
       name={chatbot.name}
       avatar={assetExists(chatbot.avatar) ? chatbot.avatar : undefined}
       copy={{ ...c, welcome: fill(c.welcome), fallback: fill(c.fallback) }}

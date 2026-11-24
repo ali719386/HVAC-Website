@@ -26,6 +26,7 @@ const HANDOFF = "__handoff";
  */
 export function Chatbot({
   quick: quickItems,
+  basic,
   name,
   avatar,
   copy,
@@ -35,6 +36,8 @@ export function Chatbot({
 }: {
   /** Quick questions (small, rendered with the page). The full knowledge loads on first open. */
   quick: ChatData["quick"];
+  /** Small talk entries, available before the full knowledge loads. */
+  basic: ChatData["entries"];
   name: string;
   avatar?: string;
   /** {company} already filled in. */
@@ -59,7 +62,12 @@ export function Chatbot({
   const loadKb = () => {
     kbRef.current ??= fetch("/assistant.json")
       .then((r) => (r.ok ? (r.json() as Promise<ChatData>) : null))
-      .catch(() => null);
+      .catch(() => null)
+      .then((kb) => {
+        // Failed load: forget it so the next question tries again.
+        if (!kb) kbRef.current = null;
+        return kb;
+      });
     return kbRef.current;
   };
 
@@ -126,7 +134,11 @@ export function Chatbot({
   /** Topic match first, then ZIP lookup, then a search over every site passage, then the fallback. */
   function reply(kb: ChatData | null, question: string, entryId?: string): Msg {
     if (entryId === HANDOFF) return { role: "bot", text: copy.handoffReply, handoff: true };
-    if (!kb) return { role: "bot", text: copy.fallback, handoff: true };
+    if (!kb) {
+      // Knowledge not available (offline or failed load): small talk still works.
+      const talk = matchQuestion(basic, question);
+      return talk ? { role: "bot", text: talk.answer } : { role: "bot", text: copy.fallback, handoff: true };
+    }
     // A 5-digit number is treated as a ZIP code and checked against the configured list.
     const zip = !entryId ? question.match(/\b(\d{5})\b/)?.[1] : undefined;
     if (zip) {

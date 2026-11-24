@@ -69,7 +69,7 @@ export function buildChatData(brand: Brand): ChatData {
   entries.push(
     {
       id: "talk-greeting",
-      keywords: ["hi", "hello", "hey", "hiya", "howdy", "greetings", "good morning", "good afternoon", "good evening", "salam", "salaam", "assalam", "assalamualaikum", "assalam o alaikum", "aoa", "help"],
+      keywords: ["hi", "hello", "hey", "hiya", "howdy", "yo", "sup", "whats up", "what is up", "wassup", "greetings", "buddy", "bro", "friend", "good morning", "good afternoon", "good evening", "salam", "salaam", "assalam", "assalamualaikum", "assalam o alaikum", "aoa", "help"],
       answer: fill(talk.greeting),
       links: [],
     },
