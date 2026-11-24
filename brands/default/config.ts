@@ -26,6 +26,8 @@ export const config: BrandConfigInput = {
     ],
     timezone: "America/New_York", // TODO: headquarters timezone
     socials: [], // TODO: add real profile URLs, e.g. { network: "facebook", url: "https://..." }
+    // TODO: the client's real WhatsApp Business number (digits with country code). Remove to hide the WhatsApp buttons.
+    whatsapp: { number: "15555550123", message: "Hi, I would like to ask about heating or cooling service.", label: "Chat on WhatsApp" },
     licenseNumber: undefined, // TODO: add state HVAC license number. Hidden while undefined.
     licenses: [], // TODO: add { stateAbbr, number } for each state where a license is held. Shown only on that state's pages.
     insured: false, // TODO: set true only if verified

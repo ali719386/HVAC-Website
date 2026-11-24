@@ -2,7 +2,8 @@ import { Clock, Mail, MapPin, Phone, Siren } from "lucide-react";
 import type { BrandConfig, Copy } from "@/lib/brand/schema";
 import { hoursText } from "@/lib/hours";
 import { OpenNowBadge } from "@/components/contact/open-badge";
-import { SocialIcon } from "@/components/ui/social-icons";
+import { SocialIcon, WhatsAppIcon } from "@/components/ui/social-icons";
+import { WhatsAppLink } from "./whatsapp";
 import { TrustList } from "./trust-list";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
@@ -38,6 +39,19 @@ export function ContactCard({
             </a>
           </div>
         </li>
+        {company.whatsapp ? (
+          <li className={row}>
+            <span className="grid size-11 shrink-0 place-items-center rounded-brand-sm bg-[#0d7468] text-white">
+              <WhatsAppIcon className="size-5" />
+            </span>
+            <div>
+              <p className="text-sm text-muted">WhatsApp</p>
+              <WhatsAppLink config={company.whatsapp} source="contact_card" className="font-semibold text-[#0d7468] hover:underline">
+                {company.whatsapp.label}
+              </WhatsAppLink>
+            </div>
+          </li>
+        ) : null}
         {emergency ? (
           <li className={row}>
             <span className="grid size-11 shrink-0 place-items-center rounded-brand-sm bg-accent text-on-accent">

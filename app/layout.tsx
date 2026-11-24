@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header";
 import { PromoBar } from "@/components/layout/promo-bar";
 import { StickyMobileCallBar } from "@/components/layout/sticky-call";
 import { TopBar } from "@/components/layout/top-bar";
+import { WhatsAppFloat } from "@/components/layout/whatsapp";
 import { getBrand, getSiteUrl } from "@/lib/brand";
 import { tokensToCss } from "@/lib/brand/tokens";
 import { fontVars } from "@/lib/fonts";
@@ -96,7 +97,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {`window.__analyticsEnabled=true;window.dataLayer=window.dataLayer||[];window.dataLayer.push({"gtm.start":Date.now(),event:"gtm.js"});var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtm.js?id=${config.analytics.gtmId}";document.head.appendChild(s);`}
           </Script>
         ) : null}
-        <StickyMobileCallBar phone={config.company.phone} bookLabel={bookLabel} />
+        <StickyMobileCallBar phone={config.company.phone} bookLabel={bookLabel} whatsapp={config.company.whatsapp} />
+        {config.company.whatsapp ? <WhatsAppFloat config={config.company.whatsapp} /> : null}
       </body>
     </html>
   );

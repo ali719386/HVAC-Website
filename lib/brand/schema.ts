@@ -758,6 +758,14 @@ export const brandConfigSchema = z.object({
     /** IANA timezone for the hours, e.g. "America/New_York". Used for the "Open now" badge. */
     timezone: z.string().refine(isTimeZone, { error: (i) => `"${String(i.input)}" is not a valid IANA timezone` }),
     socials: z.array(z.object({ network: z.enum(["facebook", "instagram", "youtube", "linkedin", "x"]), url })),
+    /** WhatsApp chat (wa.me). number: country code + number, digits only (US: 1XXXXXXXXXX). Hidden when not set. */
+    whatsapp: z
+      .object({
+        number: z.string().regex(/^\d{10,15}$/, "WhatsApp number: digits only with country code, e.g. 15555550123"),
+        message: z.string().default(""),
+        label: nonEmpty.default("Chat on WhatsApp"),
+      })
+      .optional(),
     /** Default license shown on pages without a state context. Leave undefined unless it applies everywhere it is shown. */
     licenseNumber: nonEmpty.optional(),
     /** Per-state licenses. A license number shows only on pages for that state. Verify every number before publishing. */

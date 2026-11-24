@@ -6,7 +6,8 @@ import { getFooterLinks, legalLinks } from "@/lib/nav";
 import { Logo } from "@/components/ui/logo";
 import { TrustList } from "./trust-list";
 import { coverageCounts, coverageLabel, getCoverage, licenseFor, primaryCities } from "@/lib/geo/coverage";
-import { SocialIcon } from "@/components/ui/social-icons";
+import { SocialIcon, WhatsAppIcon } from "@/components/ui/social-icons";
+import { WhatsAppLink } from "./whatsapp";
 import { Reveal } from "@/components/motion/reveal";
 
 const socialLabels = { facebook: "Facebook", instagram: "Instagram", youtube: "YouTube", linkedin: "LinkedIn", x: "X" } as const;
@@ -114,6 +115,14 @@ export function Footer({ brand }: { brand: Brand }) {
                   <Phone className="size-4" aria-hidden="true" />
                   24/7 emergency: {company.emergencyPhone.display}
                 </a>
+              </li>
+            ) : null}
+            {company.whatsapp ? (
+              <li>
+                <WhatsAppLink config={company.whatsapp} source="footer" className={`flex items-center gap-3 ${link}`}>
+                  <WhatsAppIcon className="size-4" />
+                  {company.whatsapp.label}
+                </WhatsAppLink>
               </li>
             ) : null}
             <li>
