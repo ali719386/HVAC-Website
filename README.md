@@ -113,7 +113,7 @@ How it fits together:
 
 Until a logo file exists, a wordmark (initial plus company name) is shown. `npm run check:placeholders` lists every missing file by name. Use photos you own or have licensed. Never hotlink. Write meaningful `alt` text in config.
 
-Supported equipment brands (`offerings.supportedBrands`) appear in the brand strip under the hero as `{ name, logo? }`. Put official logo files at the configured path, e.g. `public/brands/default/images/logo-gree.png` (SVG or a transparent PNG, ~400 x 160). A text wordmark shows until the file exists. Use only official logo files the client has permission to display (e.g. from the manufacturer dealer portal). A trademark disclaimer is shown under the strip.
+Supported equipment brands (`offerings.supportedBrands`) appear in the brand strip under the hero as `{ name, logo? }`. Put official logo files at the configured path, e.g. `public/brands/default/images/logo-carrier.png` (SVG or a transparent PNG, ~400 x 160). A text wordmark shows until the file exists. Use only official logo files the client has permission to display (e.g. from the manufacturer dealer portal). A trademark disclaimer is shown under the strip.
 
 ## 6. Editing content
 
