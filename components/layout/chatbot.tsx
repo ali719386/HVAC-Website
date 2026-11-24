@@ -178,9 +178,9 @@ export function Chatbot({
             onClick={openChat}
             aria-haspopup="dialog"
             aria-controls={`${uid}-panel`}
-            className="grid size-14 place-items-center rounded-full transition-[scale] duration-200 hover:scale-105 focus-visible:ring-4 focus-visible:ring-primary/30 motion-reduce:hover:scale-100"
+            className="launcher-pulse grid size-14 place-items-center rounded-full shadow-brand-sm transition-[scale,translate,box-shadow] duration-200 [--ring:var(--brand-primary)] hover:-translate-y-1 hover:scale-110 hover:shadow-brand-lg focus-visible:ring-4 focus-visible:ring-primary/30 motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
           >
-            {avatarEl("size-14")}
+            <span className="launcher-wiggle grid place-items-center">{avatarEl("size-14")}</span>
             <span className="sr-only">{copy.launcher}</span>
           </button>
           {whatsapp ? (
@@ -189,9 +189,9 @@ export function Chatbot({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => track("click_to_whatsapp", { source: "float" })}
-              className="grid size-14 place-items-center rounded-full bg-[#0d7468] text-white transition-[scale,background-color] duration-200 hover:scale-105 hover:bg-[#0a5f55] focus-visible:ring-4 focus-visible:ring-[#0d7468]/40 motion-reduce:hover:scale-100"
+              className="launcher-pulse grid size-14 place-items-center rounded-full bg-[#0d7468] text-white shadow-brand-sm transition-[scale,translate,background-color,box-shadow] duration-200 [--ring:#0d7468] hover:-translate-y-1 hover:scale-110 hover:bg-[#0a5f55] hover:shadow-brand-lg focus-visible:ring-4 focus-visible:ring-[#0d7468]/40 motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
             >
-              <WhatsAppIcon className="size-8" />
+              <WhatsAppIcon className="launcher-wiggle-late size-8" />
               <span className="sr-only">{whatsapp.label} (opens WhatsApp in a new tab)</span>
             </a>
           ) : null}
@@ -308,7 +308,7 @@ export function Chatbot({
 export function ChatOpenButton({ label, avatar, className }: { label: string; avatar?: string; className: string }) {
   return (
     <button type="button" onClick={() => window.dispatchEvent(new Event(CHAT_OPEN_EVENT))} className={className}>
-      {avatar ? <Image src={avatar} alt="" width={40} height={40} className="size-8 rounded-full" /> : null}
+      {avatar ? <Image src={avatar} alt="" width={40} height={40} className="launcher-wiggle size-8 rounded-full" /> : null}
       <span className="sr-only">{label}</span>
     </button>
   );

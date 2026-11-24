@@ -33,15 +33,15 @@ export function StickyMobileCallBar({
           </span>
         </a>
         {chat ? (
-          <ChatOpenButton label={chat.label} avatar={chat.avatar} className="grid h-12 w-12 place-items-center rounded-btn border border-line bg-surface" />
+          <ChatOpenButton label={chat.label} avatar={chat.avatar} className="launcher-pulse grid h-12 w-12 place-items-center rounded-btn border border-line bg-surface [--ring:var(--brand-primary)]" />
         ) : null}
         {whatsapp ? (
           <WhatsAppLink
             config={whatsapp}
             source="mobile_bar"
-            className="grid h-12 w-12 place-items-center rounded-btn bg-[#0d7468] text-white"
+            className="launcher-pulse grid h-12 w-12 place-items-center rounded-btn bg-[#0d7468] text-white [--ring:#0d7468]"
           >
-            <WhatsAppIcon className="size-6" />
+            <WhatsAppIcon className="launcher-wiggle-late size-6" />
             <span className="sr-only">{whatsapp.label}</span>
           </WhatsAppLink>
         ) : null}
