@@ -591,6 +591,8 @@ export const copySchema = z.object({
     /** Quick-reply button that offers call, WhatsApp and book. */
     handoff: nonEmpty,
     handoffReply: nonEmpty,
+    /** Quick questions under the welcome message. topic = an assistant entry id (e.g. "service-ac-repair", "areas", "hours"); unknown topics are skipped. */
+    quickQuestions: z.array(z.object({ label: nonEmpty, topic: nonEmpty })).default([]),
     disclaimer: nonEmpty,
     /** Small talk replies. {name} is the assistant's name, {company} the company name. */
     smallTalk: z.object({

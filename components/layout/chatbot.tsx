@@ -165,17 +165,19 @@ export function Chatbot({
     </div>
   );
 
-  // A few service shortcuts plus Talk to a person, shown once under the welcome message.
+  // Question shortcuts plus Talk to a person, shown once under the welcome message.
   const quick = (
-    <div className="flex flex-wrap gap-2 pl-9">
+    <div className="flex flex-wrap gap-2">
       {[...data.quick, { id: HANDOFF, label: copy.handoff }].map((q) => (
         <button
           key={q.id}
           type="button"
           disabled={typing}
           onClick={() => answer(q.label, q.id)}
-          className={`min-h-9 rounded-full border px-3 text-sm font-semibold transition-colors disabled:opacity-50 ${
-            q.id === HANDOFF ? "border-accent/40 bg-accent/8 text-accent-dark hover:bg-accent/15" : "border-primary/30 bg-surface text-primary hover:bg-primary/8"
+          className={`min-h-10 rounded-full border px-4 py-1.5 text-left text-sm font-medium transition-colors disabled:opacity-50 ${
+            q.id === HANDOFF
+              ? "border-accent/40 bg-surface text-accent-dark hover:bg-accent/8"
+              : "border-primary/40 bg-surface text-primary hover:border-primary hover:bg-primary/5"
           }`}
         >
           {q.label}
@@ -231,80 +233,78 @@ export function Chatbot({
           aria-modal="false"
           aria-labelledby={`${uid}-title`}
           onKeyDown={(e) => e.key === "Escape" && closeChat()}
-          className="fixed inset-0 z-50 flex flex-col bg-surface shadow-brand-lg md:inset-auto md:right-6 md:bottom-6 md:h-[min(36rem,calc(100dvh-3rem))] md:w-[23rem] md:overflow-hidden md:rounded-brand md:ring-1 md:ring-line"
+          className="fixed inset-0 z-50 flex flex-col bg-surface shadow-brand-lg md:inset-auto md:right-6 md:bottom-6 md:h-[min(37rem,calc(100dvh-3rem))] md:w-[24rem] md:overflow-hidden md:rounded-[1.25rem] md:ring-1 md:ring-line"
         >
-          <header className="flex items-center gap-3 bg-primary px-4 py-3 text-on-primary">
-            {avatarEl("size-10")}
+          {/* Header: light brand tint, avatar, name, subtitle, refresh and close. */}
+          <header className="flex items-center gap-3 border-b border-line bg-linear-to-b from-primary/12 to-primary/4 px-4 py-3.5">
+            <span className="rounded-full bg-surface p-0.5 shadow-brand-sm ring-2 ring-primary/20">{avatarEl("size-11")}</span>
             <div className="min-w-0 flex-1">
-              <p id={`${uid}-title`} className="truncate font-heading font-bold">
+              <p id={`${uid}-title`} className="truncate font-heading text-lg leading-tight font-bold text-ink">
                 {name}
               </p>
-              <p className="truncate text-xs text-on-primary/80">{copy.subtitle}</p>
+              <p className="truncate text-sm text-muted">{copy.subtitle}</p>
             </div>
             <button
               type="button"
               onClick={reset}
               title={copy.reset}
-              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-on-primary/30 px-3 text-sm font-semibold transition-colors hover:bg-on-primary/10"
+              className="grid size-10 shrink-0 place-items-center rounded-full bg-surface text-ink shadow-brand-sm transition-colors hover:text-primary"
             >
               {/* key changes on every refresh, so the icon spins once (no spin with reduced motion). */}
-              <RotateCw key={spin} className={`size-4 ${spin > 0 ? "animate-[spin_0.5s_ease-out_1]" : ""} motion-reduce:animate-none`} aria-hidden="true" />
-              {copy.reset}
+              <RotateCw key={spin} className={`size-4.5 ${spin > 0 ? "animate-[spin_0.5s_ease-out_1]" : ""} motion-reduce:animate-none`} aria-hidden="true" />
+              <span className="sr-only">{copy.reset}</span>
             </button>
-            <button type="button" onClick={closeChat} className="grid size-11 place-items-center rounded-full hover:bg-on-primary/10">
+            <button type="button" onClick={closeChat} className="grid size-10 shrink-0 place-items-center rounded-full text-ink transition-colors hover:bg-surface hover:text-primary">
               <X className="size-5" aria-hidden="true" />
               <span className="sr-only">{copy.close}</span>
             </button>
           </header>
 
-          <div ref={listRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto bg-surface-alt px-4 py-4">
+          <div ref={listRef} aria-live="polite" className="flex-1 space-y-3 overflow-y-auto bg-surface px-4 py-4">
             {messages.map((m, i) => (
               <Fragment key={i}>
-              <div className={m.role === "user" ? "flex justify-end" : "flex gap-2"}>
-                {m.role === "bot" ? avatarEl("size-7") : null}
-                <div
-                  className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[0.95rem] leading-relaxed ${
-                    m.role === "user" ? "rounded-br-sm bg-primary text-on-primary" : "rounded-tl-sm bg-surface text-ink shadow-brand-sm"
-                  }`}
-                >
-                  <span className="sr-only">{m.role === "user" ? "You: " : `${name}: `}</span>
-                  {m.text}
-                  {m.links && m.links.length > 0 ? (
-                    <span className="mt-2 flex flex-wrap gap-2">
-                      {m.links.map((l) =>
-                        l.href.startsWith("/") ? (
-                          <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm font-semibold text-primary underline underline-offset-2">
-                            {l.label}
-                          </Link>
-                        ) : (
-                          <a key={l.href} href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="text-sm font-semibold text-primary underline underline-offset-2">
-                            {l.label}
-                          </a>
-                        ),
-                      )}
-                    </span>
-                  ) : null}
-                  {m.handoff ? handoff : null}
+                <div className={m.role === "user" ? "flex justify-end" : "flex"}>
+                  <div
+                    className={`max-w-[88%] rounded-2xl px-4 py-3 text-[0.95rem] leading-relaxed ${
+                      m.role === "user" ? "rounded-br-md bg-primary text-on-primary" : "rounded-bl-md border border-primary/15 bg-primary/6 text-ink"
+                    }`}
+                  >
+                    <span className="sr-only">{m.role === "user" ? "You: " : `${name}: `}</span>
+                    {m.text}
+                    {m.links && m.links.length > 0 ? (
+                      <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                        {m.links.map((l) =>
+                          l.href.startsWith("/") ? (
+                            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} className="text-sm font-semibold text-primary underline underline-offset-2">
+                              {l.label}
+                            </Link>
+                          ) : (
+                            <a key={l.href} href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="text-sm font-semibold text-primary underline underline-offset-2">
+                              {l.label}
+                            </a>
+                          ),
+                        )}
+                      </span>
+                    ) : null}
+                    {m.handoff ? handoff : null}
+                  </div>
                 </div>
-              </div>
-              {i === 0 ? quick : null}
+                {i === 0 ? quick : null}
               </Fragment>
             ))}
             {typing ? (
-              <div className="flex gap-2" aria-label="Typing">
-                {avatarEl("size-7")}
-                <span className="inline-flex items-center gap-1 rounded-2xl rounded-tl-sm bg-surface px-3.5 py-3 shadow-brand-sm">
+              <div className="flex" aria-label="Typing">
+                <span className="inline-flex items-center gap-1 rounded-2xl rounded-bl-md border border-primary/15 bg-primary/6 px-4 py-3.5">
                   {[0, 1, 2].map((d) => (
-                    <span key={d} className="size-1.5 animate-bounce rounded-full bg-muted motion-reduce:animate-none" style={{ animationDelay: `${d * 120}ms` }} />
+                    <span key={d} className="size-1.5 animate-bounce rounded-full bg-primary/50 motion-reduce:animate-none" style={{ animationDelay: `${d * 120}ms` }} />
                   ))}
                 </span>
               </div>
             ) : null}
-
           </div>
 
-          <form onSubmit={onSubmit} className="border-t border-line bg-surface p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <div className="flex gap-2">
+          <form onSubmit={onSubmit} className="border-t border-line bg-surface px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <div className="flex items-center gap-2">
               <label htmlFor={`${uid}-q`} className="sr-only">
                 {copy.placeholder}
               </label>
@@ -316,14 +316,33 @@ export function Chatbot({
                 maxLength={300}
                 autoComplete="off"
                 placeholder={copy.placeholder}
-                className="h-11 min-w-0 flex-1 rounded-full border border-line bg-surface px-4 text-base outline-none focus:border-primary focus:ring-2 focus:ring-primary/30"
+                className="h-12 min-w-0 flex-1 rounded-full border border-primary/20 bg-primary/5 px-5 text-base outline-none transition-[border-color,box-shadow] placeholder:text-muted focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--brand-primary)_15%,transparent)]"
               />
-              <button type="submit" disabled={!input.trim() || typing} className="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-on-accent disabled:opacity-50">
-                <Send className="size-4" aria-hidden="true" />
+              <button
+                type="submit"
+                disabled={!input.trim() || typing}
+                className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-on-primary transition-colors hover:bg-primary-dark disabled:bg-primary/35"
+              >
+                <Send className="size-5" aria-hidden="true" />
                 <span className="sr-only">{copy.send}</span>
               </button>
             </div>
-            <p className="mt-2 text-center text-[0.7rem] leading-snug text-muted">{copy.disclaimer}</p>
+            <div className="mt-2.5 flex items-center justify-between gap-3">
+              <p className="text-xs leading-snug text-muted">{copy.disclaimer}</p>
+              {whatsapp ? (
+                <a
+                  href={whatsappHref(whatsapp)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => track("click_to_whatsapp", { source: "chatbot_footer" })}
+                  className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-[#0d7468] hover:underline"
+                >
+                  <WhatsAppIcon className="size-4.5" />
+                  {whatsapp.label}
+                  <span className="sr-only"> (opens WhatsApp in a new tab)</span>
+                </a>
+              ) : null}
+            </div>
           </form>
         </div>
       ) : null}

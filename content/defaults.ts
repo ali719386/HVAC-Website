@@ -217,7 +217,7 @@ export const defaultCopy: CopyInput = {
   },
   chatbot: {
     launcher: "Ask our assistant",
-    subtitle: "Answers about our services and this website",
+    subtitle: "Quick answers about our services",
     welcome: "Hi, how can I help you today?",
     fallback: "I can only answer questions about {company} and this website. Try asking about our services, service areas, hours or booking, or talk to our team using the buttons below.",
     placeholder: "Type your question",
@@ -226,7 +226,14 @@ export const defaultCopy: CopyInput = {
     reset: "Refresh chat",
     handoff: "Talk to a person",
     handoffReply: "Sure. You can reach our team directly here:",
-    disclaimer: "Automated answers from this website. For quotes and scheduling, our team will confirm details.",
+    quickQuestions: [
+      { label: "My AC is not cooling", topic: "service-ac-repair" },
+      { label: "I need a new AC", topic: "service-ac-installation" },
+      { label: "My furnace needs service", topic: "service-heating" },
+      { label: "Book a tune-up", topic: "service-maintenance" },
+      { label: "Which areas do you serve?", topic: "areas" },
+    ],
+    disclaimer: "Automated answers. Our team confirms quotes and visit times.",
     smallTalk: {
       greeting: "Hello. Ask me about our services, the areas we serve, hours, booking or anything else on this website.",
       howAreYou: "I am doing well, thank you for asking. How can I help with your heating or cooling today?",

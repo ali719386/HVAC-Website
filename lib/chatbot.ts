@@ -19,7 +19,7 @@ export type ChatEntry = {
   /** Minimum score to answer with this entry (FAQs need two matching words). */
   min?: number;
 };
-/** quick: a few service shortcuts shown once under the welcome message. */
+/** quick: question shortcuts shown once under the welcome message. */
 export type ChatData = { entries: ChatEntry[]; quick: { id: string; label: string }[] };
 
 const STOP = new Set(
@@ -212,7 +212,8 @@ export function buildChatData(brand: Brand): ChatData {
   const faqs = [...content.faqs, ...content.projectFaqs, ...config.contact.faqs];
   faqs.forEach((f, i) => entries.push({ id: `faq-${i}`, keywords: [...new Set(words(f.question))], answer: f.answer, links: [], min: 2 }));
 
-  // Four service shortcuts (in content order) under the welcome message.
-  const quick = content.services.slice(0, 4).map((s) => ({ id: `service-${s.slug}`, label: s.title }));
+  // Quick questions from copy, only for topics this brand actually has.
+  const ids = new Set(entries.map((e) => e.id));
+  const quick = content.copy.chatbot.quickQuestions.filter((q) => ids.has(q.topic)).map((q) => ({ id: q.topic, label: q.label }));
   return { entries, quick };
 }
