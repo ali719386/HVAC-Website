@@ -588,6 +588,9 @@ export const copySchema = z.object({
     send: nonEmpty,
     close: nonEmpty,
     reset: nonEmpty,
+    /** Quick-reply button that offers call, WhatsApp and book. */
+    handoff: nonEmpty,
+    handoffReply: nonEmpty,
     disclaimer: nonEmpty,
     /** Small talk replies. {name} is the assistant's name, {company} the company name. */
     smallTalk: z.object({

@@ -218,12 +218,14 @@ export const defaultCopy: CopyInput = {
   chatbot: {
     launcher: "Ask our assistant",
     subtitle: "Answers about our services and this website",
-    welcome: "Hi, I can answer questions about {company}: services, service areas, hours, booking and more. What can I help with?",
+    welcome: "Hi, how can I help you today?",
     fallback: "I can only answer questions about {company} and this website. Try asking about our services, service areas, hours or booking, or talk to our team using the buttons below.",
     placeholder: "Type your question",
     send: "Send",
     close: "Close chat",
     reset: "Refresh chat",
+    handoff: "Talk to a person",
+    handoffReply: "Sure. You can reach our team directly here:",
     disclaimer: "Automated answers from this website. For quotes and scheduling, our team will confirm details.",
     smallTalk: {
       greeting: "Hello. Ask me about our services, the areas we serve, hours, booking or anything else on this website.",

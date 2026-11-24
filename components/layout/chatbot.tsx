@@ -17,6 +17,8 @@ type Msg = { role: "bot" | "user"; text: string; links?: ChatLink[]; handoff?: b
 export const CHAT_OPEN_EVENT = "chatbot:open";
 
 const STORAGE_KEY = "site-assistant";
+/** Quick-reply id for "Talk to a person" (call, WhatsApp and book buttons). */
+const HANDOFF = "__handoff";
 
 /**
  * Website assistant: answers only from this site's content (see lib/chatbot.ts), entirely in the
@@ -96,9 +98,14 @@ export function Chatbot({
   }, [messages, typing]);
 
   function answer(question: string, entryId?: string) {
-    const entry = entryId ? data.entries.find((e) => e.id === entryId) : matchQuestion(data.entries, question);
+    const isHandoff = entryId === HANDOFF;
+    const entry = isHandoff ? undefined : entryId ? data.entries.find((e) => e.id === entryId) : matchQuestion(data.entries, question);
     const user: Msg = { role: "user", text: question };
-    const bot: Msg = entry ? { role: "bot", text: entry.answer, links: entry.links } : { role: "bot", text: copy.fallback, handoff: true };
+    const bot: Msg = isHandoff
+      ? { role: "bot", text: copy.handoffReply, handoff: true }
+      : entry
+        ? { role: "bot", text: entry.answer, links: entry.links }
+        : { role: "bot", text: copy.fallback, handoff: true };
     const withUser = [...messages, user];
     setMessages(withUser);
     setTyping(true);
@@ -155,6 +162,25 @@ export function Chatbot({
         <CalendarCheck className="size-3.5" aria-hidden="true" />
         {bookLabel}
       </Link>
+    </div>
+  );
+
+  // A few service shortcuts plus Talk to a person, shown once under the welcome message.
+  const quick = (
+    <div className="flex flex-wrap gap-2 pl-9">
+      {[...data.quick, { id: HANDOFF, label: copy.handoff }].map((q) => (
+        <button
+          key={q.id}
+          type="button"
+          disabled={typing}
+          onClick={() => answer(q.label, q.id)}
+          className={`min-h-9 rounded-full border px-3 text-sm font-semibold transition-colors disabled:opacity-50 ${
+            q.id === HANDOFF ? "border-accent/40 bg-accent/8 text-accent-dark hover:bg-accent/15" : "border-primary/30 bg-surface text-primary hover:bg-primary/8"
+          }`}
+        >
+          {q.label}
+        </button>
+      ))}
     </div>
   );
 
@@ -261,6 +287,7 @@ export function Chatbot({
                   {m.handoff ? handoff : null}
                 </div>
               </div>
+              {i === 0 ? quick : null}
               </Fragment>
             ))}
             {typing ? (
