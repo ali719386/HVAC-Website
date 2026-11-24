@@ -97,8 +97,8 @@ How it fits together:
 
 | File | Used for | Recommended size (px) | Aspect |
 |---|---|---|---|
-| `logo.svg` | Header logo (light background) | SVG, ~180 x 48 | wide |
-| `logo-dark.svg` | Footer logo (dark background) | SVG, ~180 x 48 | wide |
+| `logo.svg` or `logo.png` | Header logo (light background) | SVG, or transparent PNG ~900 x 233 | wide (~3.9:1) |
+| `logo-dark.svg` or `logo-dark.png` | Footer logo (dark background) | SVG, or transparent PNG ~900 x 233 | wide (~3.9:1) |
 | `og.jpg` | Social share image (OpenGraph/Twitter) | 1200 x 630 | 1.91:1 |
 | `hero.jpg` | Homepage hero (preloaded) | 1400 x 1450 | ~1:1 (4:3 on mobile) |
 | `about.jpg` | Why Choose Us block, About page | 1200 x 1020 | ~4:3.4 |

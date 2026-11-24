@@ -16,7 +16,7 @@ export function Logo({
   return (
     <HomeLink className="inline-flex shrink-0 items-center gap-2.5" aria-label={`${name}, home`}>
       {assetExists(src) ? (
-        <Image src={src} alt="" width={180} height={48} className="h-10 w-auto sm:h-12" preload />
+        <Image src={src} alt="" width={232} height={60} sizes="232px" className="h-11 w-auto sm:h-12 lg:h-14" preload />
       ) : (
         <>
           <span
