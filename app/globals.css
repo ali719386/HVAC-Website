@@ -38,6 +38,8 @@
     scroll-padding-top: 6rem;
   }
   body {
+    /* Never allow sideways page scroll. clip (not hidden) keeps position: sticky working. */
+    overflow-x: clip;
     background: var(--brand-surface);
     color: var(--brand-text);
     font-family: var(--font-body);

@@ -149,7 +149,7 @@ export function WhyChooseUs({ brand }: { brand: Brand }) {
         <div className="relative order-last lg:order-first">
           <BrandImage image={config.images.about} sizes="(min-width: 1024px) 560px, 100vw" aspect="aspect-[4/3.4]" />
           {years ? (
-            <div className="absolute -right-2 -bottom-6 rounded-brand bg-primary px-6 py-5 text-on-primary shadow-brand-lg sm:right-6">
+            <div className="absolute right-3 -bottom-6 rounded-brand bg-primary px-6 py-5 text-on-primary shadow-brand-lg sm:right-6">
               <p className="font-heading text-4xl font-extrabold">{years}+</p>
               <p className="text-sm font-semibold text-on-primary/85">Years in business</p>
             </div>
