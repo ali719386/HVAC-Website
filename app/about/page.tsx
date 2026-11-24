@@ -26,7 +26,9 @@ export default function AboutPage() {
     about.services.items.length > 0
       ? about.services.items.flatMap((item) => {
           const s = content.services.find((x) => x.slug === item.slug);
-          return s ? [{ ...s, title: item.title ?? s.title, summary: item.summary ?? s.summary }] : [];
+          return s
+            ? [{ ...s, title: item.title ?? s.title, summary: item.summary ?? s.summary, image: item.image ?? s.image }]
+            : [];
         })
       : content.services.slice(0, 3);
 
@@ -35,7 +37,7 @@ export default function AboutPage() {
       <PageHeader title={about.title} intro={about.intro} crumbs={[{ name: "About", href: "/about" }]} />
       <AboutStory copy={about.story} image={images.aboutStory ?? images.about} inset={images.aboutStoryInset} company={config.company} />
       <AboutWhy copy={about.why} items={about.why.items.length > 0 ? about.why.items : content.whyChooseUs} />
-      <AboutMission copy={about.mission} image={images.about} />
+      <AboutMission copy={about.mission} image={images.aboutMission ?? images.about} />
       {services.length > 0 ? <ServiceCards services={services} copy={about.services} /> : null}
       <BrandStrip brands={config.offerings.supportedBrands} title={content.copy.brandStrip.title} />
       <TestimonialSlider items={content.testimonials} copy={about.testimonials} tone="light" />

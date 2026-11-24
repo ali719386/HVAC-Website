@@ -100,10 +100,10 @@ export const config: BrandConfigInput = {
     projects: { src: "projects.jpg", alt: "Newly installed high-efficiency furnace" },
     faq: { src: "faq-thermostat.jpg", alt: "Homeowner pointing out the thermostat to a technician in her hallway" },
     promo: { src: "promo.jpg", alt: "Thermostat set to a comfortable temperature" },
-    aboutStory: { src: "service-heating-furnace.jpg", alt: "Technician inspecting the burners and controls of an indoor gas furnace with a flashlight" },
-    aboutStoryInset: { src: "hero.png", alt: "Technician servicing an outdoor air conditioning condenser" },
-    // TODO: add about-cta-home.jpg (modern American home exterior, 1920 x 1080, no visible logos or house numbers)
-    aboutCta: { src: "about-cta-home.jpg", alt: "Front exterior of a well-kept two-story American home at dusk" },
+    aboutStory: { src: "about-story-furnace.jpg", alt: "Technician testing the controls of an indoor furnace with a multimeter" },
+    aboutStoryInset: { src: "about-story-condenser.jpg", alt: "Technician kneeling beside an outdoor AC condenser with the service panel open" },
+    aboutMission: { src: "about-mission-consult.jpg", alt: "Technician showing a homeowner service details on a tablet in her living room" },
+    aboutCta: { src: "about-cta-home.jpg", alt: "Modern two-story home with a stone and wood facade and a green front lawn" },
   },
   homepage: {
     heroVariant: "summer",

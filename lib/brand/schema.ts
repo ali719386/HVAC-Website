@@ -216,7 +216,15 @@ export const copySchema = z.object({
     /** Picks services by slug with optional wording overrides. Empty: first three services. */
     services: sectionCopy.extend({
       items: z
-        .array(z.object({ slug: serviceTypeSchema, title: nonEmpty.optional(), summary: nonEmpty.optional() }))
+        .array(
+          z.object({
+            slug: serviceTypeSchema,
+            title: nonEmpty.optional(),
+            summary: nonEmpty.optional(),
+            /** About-page-only photo; defaults to the service's own image. */
+            image: imageSchema.optional(),
+          }),
+        )
         .default([]),
     }),
     testimonials: sectionCopy,
@@ -368,6 +376,8 @@ export const brandConfigSchema = z.object({
     aboutStory: imageSchema.optional(),
     /** Optional smaller photo overlapping the story photo on tablet and desktop. */
     aboutStoryInset: imageSchema.optional(),
+    /** About page "Our mission" photo (technician with homeowner). Falls back to `about`. */
+    aboutMission: imageSchema.optional(),
     /** About page final CTA background photo (wide, e.g. home exterior). */
     aboutCta: imageSchema.optional(),
   }),

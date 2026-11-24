@@ -67,9 +67,22 @@ export const copy: CopyOverrides = {
       eyebrow: "What we do",
       title: "Complete Comfort. One Trusted Team.",
       items: [
-        { slug: "ac-installation", summary: "Professional air conditioning installation designed around your property's cooling needs." },
-        { slug: "ac-repair", summary: "Reliable diagnostic and repair services to help restore your indoor comfort." },
-        { slug: "maintenance", title: "HVAC Maintenance", summary: "Routine system care to support performance, efficiency, and long-term reliability." },
+        {
+          slug: "ac-installation",
+          summary: "Professional air conditioning installation designed around your property's cooling needs.",
+          image: { src: "about-ac-installation.jpg", alt: "Technician setting up a new central air conditioner on a pad beside a home" },
+        },
+        {
+          slug: "ac-repair",
+          summary: "Reliable diagnostic and repair services to help restore your indoor comfort.",
+          image: { src: "about-ac-repair.jpg", alt: "Technician reading refrigerant gauges and an airflow meter at an outdoor AC unit" },
+        },
+        {
+          slug: "maintenance",
+          title: "HVAC Maintenance",
+          summary: "Routine system care to support performance, efficiency, and long-term reliability.",
+          image: { src: "about-maintenance.jpg", alt: "Technician connecting gauge hoses to an outdoor AC unit during a tune-up" },
+        },
       ],
     },
     testimonials: { eyebrow: "Reviews", title: "Comfort Speaks for Itself.", intro: "" },

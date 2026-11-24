@@ -59,12 +59,23 @@ function resolveAssets(brand: Brand): Brand {
         promo: img(im.promo),
         aboutStory: im.aboutStory ? img(im.aboutStory) : undefined,
         aboutStoryInset: im.aboutStoryInset ? img(im.aboutStoryInset) : undefined,
+        aboutMission: im.aboutMission ? img(im.aboutMission) : undefined,
         aboutCta: im.aboutCta ? img(im.aboutCta) : undefined,
         faq: im.faq ? img(im.faq) : undefined,
       },
     },
     content: {
       ...content,
+      copy: {
+        ...content.copy,
+        about: {
+          ...content.copy.about,
+          services: {
+            ...content.copy.about.services,
+            items: content.copy.about.services.items.map((i) => ({ ...i, image: i.image ? img(i.image) : undefined })),
+          },
+        },
+      },
       services: content.services.map((s) => ({ ...s, image: img(s.image) })),
       posts: content.posts.map((p) => ({ ...p, image: img(p.image) })),
       projects: content.projects.map((p) => ({ ...p, image: img(p.image) })),
