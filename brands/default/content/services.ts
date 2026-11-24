@@ -124,8 +124,7 @@ export const services: ServiceInput[] = [
     title: "Duct Cleaning & Repair",
     summary: "Ductwork cleaning, sealing and repair so conditioned air reaches every room.",
     icon: "wind",
-    // TODO: add service-duct-cleaning.jpg (technician working on ductwork, 1200 x 750 or larger, no logos).
-    image: { src: "service-duct-cleaning.jpg", alt: "Technician inspecting and sealing a section of home ductwork" },
+    image: { src: "service-duct-cleaning.jpg", alt: "Technician feeding a duct cleaning vacuum hose into an access opening on basement ductwork" },
     intro:
       "Leaky, crushed or dirty ducts can leave some rooms too hot or too cold even when the equipment is working. We inspect the ductwork and explain what we find before recommending any work.",
     body: [
