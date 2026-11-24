@@ -578,6 +578,20 @@ export const copySchema = z.object({
     faq: sectionCopy,
     cta: z.object({ title: nonEmpty, body: nonEmpty }),
   }),
+  /** Website assistant labels. {company} is replaced with the company name. */
+  chatbot: z.object({
+    launcher: nonEmpty,
+    subtitle: nonEmpty,
+    welcome: nonEmpty,
+    fallback: nonEmpty,
+    placeholder: nonEmpty,
+    send: nonEmpty,
+    close: nonEmpty,
+    reset: nonEmpty,
+    suggestions: nonEmpty,
+    handoff: nonEmpty,
+    disclaimer: nonEmpty,
+  }),
   /** /projects header (eyebrow, title, intro). */
   projects: sectionCopy,
   /** /projects index and detail page labels. {count} is replaced with a number. */
@@ -901,6 +915,8 @@ export const brandConfigSchema = z.object({
         .refine((s) => new Set(s.map((x) => x.key)).size === s.length, "Each contact page section key may appear only once"),
     })
     .default({ sections: contactSectionKeys.map((key) => ({ key, enabled: true })) }),
+  /** Website assistant (scripted, answers only from this brand's content; no external AI or API). Hidden when disabled. */
+  chatbot: z.object({ enabled: z.boolean(), name: nonEmpty, avatar: assetPath.optional() }).default({ enabled: false, name: "Assistant" }),
   /** Analytics. track() pushes to window.dataLayer only when an id is set; GTM loads only when gtmId is set. */
   analytics: z.object({ gtmId: z.string().regex(/^GTM-[A-Z0-9]+$/).optional() }).default({}),
   /** /projects index sections: order and visibility. Omitted: every section, in default order. */

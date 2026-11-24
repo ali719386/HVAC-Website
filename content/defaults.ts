@@ -215,6 +215,19 @@ export const defaultCopy: CopyInput = {
     faq: { eyebrow: "FAQ", title: "Contact questions", intro: "" },
     cta: { title: "Prefer to talk it through?", body: "Call and speak with our team." },
   },
+  chatbot: {
+    launcher: "Ask our assistant",
+    subtitle: "Answers about our services and this website",
+    welcome: "Hi, I can answer questions about {company}: services, service areas, hours, booking and more. What can I help with?",
+    fallback: "I can only answer questions about {company} and this website. Try one of the topics below, or talk to our team.",
+    placeholder: "Type your question",
+    send: "Send",
+    close: "Close chat",
+    reset: "Start over",
+    suggestions: "Popular topics",
+    handoff: "Talk to a person",
+    disclaimer: "Automated answers from this website. For quotes and scheduling, our team will confirm details.",
+  },
   projects: { eyebrow: "Recent work", title: "Projects", intro: "" },
   projectsPage: {
     hero: {

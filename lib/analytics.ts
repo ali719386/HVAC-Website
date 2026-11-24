@@ -10,7 +10,7 @@ declare global {
   }
 }
 
-export type TrackEvent = "form_start" | "step_complete" | "form_submit" | "click_to_call" | "click_to_whatsapp";
+export type TrackEvent = "form_start" | "step_complete" | "form_submit" | "click_to_call" | "click_to_whatsapp" | "chat_open" | "chat_question";
 
 export function track(event: TrackEvent, params: Record<string, string | number | boolean> = {}) {
   if (typeof window === "undefined" || !window.__analyticsEnabled) return;

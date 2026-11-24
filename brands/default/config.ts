@@ -192,6 +192,8 @@ export const config: BrandConfigInput = {
       { key: "cta", enabled: true },
     ],
   },
+  // Website assistant: answers only from this site's content (no AI service, no data sent anywhere).
+  chatbot: { enabled: true, name: "Coolwren Assistant", avatar: "chatbot-icon.png" },
   homepage: {
     heroVariant: "summer",
     sections: [

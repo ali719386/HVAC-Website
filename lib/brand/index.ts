@@ -47,6 +47,7 @@ function resolveAssets(brand: Brand): Brand {
         },
       },
       seo: { ...config.seo, ogImage: path(config.seo.ogImage) },
+      chatbot: { ...config.chatbot, avatar: path(config.chatbot.avatar) },
       offerings: {
         ...config.offerings,
         supportedBrands: config.offerings.supportedBrands.map((b) => ({ ...b, logo: path(b.logo) })),

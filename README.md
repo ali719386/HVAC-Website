@@ -222,6 +222,12 @@ Project detail pages show only the fields a project has. The sidebar quote form 
   - The payload adds street, preferred date and time, referrer, UTM and gclid. The server returns a short reference (for example `R-7K3M9Q`) that appears in the success state and the email subject.
 - **Analytics:** set `config.analytics.gtmId` to load Google Tag Manager. Without it, nothing is loaded and `track()` (form_start, step_complete, form_submit, click_to_call) does nothing. Never send personal data in events.
 - **Footer CTA card** text comes from `config.footer.cta`.
+## 7e. Website assistant and WhatsApp
+
+- `config.chatbot` (`enabled`, `name`, `avatar`) turns on the website assistant. It answers **only** from this brand's content: services, FAQs, coverage, hours, contact, financing, plans, projects and blog. The knowledge base is built in `lib/chatbot.ts` and matched in the browser (`lib/chat-match.ts`). There is no AI service, no API key and no data sent anywhere. Off-topic questions get a polite fallback with call, WhatsApp and book links. UI text lives in `copy.chatbot`.
+- `company.whatsapp` (`number` digits with country code, `message`, `label`) adds WhatsApp links. On desktop the assistant and WhatsApp share one floating pill. On phones both live in the sticky bottom bar, so nothing floats over forms.
+- Analytics events (only with `analytics.gtmId`): `chat_open`, `chat_question` (matched topic id only, never the question text), `click_to_whatsapp`.
+
 ## 7c. Blog
 
 - **Posts** live in `content/posts.ts`. The body is a typed block array (`heading`, `paragraph`, `list`, `callout`, `image`, `quote`), with no MDX. Heading ids, the table of contents and reading time are generated from the blocks.
