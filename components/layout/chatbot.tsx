@@ -99,9 +99,16 @@ export function Chatbot({
 
   function answer(question: string, entryId?: string) {
     const isHandoff = entryId === HANDOFF;
-    const entry = isHandoff ? undefined : entryId ? data.entries.find((e) => e.id === entryId) : matchQuestion(data.entries, question);
+    // A 5-digit number is treated as a ZIP code and checked against the configured list.
+    const zip = !entryId ? question.match(/\b(\d{5})\b/)?.[1] : undefined;
+    const zipHit = zip ? data.zips[zip] : undefined;
+    const entry = isHandoff || zip ? undefined : entryId ? data.entries.find((e) => e.id === entryId) : matchQuestion(data.entries, question);
     const user: Msg = { role: "user", text: question };
-    const bot: Msg = isHandoff
+    const bot: Msg = zip
+      ? zipHit
+        ? { role: "bot", text: `Yes, ${zip} is in our service area (${zipHit.label}).`, links: [{ label: zipHit.label, href: zipHit.href }] }
+        : { role: "bot", text: `I could not find ${zip} in our ZIP list. Check your city on the service areas page, or ask our team.`, links: [{ label: "Service areas", href: "/service-areas" }], handoff: true }
+      : isHandoff
       ? { role: "bot", text: copy.handoffReply, handoff: true }
       : entry
         ? { role: "bot", text: entry.answer, links: entry.links }

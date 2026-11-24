@@ -20,7 +20,12 @@ export type ChatEntry = {
   min?: number;
 };
 /** quick: question shortcuts shown once under the welcome message. */
-export type ChatData = { entries: ChatEntry[]; quick: { id: string; label: string }[] };
+export type ChatData = {
+  entries: ChatEntry[];
+  quick: { id: string; label: string }[];
+  /** Configured ZIP codes -> city label and page (empty until real ZIP data is added). */
+  zips: Record<string, { label: string; href: string }>;
+};
 
 const STOP = new Set(
   "a an the and or of to in on for with is are was do does did can could should would will my your our you we i me it this that what when where how why which who have has get my there their them be am at by from as if any about need".split(" "),
@@ -97,7 +102,8 @@ export function buildChatData(brand: Brand): ChatData {
   for (const s of content.services) {
     entries.push({
       id: `service-${s.slug}`,
-      keywords: [s.title.toLowerCase(), ...serviceSynonyms[s.slug]],
+      // Title, common phrases, and the "signs you may need service" listed on the service page.
+      keywords: [s.title.toLowerCase(), ...serviceSynonyms[s.slug], ...s.signs.map((x) => x.toLowerCase())],
       answer: `${s.title}: ${s.summary}${s.features.length ? ` It includes ${s.features.slice(0, 3).join(", ").toLowerCase()}.` : ""}${
         s.startingAt ? ` Starting at ${formatUsd(s.startingAt)}.` : ""
       }`,
@@ -167,6 +173,30 @@ export function buildChatData(brand: Brand): ChatData {
     });
   }
 
+  // Equipment brands serviced (from config; no dealer or certification claims).
+  const makes = offerings.supportedBrands.map((b) => b.name);
+  if (makes.length > 0) {
+    entries.push({
+      id: "brands",
+      keywords: [
+        "brands",
+        "brand",
+        "make",
+        "makes",
+        "manufacturer",
+        "manufacturers",
+        "which brands",
+        "what brands",
+        "ac brands",
+        "equipment",
+        "models",
+        ...makes.map((m) => m.toLowerCase()),
+      ],
+      answer: `We service these equipment brands: ${makes.join(", ")}. Listing a brand does not mean we are a dealer for it. Ask us if your system is a different make.`,
+      links: [{ label: "Our services", href: "/services" }, call],
+    });
+  }
+
   // Financing, plans, credentials
   if (offerings.financing.enabled) {
     entries.push({
@@ -180,7 +210,10 @@ export function buildChatData(brand: Brand): ChatData {
     entries.push({
       id: "plans",
       keywords: ["plan", "plans", "membership", "maintenance plan", "agreement", "subscription"],
-      answer: `Our maintenance plans: ${content.plans.map((p) => p.name).join(", ")}.`,
+      // Prices only when the plan content lists one (never invented).
+      answer: `Our maintenance plans: ${content.plans
+        .map((p) => (p.priceUsd !== undefined ? `${p.name} (${formatUsd(p.priceUsd)}${p.interval ? ` per ${p.interval}` : ""})` : p.name))
+        .join(", ")}.`,
       links: [{ label: "Maintenance plans", href: "/plans" }],
     });
   }
@@ -194,26 +227,183 @@ export function buildChatData(brand: Brand): ChatData {
     });
   }
 
-  // Site sections
-  entries.push({
-    id: "about",
-    keywords: ["about", "company", "your team", "history", "this website", "website"],
-    answer: `${company.name}: ${company.tagline}.`,
-    links: [{ label: "About us", href: "/about" }],
-  });
-  if (content.projects.length > 0) {
-    entries.push({ id: "projects", keywords: ["projects", "portfolio", "past work", "examples", "jobs"], answer: "See photos and details of recent jobs on our projects page.", links: [{ label: "Projects", href: "/projects" }] });
+  if (company.yearsInBusiness) {
+    entries.push({
+      id: "experience",
+      keywords: ["how long", "years", "experience", "established", "since when"],
+      answer: `We have been in business for ${company.yearsInBusiness}+ years.`,
+      links: [{ label: "About us", href: "/about" }],
+    });
   }
-  if (content.posts.length > 0) {
-    entries.push({ id: "blog", keywords: ["blog", "tips", "articles", "guide", "guides", "advice"], answer: "Our blog has homeowner guides on repairs, maintenance and choosing equipment.", links: [{ label: "Blog", href: "/blog" }] });
+  if (company.googleRating) {
+    const r = company.googleRating;
+    entries.push({
+      id: "reviews",
+      keywords: ["reviews", "review", "rating", "ratings", "testimonials", "google"],
+      answer: `We are rated ${r.score.toFixed(1)} on Google from ${r.count} reviews.`,
+      links: [{ label: "Google reviews", href: r.url }],
+    });
   }
 
-  // FAQs (site, projects, contact): need two significant words in common.
-  const faqs = [...content.faqs, ...content.projectFaqs, ...config.contact.faqs];
-  faqs.forEach((f, i) => entries.push({ id: `faq-${i}`, keywords: [...new Set(words(f.question))], answer: f.answer, links: [], min: 2 }));
+  // About page: story, why choose us, mission and values.
+  const about = content.copy.about;
+  entries.push({
+    id: "about",
+    keywords: ["about", "company", "your team", "history", "this website", "website", "story", "who owns"],
+    answer: `${company.name}: ${company.tagline}. ${about.story.intro}`,
+    links: [{ label: "About us", href: "/about" }],
+  });
+  const why = about.why.items.length > 0 ? about.why.items : content.whyChooseUs;
+  if (why.length > 0) {
+    entries.push({
+      id: "why",
+      keywords: ["why choose", "why you", "why should", "different", "better", "trust you", "reasons"],
+      answer: `Why homeowners choose us: ${why.map((w) => w.title).join(", ")}.`,
+      links: [{ label: "About us", href: "/about" }],
+    });
+  }
+  if (about.mission.intro || about.mission.values.length > 0) {
+    entries.push({
+      id: "mission",
+      keywords: ["mission", "values", "goal", "vision", "believe"],
+      answer: `${about.mission.intro}${about.mission.values.length ? ` Our values: ${about.mission.values.map((v) => v.title).join(", ")}.` : ""}`.trim(),
+      links: [{ label: "About us", href: "/about" }],
+    });
+  }
+
+  // How a job works (process steps).
+  if (content.process.length > 0) {
+    entries.push({
+      id: "process",
+      keywords: ["process", "how it works", "how does it work", "steps", "what happens", "what to expect", "next steps"],
+      answer: content.process.map((p, i) => `${i + 1}. ${p.title}: ${p.body}`).join(" "),
+      links: [book],
+    });
+  }
+
+  // Problem picker symptoms (e.g. strange noises, thermostat issue).
+  for (const sym of content.symptoms) {
+    const target = content.services.find((s) => s.slug === sym.service);
+    entries.push({
+      id: `symptom-${sym.id}`,
+      keywords: [sym.label.toLowerCase(), ...words(sym.label).filter((w) => w.length > 4)],
+      answer: `${sym.label}: ${target ? `that is usually a job for our ${target.title} service.` : "our team can take a look."} You can send the details and we will follow up.`,
+      links: [
+        ...(target ? [{ label: target.title, href: `/services/${target.slug}` }] : []),
+        { label: book.label, href: `/book?issue=${encodeURIComponent(sym.id)}` },
+      ],
+    });
+  }
+
+  // Safety (gas smell, carbon monoxide): always point to the safety notice first.
+  entries.push({
+    id: "safety",
+    keywords: ["gas smell", "smell gas", "gas leak", "carbon monoxide", "co alarm", "co detector", "dangerous", "unsafe", "safety"],
+    answer: config.contact.safetyNotice,
+    links: [{ label: "Call 911", href: "tel:911" }],
+  });
+
+  // Pricing: only what the site states (startingAt and plan prices); otherwise ask for an estimate.
+  const priced = content.services.filter((s) => s.startingAt);
+  entries.push({
+    id: "pricing",
+    keywords: ["price", "prices", "pricing", "cost", "costs", "how much", "charge", "fee", "fees", "rates", "cheap", "expensive"],
+    answer: priced.length
+      ? `Listed prices: ${priced.map((s) => `${s.title} starting at ${formatUsd(s.startingAt ?? 0)}`).join(", ")}. Other work depends on your system; contact us for an estimate.`
+      : "Pricing depends on your system and the work needed. Contact us and we will explain the options and the cost.",
+    links: [book, call],
+  });
+
+  // Promotions and rebates, only when enabled in config.
+  if (offerings.promoBar.enabled && offerings.promoBar.text) {
+    entries.push({
+      id: "promo",
+      keywords: ["promo", "promotion", "deal", "deals", "discount", "coupon", "special", "offer this month"],
+      answer: offerings.promoBar.text,
+      links: offerings.promoBar.href ? [{ label: offerings.promoBar.linkLabel ?? "Details", href: offerings.promoBar.href }] : [],
+    });
+  }
+  if (offerings.rebates.enabled && offerings.rebates.title) {
+    entries.push({
+      id: "rebates",
+      keywords: ["rebate", "rebates", "incentive", "incentives", "tax credit", "credits"],
+      answer: `${offerings.rebates.title}. ${offerings.rebates.body}`.trim(),
+      links: offerings.rebates.url ? [{ label: "Current programs", href: offerings.rebates.url }] : [],
+    });
+  }
+
+  // Projects: overview plus each project (title, city, system).
+  if (content.projects.length > 0) {
+    entries.push({
+      id: "projects",
+      keywords: ["projects", "portfolio", "past work", "examples", "jobs", "recent work"],
+      answer: `See ${content.projects.length} recent jobs on our projects page, filtered by service, city and system type.`,
+      links: [{ label: "Projects", href: "/projects" }],
+    });
+    for (const p of content.projects) {
+      entries.push({
+        id: `project-${p.slug}`,
+        keywords: [p.title.toLowerCase(), `${p.systemType.toLowerCase()} project`, `project in ${p.city.toLowerCase()}`, `${p.city.toLowerCase()} project`],
+        answer: `${p.title} (${p.city}, ${p.state}): ${p.summary}`,
+        links: [{ label: "View project", href: `/projects/${p.slug}` }],
+      });
+    }
+  }
+
+  // Blog: overview plus each article (title words and tags).
+  if (content.posts.length > 0) {
+    entries.push({
+      id: "blog",
+      keywords: ["blog", "tips", "articles", "guide", "guides", "advice", "read"],
+      answer: `Our blog has ${content.posts.length} homeowner guides on repairs, maintenance and choosing equipment.`,
+      links: [{ label: "Blog", href: "/blog" }],
+    });
+    content.posts.forEach((p) =>
+      entries.push({
+        id: `post-${p.slug}`,
+        keywords: [...new Set([...words(p.title), ...p.tags.map((t) => t.toLowerCase())])],
+        answer: `${p.title}: ${p.excerpt}`,
+        links: [{ label: "Read article", href: `/blog/${p.slug}` }],
+        min: 2,
+      }),
+    );
+  }
+
+  // Social profiles and legal pages.
+  if (company.socials.length > 0) {
+    entries.push({
+      id: "socials",
+      keywords: ["facebook", "instagram", "youtube", "linkedin", "social", "social media", "follow"],
+      answer: "You can follow us here:",
+      links: company.socials.map((s) => ({ label: s.network.charAt(0).toUpperCase() + s.network.slice(1), href: s.url })),
+    });
+  }
+  entries.push({
+    id: "legal",
+    keywords: ["privacy", "privacy policy", "terms", "terms of service", "sms", "text messages", "data", "personal information"],
+    answer: "Our privacy policy, terms of service and SMS terms are linked below.",
+    links: [
+      { label: "Privacy Policy", href: "/privacy" },
+      { label: "Terms of Service", href: "/terms" },
+      { label: "SMS Terms", href: "/sms-consent" },
+    ],
+  });
+
+  // FAQs (site, projects, contact, climate): need two significant words in common.
+  const climateFaqs = [...config.coverage.states.map((s) => s.climate)]
+    .filter((c, i, all) => all.indexOf(c) === i)
+    .flatMap((c) => content.climate[c].faqs);
+  const faqs = [...content.faqs, ...content.projectFaqs, ...config.contact.faqs, ...climateFaqs];
+  const seenQ = new Set<string>();
+  faqs.forEach((f, i) => {
+    if (seenQ.has(f.question)) return;
+    seenQ.add(f.question);
+    entries.push({ id: `faq-${i}`, keywords: [...new Set(words(f.question))], answer: f.answer, links: [], min: 2 });
+  });
 
   // Quick questions from copy, only for topics this brand actually has.
   const ids = new Set(entries.map((e) => e.id));
   const quick = content.copy.chatbot.quickQuestions.filter((q) => ids.has(q.topic)).map((q) => ({ id: q.topic, label: q.label }));
-  return { entries, quick };
+  const zips = Object.fromEntries(cities.flatMap((c) => c.zips.map((z) => [z, { label: c.label, href: c.href }])));
+  return { entries, quick, zips };
 }

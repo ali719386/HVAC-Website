@@ -2,7 +2,7 @@ import type { ChatEntry } from "./chatbot";
 
 /** Entry weights: place names beat generic words, emergencies beat services, small talk loses to any real topic. */
 const weightFor = (id: string) =>
-  id.startsWith("city-") || id.startsWith("state-") ? 3 : id === "emergency" ? 2 : id.startsWith("talk-") ? 0.5 : id.startsWith("faq-") ? 1 : 1.5;
+  id.startsWith("city-") || id.startsWith("state-") ? 3 : id === "emergency" || id === "brands" ? 2 : id.startsWith("talk-") ? 0.5 : id.startsWith("faq-") ? 1 : 1.5;
 
 const normalize = (s: string) =>
   ` ${s
@@ -21,10 +21,15 @@ export function matchQuestion(entries: ChatEntry[], question: string): ChatEntry
   for (const entry of entries) {
     let hits = 0;
     let score = 0;
+    // Count a keyword and its singular/plural only once (e.g. "service" and "services").
+    const seen = new Set<string>();
     for (const k of entry.keywords) {
+      const stem = k.replace(/s$/, "");
+      if (seen.has(stem)) continue;
       const multi = k.includes(" ");
-      const found = multi ? q.includes(` ${k} `) : tokens.has(k) || tokens.has(k.replace(/s$/, ""));
+      const found = multi ? q.includes(` ${k} `) : tokens.has(k) || tokens.has(stem);
       if (found) {
+        seen.add(stem);
         hits += 1;
         score += multi ? k.split(" ").length * 2 : 1;
       }
