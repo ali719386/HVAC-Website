@@ -22,8 +22,13 @@ export type ChatEntry = {
   handoff?: boolean;
 };
 /** quick: question shortcuts shown once under the welcome message. */
+/** A passage of site text for the search fallback (shown verbatim, never rewritten). */
+export type ChatDoc = { title: string; text: string; href: string };
+
 export type ChatData = {
   entries: ChatEntry[];
+  /** Every piece of site text, searched when no topic matches. */
+  docs: ChatDoc[];
   quick: { id: string; label: string }[];
   /** Configured ZIP codes -> city label and page (empty until real ZIP data is added). */
   zips: Record<string, { label: string; href: string }>;
@@ -128,7 +133,7 @@ export function buildChatData(brand: Brand): ChatData {
   });
   entries.push({
     id: "hours",
-    keywords: ["hours", "open", "opening", "close", "closing", "closed", "time", "weekend", "saturday", "sunday", "today"],
+    keywords: ["hours", "open", "opening", "close", "closing", "closed", "what time", "weekend", "saturday", "sunday", "working hours", "business hours"],
     answer: `Our hours: ${company.hours.map((h) => `${h.label} ${hoursText(h)}`).join("; ")}.`,
     links: [call],
   });
@@ -292,7 +297,7 @@ export function buildChatData(brand: Brand): ChatData {
   if (content.process.length > 0) {
     entries.push({
       id: "process",
-      keywords: ["process", "how it works", "how does it work", "steps", "what happens", "what to expect", "next steps"],
+      keywords: ["process", "how it works", "how does it work", "steps", "next steps", "your process"],
       answer: content.process.map((p, i) => `${i + 1}. ${p.title}: ${p.body}`).join(" "),
       links: [book],
     });
@@ -360,7 +365,9 @@ export function buildChatData(brand: Brand): ChatData {
     for (const p of content.projects) {
       entries.push({
         id: `project-${p.slug}`,
-        keywords: [p.title.toLowerCase(), `${p.systemType.toLowerCase()} project`, `project in ${p.city.toLowerCase()}`, `${p.city.toLowerCase()} project`],
+        // Title and system words plus "project"; two must match so a single word never steals a service question.
+        keywords: [...new Set(["project", "job", ...words(p.title), ...words(p.systemType), p.city.toLowerCase()])],
+        min: 2,
         answer: `${p.title} (${p.city}, ${p.state}): ${p.summary}`,
         links: [{ label: "View project", href: `/projects/${p.slug}` }],
       });
@@ -422,5 +429,71 @@ export function buildChatData(brand: Brand): ChatData {
   const ids = new Set(entries.map((e) => e.id));
   const quick = content.copy.chatbot.quickQuestions.filter((q) => ids.has(q.topic)).map((q) => ({ id: q.topic, label: q.label }));
   const zips = Object.fromEntries(cities.flatMap((c) => c.zips.map((z) => [z, { label: c.label, href: c.href }])));
-  return { entries, quick, zips };
+  return { entries, quick, zips, docs: buildDocs(brand) };
+}
+
+/** Keeps passages short enough to read in a chat bubble. */
+const clip = (s: string, max = 420) => (s.length > max ? `${s.slice(0, s.lastIndexOf(" ", max)).trim()}...` : s);
+
+/**
+ * Every readable passage on the site, for the search fallback: service pages, blog articles, projects,
+ * about, plans, financing, process, FAQs and real (non-template) city and state intros.
+ */
+export function buildDocs(brand: Brand): ChatDoc[] {
+  const { config, content } = brand;
+  const docs: ChatDoc[] = [];
+  const add = (title: string, text: string | undefined, href: string) => {
+    const t = text?.trim();
+    if (t) docs.push({ title, text: clip(t), href });
+  };
+
+  for (const s of content.services) {
+    const href = `/services/${s.slug}`;
+    add(s.title, s.intro, href);
+    s.body.forEach((p) => add(s.title, p, href));
+    if (s.features.length) add(`${s.title}: what's included`, s.features.join(". ") + ".", href);
+    if (s.signs.length) add(`${s.title}: signs you may need it`, s.signs.join(". ") + ".", href);
+  }
+
+  for (const p of content.posts) {
+    const href = `/blog/${p.slug}`;
+    add(p.title, p.excerpt, href);
+    if (p.takeaways.length) add(`${p.title}: key takeaways`, p.takeaways.join(". ") + ".", href);
+    for (const b of p.body) {
+      if (b.type === "paragraph" || b.type === "quote") add(p.title, b.text, href);
+      else if (b.type === "list") add(p.title, b.items.join(". ") + ".", href);
+      else if (b.type === "callout") add(p.title, `${b.title ? `${b.title}. ` : ""}${b.text}`, href);
+    }
+  }
+
+  for (const p of content.projects) {
+    const href = `/projects/${p.slug}`;
+    add(p.title, p.overview, href);
+    add(`${p.title}: the challenge`, p.challenge, href);
+    add(`${p.title}: our solution`, p.solution, href);
+    if (p.equipment.length) add(`${p.title}: equipment`, p.equipment.map((e) => `${e.name} (${e.type}${e.specs ? `, ${e.specs}` : ""})`).join(". ") + ".", href);
+    if (p.timeline.length) add(`${p.title}: how the work went`, p.timeline.map((t) => `${t.title}: ${t.description}`).join(" "), href);
+  }
+
+  const about = content.copy.about;
+  add("About us", about.story.intro, "/about");
+  add("Our mission", about.mission.intro, "/about");
+  for (const w of [...about.why.items, ...content.whyChooseUs]) add(w.title, w.body, "/about");
+
+  for (const p of content.plans) add(p.name, `${p.description}${p.features.length ? ` ${p.features.join(". ")}.` : ""}`, "/plans");
+  if (config.offerings.financing.enabled) add("Financing", config.offerings.financing.description, "/financing");
+  for (const step of content.process) add(`How it works: ${step.title}`, step.body, "/services");
+  add("Safety", config.contact.safetyNotice, "/contact");
+
+  for (const f of [...content.faqs, ...content.projectFaqs, ...config.contact.faqs]) add(f.question, f.answer, "/contact");
+
+  // Only written (not template) area intros, so search never repeats boilerplate.
+  for (const st of getCoverage().states) {
+    add(st.name, st.intro, st.href);
+    for (const c of st.cities) {
+      add(c.label, c.intro, c.href);
+      c.localNotes.forEach((n) => add(c.label, n, c.href));
+    }
+  }
+  return docs;
 }

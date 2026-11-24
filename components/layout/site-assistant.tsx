@@ -17,7 +17,7 @@ export function SiteAssistant() {
   const c = content.copy.chatbot;
   return (
     <Chatbot
-      data={buildChatData(brand)}
+      quick={buildChatData(brand).quick}
       name={chatbot.name}
       avatar={assetExists(chatbot.avatar) ? chatbot.avatar : undefined}
       copy={{ ...c, welcome: fill(c.welcome), fallback: fill(c.fallback) }}

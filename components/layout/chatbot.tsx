@@ -6,7 +6,7 @@ import { Fragment, useEffect, useId, useRef, useState, type FormEvent } from "re
 import { CalendarCheck, Phone as PhoneIcon, RotateCw, Send, X } from "lucide-react";
 import type { Copy, Phone } from "@/lib/brand/schema";
 import type { ChatData, ChatLink } from "@/lib/chatbot";
-import { matchQuestion } from "@/lib/chat-match";
+import { matchQuestion, searchDocs } from "@/lib/chat-match";
 import { track } from "@/lib/analytics";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { whatsappHref, type WhatsAppConfig } from "./whatsapp";
@@ -25,7 +25,7 @@ const HANDOFF = "__handoff";
  * browser. Desktop launcher is a pill with the assistant and WhatsApp; phones open it from the sticky bar.
  */
 export function Chatbot({
-  data,
+  quick: quickItems,
   name,
   avatar,
   copy,
@@ -33,7 +33,8 @@ export function Chatbot({
   whatsapp,
   bookLabel,
 }: {
-  data: ChatData;
+  /** Quick questions (small, rendered with the page). The full knowledge loads on first open. */
+  quick: ChatData["quick"];
   name: string;
   avatar?: string;
   /** {company} already filled in. */
@@ -53,6 +54,14 @@ export function Chatbot({
   const listRef = useRef<HTMLDivElement>(null);
   const uid = useId();
   const welcome: Msg = { role: "bot", text: copy.welcome };
+  // Knowledge base (/assistant.json), fetched once when the chat first opens.
+  const kbRef = useRef<Promise<ChatData | null> | null>(null);
+  const loadKb = () => {
+    kbRef.current ??= fetch("/assistant.json")
+      .then((r) => (r.ok ? (r.json() as Promise<ChatData>) : null))
+      .catch(() => null);
+    return kbRef.current;
+  };
 
   // Restore this tab's conversation (per-visitor convenience only; never sent anywhere).
   function restore(): Msg[] {
@@ -75,6 +84,7 @@ export function Chatbot({
   }
 
   function openChat() {
+    void loadKb();
     setMessages((m) => (m.length > 0 ? m : restore()));
     setOpen(true);
     track("chat_open");
@@ -97,26 +107,12 @@ export function Chatbot({
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight });
   }, [messages, typing]);
 
-  function answer(question: string, entryId?: string) {
-    const isHandoff = entryId === HANDOFF;
-    // A 5-digit number is treated as a ZIP code and checked against the configured list.
-    const zip = !entryId ? question.match(/\b(\d{5})\b/)?.[1] : undefined;
-    const zipHit = zip ? data.zips[zip] : undefined;
-    const entry = isHandoff || zip ? undefined : entryId ? data.entries.find((e) => e.id === entryId) : matchQuestion(data.entries, question);
-    const user: Msg = { role: "user", text: question };
-    const bot: Msg = zip
-      ? zipHit
-        ? { role: "bot", text: `Yes, ${zip} is in our service area (${zipHit.label}).`, links: [{ label: zipHit.label, href: zipHit.href }] }
-        : { role: "bot", text: `I could not find ${zip} in our ZIP list. Check your city on the service areas page, or ask our team.`, links: [{ label: "Service areas", href: "/service-areas" }], handoff: true }
-      : isHandoff
-      ? { role: "bot", text: copy.handoffReply, handoff: true }
-      : entry
-        ? { role: "bot", text: entry.answer, links: entry.links, handoff: entry.handoff }
-        : { role: "bot", text: copy.fallback, handoff: true };
-    const withUser = [...messages, user];
+  async function answer(question: string, entryId?: string) {
+    const withUser = [...messages, { role: "user" as const, text: question }];
     setMessages(withUser);
     setTyping(true);
-    track("chat_question", { matched: Boolean(entry), topic: entry?.id ?? "none" });
+    const kb = await loadKb();
+    const bot = reply(kb, question, entryId);
     // Short pause so the reply reads as a reply (not an animation; fine with reduced motion).
     window.clearTimeout(replyTimer.current);
     replyTimer.current = window.setTimeout(() => {
@@ -124,7 +120,35 @@ export function Chatbot({
       const next = [...withUser, bot];
       setMessages(next);
       persist(next);
-    }, 450);
+    }, 350);
+  }
+
+  /** Topic match first, then ZIP lookup, then a search over every site passage, then the fallback. */
+  function reply(kb: ChatData | null, question: string, entryId?: string): Msg {
+    if (entryId === HANDOFF) return { role: "bot", text: copy.handoffReply, handoff: true };
+    if (!kb) return { role: "bot", text: copy.fallback, handoff: true };
+    // A 5-digit number is treated as a ZIP code and checked against the configured list.
+    const zip = !entryId ? question.match(/\b(\d{5})\b/)?.[1] : undefined;
+    if (zip) {
+      const hit = kb.zips[zip];
+      track("chat_question", { matched: Boolean(hit), topic: "zip" });
+      return hit
+        ? { role: "bot", text: `Yes, ${zip} is in our service area (${hit.label}).`, links: [{ label: hit.label, href: hit.href }] }
+        : { role: "bot", text: `I could not find ${zip} in our ZIP list. Check your city on the service areas page, or ask our team.`, links: [{ label: "Service areas", href: "/service-areas" }], handoff: true };
+    }
+    const entry = entryId ? kb.entries.find((e) => e.id === entryId) : matchQuestion(kb.entries, question);
+    if (entry) {
+      track("chat_question", { matched: true, topic: entry.id });
+      return { role: "bot", text: entry.answer, links: entry.links, handoff: entry.handoff };
+    }
+    // Search fallback: the closest passage from the site, shown exactly as written there.
+    const doc = searchDocs(kb.docs, question);
+    if (doc) {
+      track("chat_question", { matched: true, topic: "search" });
+      return { role: "bot", text: doc.text, links: [{ label: `More: ${doc.title}`, href: doc.href }] };
+    }
+    track("chat_question", { matched: false, topic: "none" });
+    return { role: "bot", text: copy.fallback, handoff: true };
   }
 
   function onSubmit(e: FormEvent) {
@@ -132,7 +156,7 @@ export function Chatbot({
     const q = input.trim().slice(0, 300);
     if (!q || typing) return;
     setInput("");
-    answer(q);
+    void answer(q);
   }
 
   /** Refresh: clears this conversation (also from storage) and starts again with the welcome message. */
@@ -175,12 +199,12 @@ export function Chatbot({
   // Question shortcuts plus Talk to a person, shown once under the welcome message.
   const quick = (
     <div className="flex flex-wrap gap-2">
-      {[...data.quick, { id: HANDOFF, label: copy.handoff }].map((q) => (
+      {[...quickItems, { id: HANDOFF, label: copy.handoff }].map((q) => (
         <button
           key={q.id}
           type="button"
           disabled={typing}
-          onClick={() => answer(q.label, q.id)}
+          onClick={() => void answer(q.label, q.id)}
           className={`min-h-10 rounded-full border px-4 py-1.5 text-left text-sm font-medium transition-colors disabled:opacity-50 ${
             q.id === HANDOFF
               ? "border-accent/40 bg-surface text-accent-dark hover:bg-accent/8"
