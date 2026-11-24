@@ -102,7 +102,8 @@ function loadBrand(): Brand {
   const available = brandSlugs.join(", ");
   if (!selected) {
     throw new Error(
-      `NEXT_PUBLIC_BRAND is not set. Add NEXT_PUBLIC_BRAND=<slug> to .env.local (available: ${available}).`,
+      `NEXT_PUBLIC_BRAND is not set. Add NEXT_PUBLIC_BRAND=<slug> to .env.local (local) or .env.production / ` +
+        `your host's environment variables (e.g. Vercel). Available: ${available}.`,
     );
   }
   if (!isBrandSlug(selected)) {

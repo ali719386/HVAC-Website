@@ -342,7 +342,7 @@ Without Upstash, the limiter is **in-memory and best-effort**. On serverless hos
 ## 11. Deploying to Vercel
 
 1. Push the repo to GitHub, GitLab or Bitbucket and import it in Vercel. The framework is detected as Next.js automatically.
-2. Set environment variables: `NEXT_PUBLIC_BRAND`, `NEXT_PUBLIC_SITE_URL`, plus Resend and/or webhook variables (at least one channel, or leads return 503). Optionally add Upstash and Turnstile.
+2. Set environment variables: `NEXT_PUBLIC_BRAND` (the committed `.env.production` defaults it to `default`; a value set in Vercel overrides it), `NEXT_PUBLIC_SITE_URL`, plus Resend and/or webhook variables (at least one channel, or leads return 503). Optionally add Upstash and Turnstile.
 3. Deploy, then add the client's domain and make sure `NEXT_PUBLIC_SITE_URL` matches it.
 4. One Vercel project per client brand is the simplest setup. Each project uses the same repo with a different `NEXT_PUBLIC_BRAND`.
 
