@@ -21,9 +21,13 @@ const sizes: Record<Size, string> = {
   lg: "h-14 px-7 text-base",
 };
 
+/** Unprefixed display utility in `extra` (e.g. `hidden sm:inline-flex`). Tailwind resolves same-specificity utilities by stylesheet order, so a baked-in `inline-flex` would beat `hidden`. */
+const HAS_DISPLAY = /(?:^|\s)(?:hidden|inline-flex|flex|inline-block|block|grid|inline-grid)(?:\s|$)/;
+
 export function buttonClass(variant: Variant = "primary", size: Size = "md", extra = "") {
+  const display = HAS_DISPLAY.test(extra) ? "" : "inline-flex";
   return [
-    "inline-flex items-center justify-center gap-2 rounded-btn font-semibold whitespace-nowrap",
+    [display, "items-center justify-center gap-2 rounded-btn font-semibold whitespace-nowrap"].filter(Boolean).join(" "),
     // Press feedback: a slight scale (transform only, no layout). Off with reduced motion.
     "transition-[color,background-color,border-color,scale] duration-200 active:scale-[0.98] motion-reduce:active:scale-100 disabled:cursor-not-allowed disabled:opacity-60",
     variants[variant],

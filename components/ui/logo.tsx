@@ -14,9 +14,9 @@ export function Logo({
 }) {
   const initial = name.trim().charAt(0).toUpperCase();
   return (
-    <HomeLink className="inline-flex shrink-0 items-center gap-2.5" aria-label={`${name}, home`}>
+    <HomeLink className="inline-flex min-w-0 items-center gap-2.5" aria-label={`${name}, home`}>
       {assetExists(src) ? (
-        <Image src={src} alt="" width={232} height={60} sizes="232px" className="h-11 w-auto sm:h-12 lg:h-14" preload />
+        <Image src={src} alt="" width={232} height={60} sizes="232px" className="h-11 w-auto max-w-full sm:h-12 lg:h-14" preload />
       ) : (
         <>
           <span

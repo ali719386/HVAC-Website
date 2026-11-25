@@ -36,10 +36,14 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 6rem;
+    /* clip on the viewport too: overflow on body alone still lets the page pan sideways. */
+    overflow-x: clip;
+    max-width: 100%;
   }
   body {
     /* Never allow sideways page scroll. clip (not hidden) keeps position: sticky working. */
     overflow-x: clip;
+    max-width: 100%;
     background: var(--brand-surface);
     color: var(--brand-text);
     font-family: var(--font-body);

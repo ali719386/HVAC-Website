@@ -60,7 +60,7 @@ export function MobileMenu({ nav, phone, bookLabel }: { nav: NavItem[]; phone: P
         id={panelId}
         ref={panelRef}
         hidden={!open}
-        className="absolute inset-x-0 top-full z-50 h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain border-t border-line bg-surface transition-[opacity,translate] duration-200 ease-out starting:-translate-y-2 starting:opacity-0 motion-reduce:transition-none lg:h-[calc(100dvh-5rem)]"
+        className="absolute inset-x-0 top-full z-50 h-[calc(100dvh-4.5rem)] w-full overflow-y-auto overscroll-contain border-t border-line bg-surface transition-[opacity,translate] duration-200 ease-out starting:-translate-y-2 starting:opacity-0 motion-reduce:transition-none lg:h-[calc(100dvh-5rem)]"
       >
         <nav aria-label="Mobile" className="container-site py-4">
           <ul className="divide-y divide-line">

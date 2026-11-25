@@ -16,7 +16,7 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
   const { company } = config;
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-surface">
-      <div className="container-site flex h-[4.5rem] items-center justify-between gap-4 lg:h-20">
+      <div className="container-site flex h-[4.5rem] min-w-0 items-center justify-between gap-2 sm:gap-4 lg:h-20">
         <Logo name={company.name} src={company.logo.light} />
 
         <nav aria-label="Main" className="hidden lg:block">
@@ -41,7 +41,7 @@ export function Header({ config, nav, bookLabel }: { config: BrandConfig; nav: N
           </ul>
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <a href={`tel:${company.phone.tel}`} className="hidden items-center gap-3 md:flex lg:hidden 2xl:flex" aria-label={`Call ${company.phone.display}`}>
             <span className="grid size-11 place-items-center rounded-full bg-surface-alt text-primary">
               <Phone className="size-5" aria-hidden="true" />
